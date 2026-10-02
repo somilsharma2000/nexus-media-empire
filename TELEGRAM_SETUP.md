@@ -1,55 +1,43 @@
-# Telegram Bot Setup
+# Telegram Bot Setup Guide
 
-## Quick Start
+## Step 1 — Create your bot
+1. Open Telegram, search for **@BotFather**
+2. Send `/newbot` and follow the prompts
+3. Copy the **token** you receive
 
-1. **Create your bot** — Message [@BotFather](https://t.me/BotFather) on Telegram, send `/newbot` and follow the prompts.
-2. **Copy the token** — Paste it into `TELEGRAM_BOT_TOKEN` in your `.env` file.
-3. **Find your user ID** — Message [@userinfobot](https://t.me/userinfobot); copy your numeric ID into `TELEGRAM_ADMIN_USER_ID`.
-4. **Deploy to Vercel** (or start locally with `npm run dev`).
-5. **Register the webhook** — Visit:
-   ```
-   YOUR_DOMAIN/api/telegram/setup
-   ```
-   You should see `{ "success": true, "webhookUrl": "..." }`.
-6. **Test it** — Send `/status` to your bot on Telegram.
+## Step 2 — Get your Telegram User ID
+1. Search for **@userinfobot** on Telegram
+2. Start the bot — it will reply with your numeric User ID
 
----
+## Step 3 — Add to .env
+```
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_ADMIN_USER_ID=your_numeric_user_id_here
+```
+
+## Step 4 — Register the Webhook
+After deploying to Vercel, visit:
+```
+https://YOUR_DOMAIN/api/telegram/setup
+```
+
+## Step 5 — Test
+Send `/status` to your bot. You should receive a live status report.
 
 ## Available Commands
-
-| Command | Description |
+| Command | Action |
 |---|---|
-| `/status` | Full pipeline status — revenue, alerts, article counts |
-| `/pause` | Pause all pipeline steps |
-| `/resume` | Resume the pipeline |
-| `/budget` | Show current month token spend and budget |
-| `/articles` | List the last 5 articles with their status |
-| `/approve_{id}` | Approve an article → status set to `scheduled` |
-| `/reject_{id}` | Reject an article → status set to `rejected` |
-| `/revise_{id}` | Re-run QA review for an article |
+| `/status` | Full system status: revenue, pipeline, alerts |
+| `/pause` | Pause all pipeline steps immediately |
+| `/resume` | Resume all pipeline steps |
+| `/budget` | Current month AI token spend + remaining |
+| `/articles` | Last 5 articles with status |
 
----
-
-## Automatic Alerts
-
-The bot will automatically message you when:
-
-- 🚨 **Critical monitor alerts** fire (site down, API unavailable)
-- 🚨 **QA rejects** an article — includes inline `/approve_` and `/reject_` shortcuts
-
----
+## Inline Actions (from QA alerts)
+When the AI QA gate rejects an article, the bot sends you a message with inline buttons:
+- **APPROVE** — schedules the article for publishing
+- **REVISE** — re-runs QA with revision instructions
+- **REJECT** — marks the article as rejected
 
 ## Security
-
-Every incoming message is checked against `TELEGRAM_ADMIN_USER_ID`.  
-Any message from an unknown sender is rejected with `Unauthorized`.
-
----
-
-## Environment Variables
-
-```bash
-TELEGRAM_BOT_TOKEN=         # from @BotFather
-TELEGRAM_ADMIN_USER_ID=     # your numeric Telegram user ID
-NEXT_PUBLIC_SITE_URL=       # your deployed domain, e.g. https://nexus.vercel.app
-```
+The bot is locked to your `TELEGRAM_ADMIN_USER_ID` — any other user gets silently ignored.

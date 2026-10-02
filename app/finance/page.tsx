@@ -2,12 +2,89 @@
 
 import React, { useEffect, useState } from "react";
 import { ChevronRight, BarChart2 } from "lucide-react";
+import CookieConsent from "../../components/CookieConsent";
 
 interface Article { id: number; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; }
+
+interface AdSlot {
+  id: string;
+  name: string;
+  siteTargeting: string;
+  placement: string;
+  type: string;
+  headline: string;
+  description: string;
+  ctaUrl: string;
+  weight: number;
+  isActive: boolean;
+  requiresDisclosure: boolean;
+  priority: number;
+  frequencyCapPerUser: number;
+}
+
+/** Weighted random pick */
+function pickByWeight(slots: AdSlot[]): AdSlot | null {
+  if (!slots.length) return null;
+  const total = slots.reduce((s, slot) => s + slot.weight, 0);
+  let rand = Math.random() * total;
+  for (const slot of slots) {
+    rand -= slot.weight;
+    if (rand <= 0) return slot;
+  }
+  return slots[slots.length - 1];
+}
+
+function checkFrequencyCap(slot: AdSlot): boolean {
+  if (slot.frequencyCapPerUser <= 0) return true;
+  const key = `nexus_ad_shown_${slot.id}`;
+  const count = parseInt(localStorage.getItem(key) || "0", 10);
+  if (count >= slot.frequencyCapPerUser) return false;
+  localStorage.setItem(key, String(count + 1));
+  return true;
+}
+
+function HouseAdCard() {
+  return (
+    <div className="group cursor-pointer border-b border-gray-200 pb-10 flex flex-col gap-3"
+      onClick={() => window.open("http://localhost:3003", "_blank")}>
+      <div className="flex items-center gap-3">
+        <span className="text-xs font-bold text-amber-700 uppercase tracking-widest bg-amber-50 px-2 py-1">Sponsored</span>
+      </div>
+      <h2 className="text-3xl font-bold text-gray-900 leading-tight group-hover:text-amber-700 transition-colors">
+        Upgrade to Nexus Pro
+      </h2>
+      <p className="text-gray-600 text-lg leading-relaxed font-serif">Automate your entire content operation.</p>
+      <span className="text-sm font-bold font-sans text-gray-900 flex items-center gap-1 uppercase tracking-wider group-hover:text-amber-700">
+        Learn More <ChevronRight className="w-4 h-4"/>
+      </span>
+    </div>
+  );
+}
+
+function MidFeedAdCard({ slot }: { slot: AdSlot }) {
+  return (
+    <div className="group cursor-pointer border-b border-gray-200 pb-10 flex flex-col gap-3"
+      onClick={() => window.open(slot.ctaUrl, "_blank")}>
+      <div className="flex items-center gap-3">
+        <span className="text-xs font-bold text-amber-700 uppercase tracking-widest bg-amber-50 px-2 py-1">
+          {slot.requiresDisclosure ? "Sponsored" : "Advertisement"}
+        </span>
+      </div>
+      <h2 className="text-3xl font-bold text-gray-900 leading-tight group-hover:text-amber-700 transition-colors">
+        {slot.headline}
+      </h2>
+      <p className="text-gray-600 text-lg leading-relaxed font-serif">{slot.description}</p>
+      <span className="text-sm font-bold font-sans text-gray-900 flex items-center gap-1 uppercase tracking-wider group-hover:text-amber-700">
+        Learn More <ChevronRight className="w-4 h-4"/>
+      </span>
+    </div>
+  );
+}
 
 export default function FinanceSite() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [midFeedSlot, setMidFeedSlot] = useState<AdSlot | null>(null);
 
   const fetchArticles = async () => {
     try {
@@ -22,8 +99,27 @@ export default function FinanceSite() {
     }
   };
 
+  const fetchAds = async () => {
+    try {
+      const res = await fetch('/api/adslots');
+      const slots: AdSlot[] = await res.json();
+      const eligible = slots.filter(
+        (s) => s.isActive && (s.siteTargeting === "all" || s.siteTargeting === "finance") && s.placement === "midFeed"
+      );
+      const picked = pickByWeight(eligible);
+      if (picked && checkFrequencyCap(picked)) {
+        setMidFeedSlot(picked);
+      } else {
+        setMidFeedSlot(null);
+      }
+    } catch {
+      setMidFeedSlot(null);
+    }
+  };
+
   useEffect(() => {
     fetchArticles();
+    fetchAds();
     const interval = setInterval(fetchArticles, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -77,6 +173,9 @@ export default function FinanceSite() {
                   <span className="text-sm font-bold font-sans text-gray-900 flex items-center gap-1 uppercase tracking-wider group-hover:text-amber-700">Continue Reading <ChevronRight className="w-4 h-4"/></span>
                 </div>
               ))}
+
+              {/* Mid-feed Ad — dynamic or house fallback */}
+              {midFeedSlot ? <MidFeedAdCard slot={midFeedSlot} /> : <HouseAdCard />}
             </div>
 
             {/* Sidebar Data */}
@@ -95,7 +194,9 @@ export default function FinanceSite() {
           </div>
         )}
       </main>
+
+      {/* Cookie Consent Banner */}
+      <CookieConsent />
     </div>
   );
 }
-

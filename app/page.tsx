@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { 
@@ -10,6 +10,13 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import RevenueDashboard from "../components/RevenueDashboard";
+import AdSlotManager from "../components/AdSlotManager";
+import AffiliateManager from "../components/AffiliateManager";
+import AlertFeed from "../components/AlertFeed";
+import PipelineStatus from "../components/PipelineStatus";
+import RisingKeywords from "../components/RisingKeywords";
+import QAConfigPanel from "../components/QAConfigPanel";
+import CookieConsent from "../components/CookieConsent";
 
 
 const TRENDS = [
@@ -188,6 +195,11 @@ export default function NexusDashboard() {
           <NavItem icon={<Database />} label="Trend Pipeline" active={currentView === 'pipeline'} onClick={() => setCurrentView('pipeline')} />
           <NavItem icon={<Globe />} label="Empire Network" active={currentView === 'network'} onClick={() => setCurrentView('network')} />
           <NavItem icon={<Sliders />} label="Agent Config" active={currentView === 'config'} onClick={() => setCurrentView('config')} />
+          <NavItem icon={<RefreshCw />} label="Auto-Pilot Pipeline" active={currentView === 'autopilot'} onClick={() => setCurrentView('autopilot')} />
+          <NavItem icon={<Layers />} label="Ad Slots & Affiliates" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
+          <NavItem icon={<ShieldCheck />} label="System Health" active={currentView === 'health'} onClick={() => setCurrentView('health')} />
+          <NavItem icon={<BarChart />} label="SEO Keywords" active={currentView === 'seo'} onClick={() => setCurrentView('seo')} />
+          <NavItem icon={<Brain />} label="QA Gate Config" active={currentView === 'qaconfig'} onClick={() => setCurrentView('qaconfig')} />
         </nav>
 
         <div className="mt-auto bg-gray-900/50 p-4 rounded-xl border border-gray-800">
@@ -943,6 +955,67 @@ export default function NexusDashboard() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* NEW VIEW: PIPELINE CONTROL */}
+      {currentView === 'autopilot' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-10">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><RefreshCw className="w-8 h-8 text-blue-500" /> Autonomous Pipeline</h2>
+            <p className="text-gray-400 mt-2">Monitor and control the fully autonomous content engine — trend scout, QA gate, and publisher.</p>
+          </header>
+          <PipelineStatus />
+        </motion.div>
+      )}
+
+      {/* NEW VIEW: AD SLOT MANAGER */}
+      {currentView === 'adslots' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-10">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><Layers className="w-8 h-8 text-yellow-500" /> Ad Slot Manager</h2>
+            <p className="text-gray-400 mt-2">Control every ad unit across the entire network. Live toggles, kill switch, targeting, and rotation.</p>
+          </header>
+          <AdSlotManager />
+          <div className="mt-10">
+            <h3 className="text-xl font-bold mb-6 flex items-center gap-2"><Share2 className="w-5 h-5 text-green-400" /> Affiliate Link Manager</h3>
+            <AffiliateManager />
+          </div>
+        </motion.div>
+      )}
+
+      {/* NEW VIEW: SYSTEM HEALTH */}
+      {currentView === 'health' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-10">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><ShieldCheck className="w-8 h-8 text-green-500" /> System Health</h2>
+            <p className="text-gray-400 mt-2">Autonomous monitoring — site uptime, revenue anomalies, and alert feed.</p>
+          </header>
+          <AlertFeed />
+        </motion.div>
+      )}
+
+      {/* NEW VIEW: SEO & KEYWORDS */}
+      {currentView === 'seo' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-10">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><BarChart className="w-8 h-8 text-purple-500" /> SEO & Rising Keywords</h2>
+            <p className="text-gray-400 mt-2">Rising keyword opportunities — one click to generate a follow-up article and capture the ranking.</p>
+          </header>
+          <RisingKeywords />
+        </motion.div>
+      )}
+
+      {/* NEW VIEW: QA CONFIG */}
+      {currentView === 'qaconfig' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-10">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><Brain className="w-8 h-8 text-pink-500" /> AI QA Gate Config</h2>
+            <p className="text-gray-400 mt-2">Tune the AI self-reviewer thresholds, budget cap, and auto-publish behaviour without touching code.</p>
+          </header>
+          <QAConfigPanel />
+        </motion.div>
+      )}
+
+      <CookieConsent />
 
     </div>
   );
