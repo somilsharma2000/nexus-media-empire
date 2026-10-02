@@ -13,9 +13,11 @@
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "framer-motion": "^13.5.0",
+    "grammy": "^1.46.0",
     "lucide-react": "^1.49.0",
     "next": "14.2.35",
     "next-auth": "^5.0.0-beta.32",
+    "openai": "^7.27.0",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^3.7.0"

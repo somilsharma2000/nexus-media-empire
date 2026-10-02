@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import { 
@@ -9,6 +9,8 @@ import {
   Inbox, Share2, ShieldCheck
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import RevenueDashboard from "../components/RevenueDashboard";
+
 
 const TRENDS = [
   { id: 1, topic: "OpenAI Strawberry Model Leaks", score: 98, niche: "AI & Tech" },
@@ -394,14 +396,14 @@ export default function NexusDashboard() {
                       <h4 className="font-bold text-white text-lg mt-2">{trend.topic}</h4>
                     </div>
                     <span className={`text-xs font-bold px-2 py-1 rounded-full border ${trend.score > 90 ? 'bg-red-900/20 text-red-400 border-red-900/50' : 'bg-orange-900/20 text-orange-400 border-orange-900/50'}`}>
-                      🔥 {trend.score}/100 Virality
+                      ðŸ”¥ {trend.score}/100 Virality
                     </span>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-500 mt-4 pt-4 border-t border-gray-800/50">
                     <div className="flex items-center gap-1"><MessageSquare className="w-4 h-4" /> {(Math.random() * 5000 + 1000).toFixed(0)} mentions</div>
                     <div className="flex items-center gap-1"><Activity className="w-4 h-4" /> Rising Fast</div>
                     <button onClick={() => { setCurrentView('dashboard'); startGeneration(trend); }} className="ml-auto text-blue-400 hover:text-blue-300 font-semibold text-xs transition-colors">
-                      Send to Command Center →
+                      Send to Command Center â†’
                     </button>
                   </div>
                 </div>
@@ -947,7 +949,7 @@ export default function NexusDashboard() {
                       Back to Network
                     </button>
                     <button onClick={() => window.open('/news', '_blank')} className="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold flex items-center gap-2 shadow-[0_0_15px_rgba(37,99,235,0.4)] transition-all">
-                      <Globe className="w-4 h-4" /> View Live Site ↗
+                      <Globe className="w-4 h-4" /> View Live Site â†—
                     </button>
                   </>
                 ) : (

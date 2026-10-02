@@ -1,0 +1,5 @@
+{
+  "trend_scout": { "status": "active", "consecutiveFailures": 0 },
+  "qa_review": { "status": "active", "consecutiveFailures": 0 },
+  "publisher": { "status": "active", "consecutiveFailures": 0 }
+}

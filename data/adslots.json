@@ -1,0 +1,50 @@
+[
+  {
+    "id": "slot-1",
+    "name": "House - Mid Feed",
+    "siteTargeting": "all",
+    "placement": "midFeed",
+    "type": "house",
+    "headline": "Upgrade to Nexus Pro",
+    "description": "Automate your entire content operation.",
+    "ctaUrl": "http://localhost:3003",
+    "weight": 1,
+    "isActive": true,
+    "requiresDisclosure": false,
+    "priority": 1,
+    "adCode": "",
+    "frequencyCapPerUser": 0
+  },
+  {
+    "id": "slot-2",
+    "name": "Affiliate - Crypto Tools",
+    "siteTargeting": "crypto",
+    "placement": "sidebar",
+    "type": "affiliate",
+    "headline": "Best Crypto Portfolio Tracker",
+    "description": "Track your entire portfolio in real time.",
+    "ctaUrl": "http://localhost:3002/go/crypto-tracker",
+    "weight": 2,
+    "isActive": true,
+    "requiresDisclosure": true,
+    "priority": 2,
+    "adCode": "",
+    "frequencyCapPerUser": 0
+  },
+  {
+    "id": "slot-3",
+    "name": "House - Footer",
+    "siteTargeting": "all",
+    "placement": "footer",
+    "type": "house",
+    "headline": "Join 10,000 Readers",
+    "description": "Get the latest analysis delivered weekly.",
+    "ctaUrl": "#newsletter",
+    "weight": 1,
+    "isActive": true,
+    "requiresDisclosure": false,
+    "priority": 1,
+    "adCode": "",
+    "frequencyCapPerUser": 0
+  }
+]

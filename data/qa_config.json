@@ -1,0 +1,7 @@
+{
+  "approveThreshold": 8,
+  "reviseThreshold": 5,
+  "maxRevisionAttempts": 1,
+  "autoPublishApproved": true,
+  "requireQAForPublish": true
+}

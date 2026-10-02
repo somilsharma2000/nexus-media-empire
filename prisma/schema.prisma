@@ -20,12 +20,51 @@ model Article {
   publishedAt DateTime?
 }
 
-model AdConfig {
-  id                 String   @id @default(cuid())
-  headline           String
-  description        String?
-  buttonText         String
-  affiliateUrl       String
-  injectionFrequency Int      @default(3)
-  updatedAt          DateTime @updatedAt
+model AdSlot {
+  id                  String   @id @default(cuid())
+  name                String
+  siteTargeting       String   // "all", "news", "crypto", "finance"
+  placement           String   // "header", "inArticle", "midFeed", "sidebar", "footer"
+  type                String   // "adsense", "affiliate", "direct", "house"
+  adCode              String?  // HTML/JS code for adsense/direct
+  headline            String?  // For affiliate/house
+  description         String?  
+  ctaUrl              String?  // For affiliate/house
+  weight              Int      @default(1)
+  isActive            Boolean  @default(true)
+  requiresDisclosure  Boolean  @default(true)
+  frequencyCapPerUser Int      @default(0) // 0 means unlimited
+  priority            Int      @default(1)
+  updatedAt           DateTime @updatedAt
+}
+
+model ClickLog {
+  id        String   @id @default(cuid())
+  slug      String
+  targetUrl String
+  site      String?
+  device    String?
+  timestamp DateTime @default(now())
+}
+
+model AlertLog {
+  id        String   @id @default(cuid())
+  type      String   // 'site_down', 'revenue_drop', 'article_zero', 'ads_txt_fail'
+  message   String
+  severity  String   // 'info', 'warning', 'critical'
+  resolved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model AnalyticsCache {
+  id            String   @id @default(cuid())
+  site          String
+  todayRevenue  Float    @default(0)
+  weekRevenue   Float    @default(0)
+  monthRevenue  Float    @default(0)
+  pageviews     Int      @default(0)
+  rpm           Float    @default(0)
+  ctr           Float    @default(0)
+  syncedAt      DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

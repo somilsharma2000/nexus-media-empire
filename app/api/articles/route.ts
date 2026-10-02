@@ -99,7 +99,21 @@ export async function POST(req: Request) {
   articles.unshift(newArticle); 
   
   await fs.writeFile(dataFilePath, JSON.stringify(articles, null, 2));
-  
+
+  // Notify SEO system about the new article URL
+  try {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3002';
+    const articleUrl = `${siteUrl}/news/${newArticle.id}`;
+    await fetch(`${siteUrl}/api/seo/ping`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: articleUrl }),
+    });
+  } catch (pingErr) {
+    console.error('[SEO Ping] Failed to ping:', pingErr);
+  }
+
   return NextResponse.json({ success: true, article: newArticle });
 }
+
 
