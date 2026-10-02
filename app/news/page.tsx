@@ -36,8 +36,32 @@ export default function PublicNewsSite() {
   const sidebarArticles = articles.length > 1 ? articles.slice(1, 4) : [];
   const feedArticles = articles.length > 4 ? articles.slice(4) : [];
 
+  // Generate GEO/SEO JSON-LD Schema for AI Crawlers
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsMediaOrganization',
+    'name': 'The Trend Matrix',
+    'url': 'https://thetrendmatrix.com',
+    'mainEntityOfPage': {
+      '@type': 'CollectionPage',
+      '@id': 'https://thetrendmatrix.com/news'
+    },
+    'description': 'AI-driven technology and market analysis.',
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'Nexus Media Empire'
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#050505] text-gray-200 font-sans selection:bg-blue-500/30">
+      
+      {/* GEO/SEO Schema Injection */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       
       {/* Breaking News Ticker */}
       <div className="bg-blue-600 text-white text-xs font-bold uppercase tracking-widest py-1.5 px-4 flex items-center overflow-hidden whitespace-nowrap">
@@ -226,4 +250,5 @@ export default function PublicNewsSite() {
     </div>
   );
 }
+
 
