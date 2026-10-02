@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { sendTelegramAlert } from '@/lib/telegram';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,8 +53,19 @@ async function createAlert(alert: Omit<Alert, 'id' | 'resolved' | 'createdAt'>):
     console.log('[Monitor Alert]', newAlert);
   }
 
+  // Send Telegram alert for critical severity issues
+  if (newAlert.severity === 'critical') {
+    await sendTelegramAlert(
+      `🚨 <b>CRITICAL ALERT</b>\n` +
+      `${newAlert.message}\n` +
+      `Type: ${newAlert.type}\n` +
+      `Time: ${new Date(newAlert.createdAt).toUTCString()}`
+    );
+  }
+
   return newAlert;
 }
+
 
 export async function POST(request: Request) {
   const authHeader = request.headers.get('authorization');

@@ -3,20 +3,93 @@
 import React, { useEffect, useState } from "react";
 import { TrendingUp, Clock, ArrowRight, Share2, Menu, Search, Bookmark, ChevronRight, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import CookieConsent from "../../components/CookieConsent";
 
 interface Article { id: number; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; }
+
+interface AdSlot {
+  id: string;
+  name: string;
+  siteTargeting: string;
+  placement: string;
+  type: string;
+  headline: string;
+  description: string;
+  ctaUrl: string;
+  weight: number;
+  isActive: boolean;
+  requiresDisclosure: boolean;
+  priority: number;
+  frequencyCapPerUser: number;
+}
+
+/** Weighted random pick from array of slots */
+function pickByWeight(slots: AdSlot[]): AdSlot | null {
+  if (!slots.length) return null;
+  const total = slots.reduce((s, slot) => s + slot.weight, 0);
+  let rand = Math.random() * total;
+  for (const slot of slots) {
+    rand -= slot.weight;
+    if (rand <= 0) return slot;
+  }
+  return slots[slots.length - 1];
+}
+
+/** Check + update frequency cap using localStorage */
+function checkFrequencyCap(slot: AdSlot): boolean {
+  if (slot.frequencyCapPerUser <= 0) return true; // no cap
+  const key = `nexus_ad_shown_${slot.id}`;
+  const count = parseInt(localStorage.getItem(key) || "0", 10);
+  if (count >= slot.frequencyCapPerUser) return false;
+  localStorage.setItem(key, String(count + 1));
+  return true;
+}
+
+/** House ad fallback card */
+function HouseAdCard() {
+  return (
+    <div className="group cursor-pointer flex flex-col border border-gray-800 bg-gray-900/30 p-6 rounded-2xl h-[330px]"
+      onClick={() => window.open("http://localhost:3003", "_blank")}>
+      <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-4">- Advertisement -</span>
+      <h4 className="text-xl font-bold text-blue-400 leading-tight mb-2 group-hover:text-blue-300 transition-colors">
+        Upgrade to Nexus Pro
+      </h4>
+      <p className="text-gray-400 text-sm mb-4">Automate your entire content operation.</p>
+      <button className="mt-auto border border-blue-500/50 text-blue-400 hover:bg-blue-900/20 py-2 rounded-lg text-sm font-bold transition-colors">
+        Learn More →
+      </button>
+    </div>
+  );
+}
+
+/** Dynamic mid-feed ad card */
+function MidFeedAdCard({ slot }: { slot: AdSlot }) {
+  return (
+    <div className="group cursor-pointer flex flex-col border border-gray-800 bg-gray-900/30 p-6 rounded-2xl h-[330px]"
+      onClick={() => window.open(slot.ctaUrl, "_blank")}>
+      {slot.requiresDisclosure && (
+        <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">- Sponsored -</span>
+      )}
+      <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-4">- Advertisement -</span>
+      <h4 className="text-xl font-bold text-blue-400 leading-tight mb-2 group-hover:text-blue-300 transition-colors">
+        {slot.headline}
+      </h4>
+      <p className="text-gray-400 text-sm mb-4">{slot.description}</p>
+      <button className="mt-auto border border-blue-500/50 text-blue-400 hover:bg-blue-900/20 py-2 rounded-lg text-sm font-bold transition-colors">
+        Learn More →
+      </button>
+    </div>
+  );
+}
 
 export default function PublicNewsSite() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-  const [adData, setAdData] = useState<any>(null);
+  const [midFeedSlot, setMidFeedSlot] = useState<AdSlot | null>(null);
 
   const fetchArticles = async () => {
     try {
       const res = await fetch('/api/articles');
-      const adRes = await fetch('/api/ads');
-      const adJson = await adRes.json();
-      if(adJson.activeAd) setAdData(adJson.activeAd);
       const data = await res.json();
       setArticles(data);
     } catch (e) {
@@ -26,8 +99,30 @@ export default function PublicNewsSite() {
     }
   };
 
+  const fetchAds = async () => {
+    try {
+      const res = await fetch('/api/adslots');
+      const slots: AdSlot[] = await res.json();
+
+      // Filter: active, matching site (all or news), midFeed placement
+      const eligible = slots.filter(
+        (s) => s.isActive && (s.siteTargeting === "all" || s.siteTargeting === "news") && s.placement === "midFeed"
+      );
+
+      const picked = pickByWeight(eligible);
+      if (picked && checkFrequencyCap(picked)) {
+        setMidFeedSlot(picked);
+      } else {
+        setMidFeedSlot(null);
+      }
+    } catch {
+      setMidFeedSlot(null);
+    }
+  };
+
   useEffect(() => {
     fetchArticles();
+    fetchAds();
     const interval = setInterval(fetchArticles, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -90,7 +185,7 @@ export default function PublicNewsSite() {
             </div>
             <div className="hidden md:flex items-center gap-6 text-sm font-bold text-gray-400 ml-8">
               <span className="text-white hover:text-blue-400 cursor-pointer transition-colors">Technology</span>
-              <span className="hover:text-blue-400 cursor-pointer transition-colors">AI & Future</span>
+              <span className="hover:text-blue-400 cursor-pointer transition-colors">AI &amp; Future</span>
               <span className="hover:text-blue-400 cursor-pointer transition-colors">Markets</span>
               <span className="hover:text-blue-400 cursor-pointer transition-colors">Startups</span>
             </div>
@@ -210,19 +305,8 @@ export default function PublicNewsSite() {
                     </div>
                   ))}
 
-                  {/* Mid-feed Advertisement */}
-                  <div className="group cursor-pointer flex flex-col border border-gray-800 bg-gray-900/30 p-6 rounded-2xl h-[330px]" onClick={() => alert("Redirecting to sponsor...")}>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-4">- Advertisement -</span>
-                    <h4 className="text-xl font-bold text-blue-400 leading-tight mb-2 group-hover:text-blue-300 transition-colors">
-                      Need Enterprise Level SEO?
-                    </h4>
-                    <p className="text-gray-400 text-sm mb-4">
-                      Nexus generates 1,000+ AI optimized articles daily. Stop writing manually.
-                    </p>
-                    <button className="mt-auto border border-blue-500/50 text-blue-400 hover:bg-blue-900/20 py-2 rounded-lg text-sm font-bold transition-colors">
-                      Book a Demo Today
-                    </button>
-                  </div>
+                  {/* Mid-feed Advertisement — dynamic slot or house fallback */}
+                  {midFeedSlot ? <MidFeedAdCard slot={midFeedSlot} /> : <HouseAdCard />}
                 </div>
               </div>
             )}
@@ -247,9 +331,9 @@ export default function PublicNewsSite() {
           </div>
         </div>
       </footer>
+
+      {/* Cookie Consent Banner */}
+      <CookieConsent />
     </div>
   );
 }
-
-
-

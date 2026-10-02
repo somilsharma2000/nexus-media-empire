@@ -2,12 +2,86 @@
 
 import React, { useEffect, useState } from "react";
 import { TrendingUp, Clock, Share2, Menu, Search, Bookmark, ChevronRight, Zap } from "lucide-react";
+import CookieConsent from "../../components/CookieConsent";
 
 interface Article { id: number; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; }
+
+interface AdSlot {
+  id: string;
+  name: string;
+  siteTargeting: string;
+  placement: string;
+  type: string;
+  headline: string;
+  description: string;
+  ctaUrl: string;
+  weight: number;
+  isActive: boolean;
+  requiresDisclosure: boolean;
+  priority: number;
+  frequencyCapPerUser: number;
+}
+
+/** Weighted random pick */
+function pickByWeight(slots: AdSlot[]): AdSlot | null {
+  if (!slots.length) return null;
+  const total = slots.reduce((s, slot) => s + slot.weight, 0);
+  let rand = Math.random() * total;
+  for (const slot of slots) {
+    rand -= slot.weight;
+    if (rand <= 0) return slot;
+  }
+  return slots[slots.length - 1];
+}
+
+function checkFrequencyCap(slot: AdSlot): boolean {
+  if (slot.frequencyCapPerUser <= 0) return true;
+  const key = `nexus_ad_shown_${slot.id}`;
+  const count = parseInt(localStorage.getItem(key) || "0", 10);
+  if (count >= slot.frequencyCapPerUser) return false;
+  localStorage.setItem(key, String(count + 1));
+  return true;
+}
+
+function HouseAdCard() {
+  return (
+    <div className="group cursor-pointer border border-gray-900 hover:border-green-900/50 p-6 rounded-xl bg-[#040c06] flex flex-col gap-3"
+      onClick={() => window.open("http://localhost:3003", "_blank")}>
+      <span className="text-[10px] text-gray-600 uppercase tracking-widest font-bold">- Advertisement -</span>
+      <h4 className="text-xl font-bold text-green-400 leading-tight group-hover:text-green-300 transition-colors">
+        Upgrade to Nexus Pro
+      </h4>
+      <p className="text-gray-500 text-sm">Automate your entire content operation.</p>
+      <span className="mt-auto text-sm font-bold text-gray-400 flex items-center gap-1 group-hover:text-green-500 transition-colors">
+        Learn More <ChevronRight className="w-4 h-4"/>
+      </span>
+    </div>
+  );
+}
+
+function MidFeedAdCard({ slot }: { slot: AdSlot }) {
+  return (
+    <div className="group cursor-pointer border border-gray-900 hover:border-green-900/50 p-6 rounded-xl bg-[#040c06] flex flex-col gap-3"
+      onClick={() => window.open(slot.ctaUrl, "_blank")}>
+      {slot.requiresDisclosure && (
+        <span className="text-[10px] text-gray-600 uppercase tracking-widest font-bold">- Sponsored -</span>
+      )}
+      <span className="text-[10px] text-gray-600 uppercase tracking-widest font-bold">- Advertisement -</span>
+      <h4 className="text-xl font-bold text-green-400 leading-tight group-hover:text-green-300 transition-colors">
+        {slot.headline}
+      </h4>
+      <p className="text-gray-500 text-sm">{slot.description}</p>
+      <span className="mt-auto text-sm font-bold text-gray-400 flex items-center gap-1 group-hover:text-green-500 transition-colors">
+        Learn More <ChevronRight className="w-4 h-4"/>
+      </span>
+    </div>
+  );
+}
 
 export default function CryptoSite() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [midFeedSlot, setMidFeedSlot] = useState<AdSlot | null>(null);
 
   const fetchArticles = async () => {
     try {
@@ -23,8 +97,27 @@ export default function CryptoSite() {
     }
   };
 
+  const fetchAds = async () => {
+    try {
+      const res = await fetch('/api/adslots');
+      const slots: AdSlot[] = await res.json();
+      const eligible = slots.filter(
+        (s) => s.isActive && (s.siteTargeting === "all" || s.siteTargeting === "crypto") && s.placement === "midFeed"
+      );
+      const picked = pickByWeight(eligible);
+      if (picked && checkFrequencyCap(picked)) {
+        setMidFeedSlot(picked);
+      } else {
+        setMidFeedSlot(null);
+      }
+    } catch {
+      setMidFeedSlot(null);
+    }
+  };
+
   useEffect(() => {
     fetchArticles();
+    fetchAds();
     const interval = setInterval(fetchArticles, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -109,11 +202,16 @@ export default function CryptoSite() {
                   <span className="mt-auto text-sm font-bold text-gray-400 flex items-center gap-1 group-hover:text-green-500 transition-colors">Read Report <ChevronRight className="w-4 h-4"/></span>
                 </div>
               ))}
+
+              {/* Mid-feed Ad — dynamic or house fallback */}
+              {midFeedSlot ? <MidFeedAdCard slot={midFeedSlot} /> : <HouseAdCard />}
             </div>
           </>
         )}
       </main>
+
+      {/* Cookie Consent Banner */}
+      <CookieConsent />
     </div>
   );
 }
-

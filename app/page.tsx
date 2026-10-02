@@ -247,44 +247,10 @@ export default function NexusDashboard() {
               </div>
             </div>
 
-            {/* Network Monetization Chart */}
-            <div className="bg-gray-900/40 border border-gray-800 p-6 rounded-xl mb-8 relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-900/10 to-purple-900/10 opacity-50"></div>
-              <div className="relative z-10 flex justify-between items-end mb-8">
-                <div>
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2"><LineChart className="w-5 h-5 text-blue-400"/> Network Monetization</h3>
-                  <p className="text-sm text-gray-400 mt-1">Traffic and ad-revenue correlation across all active subdomains (Last 30 Days)</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-400 font-semibold mb-1">Projected 30-Day Revenue</p>
-                  <p className="text-3xl font-bold text-green-400 flex items-center gap-2 justify-end">
-                    <TrendingUp className="w-6 h-6" /> $12,450.00
-                  </p>
-                </div>
-              </div>
-              
-              <div className="h-40 flex items-end gap-1.5 w-full relative z-10">
-                {[...Array(30)].map((_, i) => {
-                  // Mathematical upward trend simulation (Deterministic to prevent Hydration errors)
-                  const base = 20;
-                  // Pseudo-random volatility based on index so Server and Client match perfectly
-                  const volatility = (Math.sin(i * 87.5) + 1) * 15; 
-                  const growth = i * 1.8;
-                  const height = Math.min(base + volatility + growth, 100); 
-                  
-                  return (
-                    <div 
-                      key={i} 
-                      className="flex-1 bg-blue-900/40 border-t border-blue-500/30 hover:bg-blue-500 hover:border-blue-400 transition-all duration-300 rounded-t-sm cursor-crosshair relative group/bar" 
-                      style={{ height: `${height}%` }}
-                    >
-                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-black border border-gray-700 text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover/bar:opacity-100 pointer-events-none text-green-400 font-mono z-50 transition-opacity shadow-lg">
-                        ${Math.floor(height * 14.5)}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
+            {/* Network Monetization — Real Revenue Dashboard */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><LineChart className="w-5 h-5 text-blue-400"/> Network Monetization</h3>
+              <RevenueDashboard />
             </div>
 
             <h3 className="text-lg font-semibold mb-4 border-b border-gray-800 pb-2">Live Trend Scraper</h3>
@@ -568,6 +534,11 @@ export default function NexusDashboard() {
               <h2 className="text-3xl font-bold flex items-center gap-3"><TrendingUp className="w-8 h-8 text-green-500" /> Monetization Engine</h2>
               <p className="text-gray-400 mt-2">Automate revenue generation. Configure ad networks and auto-inject affiliate links.</p>
             </header>
+
+            {/* Real Revenue Dashboard */}
+            <div className="mb-8">
+              <RevenueDashboard />
+            </div>
 
             <div className="grid md:grid-cols-2 gap-8 mb-8">
               {/* Affiliate Auto-Injector */}
@@ -997,8 +968,6 @@ function TabButton({ icon, label, active, onClick }: { icon: React.ReactNode, la
     </button>
   );
 }
-
-
 
 
 

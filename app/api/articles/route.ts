@@ -88,8 +88,13 @@ export async function POST(req: Request) {
     time: 'Just now',
     excerpt: excerpt,
     content: body.content,
-    image: "bg-gradient-to-br from-blue-900 to-black", // Dynamic gradient
-    featured: true // Newest is featured
+    metaDescription: body.metaDescription || '',
+    tweets: body.tweets || [],
+    image: "bg-gradient-to-br from-blue-900 to-black",
+    featured: true,
+    status: 'draft',
+    qaStatus: 'pending',
+    qaVerdict: null,
   };
   
   // Demote previous featured articles
@@ -99,6 +104,28 @@ export async function POST(req: Request) {
   articles.unshift(newArticle); 
   
   await fs.writeFile(dataFilePath, JSON.stringify(articles, null, 2));
+
+  // ── Auto-run QA review if API key is available ───────────────────────────
+  let qaVerdict = null;
+  if (process.env.OPENAI_API_KEY) {
+    try {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3002';
+      const qaRes = await fetch(`${siteUrl}/api/qa-review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          articleId: String(newArticle.id),
+          content: newArticle.content,
+        }),
+      });
+      if (qaRes.ok) {
+        const qaData = await qaRes.json();
+        qaVerdict = qaData.verdict ?? null;
+      }
+    } catch (qaErr) {
+      console.error('[QA Auto-Review] Failed:', qaErr);
+    }
+  }
 
   // Notify SEO system about the new article URL
   try {
@@ -113,7 +140,5 @@ export async function POST(req: Request) {
     console.error('[SEO Ping] Failed to ping:', pingErr);
   }
 
-  return NextResponse.json({ success: true, article: newArticle });
+  return NextResponse.json({ success: true, article: newArticle, qaVerdict });
 }
-
-
