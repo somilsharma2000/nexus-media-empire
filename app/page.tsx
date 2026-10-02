@@ -444,6 +444,11 @@ export default function NexusDashboard() {
               <p className="text-gray-400 mt-2">Macro-level performance monitoring across all domains powered by the Nexus Engine.</p>
             </header>
 
+            {/* Revenue overview — pulls from AdSense API */}
+            <div className="mb-8">
+              <RevenueDashboard />
+            </div>
+
             <div className="grid grid-cols-4 gap-6 mb-8">
               <div className="bg-gray-900/50 border border-gray-800 p-6 rounded-xl">
                 <p className="text-xs text-gray-500 font-bold uppercase mb-2">Total Pageviews (30D)</p>
@@ -968,6 +973,5 @@ function TabButton({ icon, label, active, onClick }: { icon: React.ReactNode, la
     </button>
   );
 }
-
 
 
