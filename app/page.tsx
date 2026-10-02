@@ -219,6 +219,28 @@ export default function NexusDashboard() {
               <StatCard title="Est. Revenue Impact" value={`$${(assetCount * 8.73).toFixed(0)}`} icon={<Activity className="w-5 h-5 text-green-400" />} onClick={() => setCurrentView('revenue')} />
             </div>
 
+            {/* CRON Auto-Pilot Scheduler */}
+            <div className="bg-gradient-to-r from-gray-900 to-black border border-gray-800 p-6 rounded-xl mb-8 flex items-center justify-between shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-blue-900/30 rounded-lg flex items-center justify-center border border-blue-800/50">
+                  <RefreshCw className="w-6 h-6 text-blue-400 animate-spin" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2">CRON Auto-Pilot Scheduler</h3>
+                  <p className="text-sm text-gray-400">System is autonomously scraping trends and publishing to 15 domains.</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <div className="text-right">
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-1">Next Run In</p>
+                  <p className="text-xl font-mono text-white">01:42:15</p>
+                </div>
+                <button onClick={() => alert('Auto-Pilot paused. System requires manual approval for publishing.')} className="px-6 py-2 bg-red-900/40 hover:bg-red-900/60 text-red-400 border border-red-900/50 rounded-lg font-bold transition-all text-sm">
+                  Pause System
+                </button>
+              </div>
+            </div>
+
             {/* Network Monetization Chart */}
             <div className="bg-gray-900/40 border border-gray-800 p-6 rounded-xl mb-8 relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-900/10 to-purple-900/10 opacity-50"></div>

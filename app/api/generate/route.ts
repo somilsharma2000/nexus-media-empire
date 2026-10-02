@@ -1,48 +1,54 @@
 import { NextResponse } from 'next/server';
 
-// This is a production-ready API route structure. 
-// Right now it uses an advanced templating engine to generate highly realistic mock data.
-// To use real AI, you just replace the mock response with an OpenAI/Gemini API call here.
-
 export async function POST(request: Request) {
   try {
     const { topic, niche } = await request.json();
-
-    // Simulate the time it takes for an LLM to generate content (3 seconds)
     await new Promise((resolve) => setTimeout(resolve, 3500));
 
-    // Generate highly realistic contextual content based on what the user clicked
-    const blogDraft = `
-# Why ${topic} is Changing Everything in 2026
-
-The digital landscape is shifting faster than ever. If you've been paying attention to the ${niche} space recently, you know that **${topic}** isn't just a buzzword—it's a massive paradigm shift.
-
-## The Core Impact
-Experts are already seeing up to a 400% increase in efficiency for early adopters. The reason is simple: it eliminates the traditional bottlenecks that have plagued the industry for the last decade.
-
-### What You Need To Do Right Now:
-1. **Audit your current stack:** Are you prepared for this integration?
-2. **Train your team:** The learning curve is steep but necessary.
-3. **Deploy early:** First-mover advantage in ${niche} has never been more critical.
-
-*Conclusion: Don't get left behind. The companies that adapt to ${topic} today will own tomorrow.*
-    `.trim();
-
-    const tweets = [
-      `🚨 BIG UPDATE IN ${niche.toUpperCase()}: ${topic} is officially here. \n\nIf you aren't paying attention, you are going to fall behind. Here is a quick thread on why this changes everything. 🧵 1/4`,
-      `Most people think ${topic} is just a minor update. They are wrong. It completely fundamentally rewires how we handle operations. 2/4`,
-      `I've spent the last 24 hours diving deep into this. The biggest takeaway? The barrier to entry just dropped to zero. 3/4`,
-      `Are you implementing this yet? Drop a ⚡ in the replies if you are adapting, or ask your questions below. Let's build! 4/4`
+    const templates = [
+      {
+        type: 'Deep Dive',
+        blog: `# The Silent Rise of ${topic}\n\nWhile the mainstream media is distracted, the ${niche} sector is undergoing a massive transformation. **${topic}** is no longer a fringe concept; it is the foundation of the next decade.\n\n## The Data Speaks\nRecent metrics show a 310% surge in enterprise adoption. Why? Because the legacy systems are breaking.\n\n### Three Things You Must Know:\n* **Cost Efficiency:** Overhead is reduced by nearly 40%.\n* **Scalability:** It scales infinitely without human bottlenecks.\n* **Security:** Cryptographic protocols ensure zero data leaks.\n\nAre you positioned for this shift?`,
+        tweets: [
+          `🚨 BREAKING: ${topic} is quietly taking over the ${niche} space. \n\nHere is what the media isn't telling you. 🧵 1/4`,
+          `Legacy systems are dying. We are seeing a 310% surge in adoption for ${topic}. The cost efficiency alone is staggering. 2/4`,
+          `The best part? It scales infinitely. No more human bottlenecks. No more data leaks. 3/4`,
+          `If you are building in ${niche} and ignoring this, you are NGMI. Drop your thoughts below. 👇 4/4`
+        ],
+        image: `A hyper-realistic, highly detailed macro shot of a glowing microchip representing ${topic}, dark cinematic lighting, glowing blue and purple circuitry, 8k resolution, Unreal Engine 5 render --ar 16:9`
+      },
+      {
+        type: 'Listicle',
+        blog: `# 5 Reasons ${topic} Will Dominate in 2026\n\nIf you work in ${niche}, you need to pay attention. The landscape is shifting, and **${topic}** is leading the charge. Here are the top 5 reasons why.\n\n## 1. Unprecedented ROI\nEarly investors are seeing returns that defy traditional market logic.\n\n## 2. Regulatory Tailwinds\nNew frameworks are actually *encouraging* innovation in this space.\n\n## 3. The Talent Migration\nTop engineers from FAANG are leaving to build in this ecosystem.\n\n## 4. Decentralization\nPower is shifting back to the users.\n\n## 5. Mainstream Adoption\nIt's no longer just for tech insiders.\n\nDon't get left behind.`,
+        tweets: [
+          `Top 5 reasons ${topic} will completely dominate the ${niche} market by 2026. \n\nA quick thread 🧵👇 1/5`,
+          `1. Unprecedented ROI. Early adopters are seeing returns that defy logic.\n2. Regulatory tailwinds. The government is finally getting out of the way. 2/5`,
+          `3. Brain Drain. Top FAANG engineers are quietly migrating to build ${topic} infrastructure. 3/5`,
+          `4. True decentralization.\n5. Mainstream adoption is here. It's not just a tech-bubble anymore. 4/5`,
+          `Are you positioned for the shift? Bookmark this thread and check back in 12 months. 📈 5/5`
+        ],
+        image: `A stunning minimalist digital art piece representing ${topic}, clean lines, isometric perspective, corporate tech style, white and electric blue color palette, 8k --ar 16:9`
+      },
+      {
+        type: 'News Report',
+        blog: `# BREAKING: Major Shift in ${topic} Shakes the ${niche} Industry\n\n**San Francisco, CA** — In a stunning development today, insiders revealed a massive pivot regarding **${topic}**. \n\n## What Happened?\nFor months, rumors circulated about systemic changes in the ${niche} sector. Today, those rumors were validated. The integration of ${topic} into core infrastructure is happening faster than anyone predicted.\n\n"We are looking at a fundamental rewiring of how business operates," said one lead engineer. \n\n## Market Reaction\nMarkets have responded aggressively, with related assets surging. As this story develops, one thing is clear: the old way of doing things is officially dead.`,
+        tweets: [
+          `⚠️ MASSIVE UPDATE IN ${niche.toUpperCase()} ⚠️\n\nThe rumors about ${topic} were true. Everything is changing. 🧵 1/3`,
+          `Insiders just confirmed that the integration of ${topic} into core infrastructure is happening 10x faster than predicted. "A fundamental rewiring." 2/3`,
+          `The old way of doing things is dead. Markets are already pricing this in. Are you paying attention? 3/3`
+        ],
+        image: `A futuristic trading floor or command center, holographic data screens displaying information about ${topic}, cinematic lighting, photorealistic, depth of field --ar 16:9`
+      }
     ];
 
-    const imagePrompt = `A futuristic, hyper-realistic cinematic 3D render representing ${topic} in the style of cyberpunk neon lighting. Deep blues and electric purples, highly detailed, 8k resolution, trending on ArtStation, Unreal Engine 5 render --ar 16:9 --v 6.0`;
+    const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
 
     return NextResponse.json({
       success: true,
       data: {
-        blog: blogDraft,
-        tweets: tweets,
-        imagePrompt: imagePrompt
+        blog: randomTemplate.blog,
+        tweets: randomTemplate.tweets,
+        imagePrompt: randomTemplate.image
       }
     });
   } catch {
