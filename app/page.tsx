@@ -29,6 +29,8 @@ interface GenerationResults { blog?: string; tweets?: string[]; systemPrompt?: s
 
 export default function NexusDashboard() {
   const [currentView, setCurrentView] = useState("dashboard");
+  const [toast, setToast] = useState<{message: string, type: string} | null>(null);
+  const showToast = (message: string, type = 'success') => { setToast({message, type}); setTimeout(() => setToast(null), 3000); };
   const [selectedTrend, setSelectedTrend] = useState<Trend | null>(null);
   
   // Generation & Results States
@@ -103,7 +105,7 @@ export default function NexusDashboard() {
     setTimeout(() => {
       setIsPublishing(false);
       setIsPublished(true);
-      setAssetCount(prev => prev + 3); // 3 assets per generation
+      setAssetCount(prev => prev + 3); showToast('Assets successfully published!'); setTimeout(() => { setShowModal(false); setCurrentView('dashboard'); }, 1500);
     }, 2000);
   };
 
@@ -156,7 +158,7 @@ export default function NexusDashboard() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert("Copied to clipboard!");
+    showToast("Copied to clipboard!");
   };
 
   return (
@@ -235,7 +237,7 @@ export default function NexusDashboard() {
                   <p className="text-xs text-gray-500 font-bold uppercase mb-1">Next Run In</p>
                   <p className="text-xl font-mono text-white">01:42:15</p>
                 </div>
-                <button onClick={() => alert('Auto-Pilot paused. System requires manual approval for publishing.')} className="px-6 py-2 bg-red-900/40 hover:bg-red-900/60 text-red-400 border border-red-900/50 rounded-lg font-bold transition-all text-sm">
+                <button onClick={() => showToast('Auto-Pilot paused. System requires manual approval for publishing.')} className="px-6 py-2 bg-red-900/40 hover:bg-red-900/60 text-red-400 border border-red-900/50 rounded-lg font-bold transition-all text-sm">
                   Pause System
                 </button>
               </div>
@@ -432,9 +434,9 @@ export default function NexusDashboard() {
                   </div>
                 </div>
                 <div className="p-4 bg-black/40 flex justify-end gap-4">
-                  <button onClick={() => alert('Asset rejected. Feedback loop initiated to retrain the writing model.')} className="px-6 py-2 text-sm font-bold text-red-400 hover:text-red-300 transition-colors">Reject & Retrain AI</button>
-                  <button onClick={() => alert('Opening rich text Markdown editor...')} className="px-6 py-2 text-sm font-bold bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors flex items-center gap-2"><Code2 className="w-4 h-4"/> Edit Markdown</button>
-                  <button onClick={() => alert('Asset approved! Syndicating to the Empire Network...')} className="px-6 py-2 text-sm font-bold bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors shadow-[0_0_15px_rgba(34,197,94,0.3)]">Approve & Publish</button>
+                  <button onClick={() => showToast('Asset rejected. Feedback loop initiated to retrain the writing model.', 'error')} className="px-6 py-2 text-sm font-bold text-red-400 hover:text-red-300 transition-colors">Reject & Retrain AI</button>
+                  <button onClick={() => showToast('Opening rich text Markdown editor...')} className="px-6 py-2 text-sm font-bold bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors flex items-center gap-2"><Code2 className="w-4 h-4"/> Edit Markdown</button>
+                  <button onClick={() => showToast('Asset approved! Syndicating to the Empire Network...')} className="px-6 py-2 text-sm font-bold bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors shadow-[0_0_15px_rgba(34,197,94,0.3)]">Approve & Publish</button>
                 </div>
               </div>
 
@@ -455,9 +457,9 @@ export default function NexusDashboard() {
                   </div>
                 </div>
                 <div className="p-4 bg-black/40 flex justify-end gap-4">
-                  <button onClick={() => alert('Asset rejected. Feedback loop initiated to retrain the writing model.')} className="px-6 py-2 text-sm font-bold text-red-400 hover:text-red-300 transition-colors">Reject & Retrain AI</button>
-                  <button onClick={() => alert('Opening rich text Markdown editor...')} className="px-6 py-2 text-sm font-bold bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors flex items-center gap-2"><Code2 className="w-4 h-4"/> Edit Markdown</button>
-                  <button onClick={() => alert('Asset approved! Syndicating to the Empire Network...')} className="px-6 py-2 text-sm font-bold bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors shadow-[0_0_15px_rgba(34,197,94,0.3)]">Approve & Publish</button>
+                  <button onClick={() => showToast('Asset rejected. Feedback loop initiated to retrain the writing model.', 'error')} className="px-6 py-2 text-sm font-bold text-red-400 hover:text-red-300 transition-colors">Reject & Retrain AI</button>
+                  <button onClick={() => showToast('Opening rich text Markdown editor...')} className="px-6 py-2 text-sm font-bold bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors flex items-center gap-2"><Code2 className="w-4 h-4"/> Edit Markdown</button>
+                  <button onClick={() => showToast('Asset approved! Syndicating to the Empire Network...')} className="px-6 py-2 text-sm font-bold bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors shadow-[0_0_15px_rgba(34,197,94,0.3)]">Approve & Publish</button>
                 </div>
               </div>
             </div>
@@ -616,7 +618,7 @@ export default function NexusDashboard() {
                     <p className="text-sm text-gray-400 mb-4">Ad units are automatically injected into the sidebar, mid-article, and footer of all Nexus-generated properties.</p>
                   </div>
                   
-                  <button onClick={() => alert('Payout request for $610.56 submitted. Funds will arrive in 3-5 business days.')} className="w-full py-4 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-bold transition-all flex justify-center items-center gap-2">
+                  <button onClick={() => showToast('Payout request for $610.56 submitted. Funds will arrive in 3-5 business days.')} className="w-full py-4 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-bold transition-all flex justify-center items-center gap-2">
                     <Lock className="w-4 h-4" /> Request AdSense Payout (Net 30)
                   </button>
                 </div>
@@ -630,7 +632,7 @@ export default function NexusDashboard() {
                   <h3 className="text-xl font-bold text-white flex items-center gap-2"><Layers className="w-5 h-5 text-purple-400"/> Global Ad Slot Control (Admin)</h3>
                   <p className="text-sm text-gray-400 mt-1">Directly inject your raw AdSense, Header Bidding, or Native Ad code across the entire 15-site network.</p>
                 </div>
-                <button onClick={() => alert('Ad Tags successfully injected across all 15 domains in the Empire Network.')} className="px-6 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-bold transition-all shadow-[0_0_15px_rgba(147,51,234,0.3)]">
+                <button onClick={() => showToast('Ad Tags successfully injected across all 15 domains in the Empire Network.')} className="px-6 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-bold transition-all shadow-[0_0_15px_rgba(147,51,234,0.3)]">
                   Deploy to All Sites
                 </button>
               </div>
@@ -811,7 +813,7 @@ export default function NexusDashboard() {
                       </div>
                       <div className="flex gap-2">
                         <input type="password" value="sk-proj-a9F8jL2pXmN4qQ7..." readOnly className="flex-1 bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-gray-500 font-mono focus:outline-none" />
-                        <button onClick={() => alert('API Key verified.')} className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-semibold">Edit</button>
+                        <button onClick={() => showToast('API Key verified.')} className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-semibold">Edit</button>
                       </div>
                     </div>
                     
@@ -823,7 +825,7 @@ export default function NexusDashboard() {
                       </div>
                       <div className="flex gap-2">
                         <input type="password" value="mj-api-v6-9x882ndP..." readOnly className="flex-1 bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-gray-500 font-mono focus:outline-none" />
-                        <button onClick={() => alert('API Key verified.')} className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-semibold">Edit</button>
+                        <button onClick={() => showToast('API Key verified.')} className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-semibold">Edit</button>
                       </div>
                     </div>
 
@@ -833,14 +835,14 @@ export default function NexusDashboard() {
                         <div className="flex items-center gap-2 text-white font-bold"><MessageSquare className="w-4 h-4 text-blue-400"/> X (Twitter) Pro API</div>
                         <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 bg-red-900/30 text-red-400 border border-red-900/50 rounded">Disconnected</span>
                       </div>
-                      <button onClick={() => alert('OAuth flow initiated. Connecting to X API v2...')} className="w-full py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white rounded text-sm font-semibold flex items-center justify-center gap-2 transition-colors">
+                      <button onClick={() => showToast('OAuth flow initiated. Connecting to X API v2...')} className="w-full py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white rounded text-sm font-semibold flex items-center justify-center gap-2 transition-colors">
                         <Key className="w-4 h-4" /> Link OAuth App
                       </button>
                     </div>
                   </div>
                 </div>
                 
-                <button onClick={() => alert('Configuration Saved. Changes will apply to all future asset generations.')} className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all">
+                <button onClick={() => showToast('Configuration Saved. Changes will apply to all future asset generations.')} className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all">
                   Save Configuration
                 </button>
               </div>
