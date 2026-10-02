@@ -1,0 +1,18 @@
+                  {/* Mid-feed Advertisement */}
+                  {adData && (
+                    <div className="group cursor-pointer flex flex-col border border-gray-800 bg-gray-900/30 p-6 rounded-2xl h-[330px]" onClick={() => window.open(adData.url, '_blank')}>
+                      <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-4">- Advertisement -</span>
+                      <h4 className="text-xl font-bold text-blue-400 leading-tight mb-2 group-hover:text-blue-300 transition-colors">
+                        {adData.title}
+                      </h4>
+                      <p className="text-gray-400 text-sm mb-4">
+                        {adData.description}
+                      </p>
+                      <button className="mt-auto border border-blue-500/50 text-blue-400 hover:bg-blue-900/20 py-2 rounded-lg text-sm font-bold transition-colors">
+                        {adData.buttonText}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}

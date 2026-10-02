@@ -9,10 +9,14 @@ interface Article { id: number; title: string; category: string; time: string; e
 export default function PublicNewsSite() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [adData, setAdData] = useState<any>(null);
 
   const fetchArticles = async () => {
     try {
       const res = await fetch('/api/articles');
+      const adRes = await fetch('/api/ads');
+      const adJson = await adRes.json();
+      if(adJson.activeAd) setAdData(adJson.activeAd);
       const data = await res.json();
       setArticles(data);
     } catch (e) {
@@ -222,3 +226,4 @@ export default function PublicNewsSite() {
     </div>
   );
 }
+

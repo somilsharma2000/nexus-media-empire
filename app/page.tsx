@@ -32,6 +32,8 @@ export default function NexusDashboard() {
   const [toast, setToast] = useState<{message: string, type: string} | null>(null);
   const showToast = (message: string, type = 'success') => { setToast({message, type}); setTimeout(() => setToast(null), 3000); };
   const [selectedTrend, setSelectedTrend] = useState<Trend | null>(null);
+  const [adConfig, setAdConfig] = useState({ title: 'Need Enterprise Level SEO?', description: 'Nexus generates 1,000+ AI optimized articles daily.', buttonText: 'Book a Demo Today', url: 'https://nexus-saas.com', injectionFrequency: 3 });
+  const saveAdConfig = async () => { try { await fetch('/api/ads', { method: 'POST', body: JSON.stringify({ activeAd: adConfig }) }); showToast('Monetization settings deployed across network!'); } catch { showToast('Failed to deploy', 'error'); } };
   
   // Generation & Results States
   const [isGenerating, setIsGenerating] = useState(false);
@@ -595,37 +597,40 @@ export default function NexusDashboard() {
                 </div>
               </div>
 
-              {/* Programmatic Ad Networks */}
+              {/* Dynamic Ad Injection Control */}
               <div className="bg-gray-900/50 border border-gray-800 p-8 rounded-xl relative overflow-hidden group">
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><Globe className="w-5 h-5 text-blue-400"/> Programmatic SEO Ads</h3>
-                    <span className="text-xs font-bold text-blue-400 border border-blue-900/50 bg-blue-900/20 px-3 py-1 rounded-full">RPM: $14.50</span>
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><Globe className="w-5 h-5 text-blue-400"/> Dynamic Ad Injection</h3>
+                    <button onClick={saveAdConfig} className="text-xs font-bold text-white border border-blue-600 bg-blue-600 hover:bg-blue-500 px-4 py-1.5 rounded transition-colors shadow-[0_0_15px_rgba(37,99,235,0.4)]">DEPLOY TO NETWORK</button>
                   </div>
                   
-                  <div className="flex-1">
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                      <div className="bg-black border border-gray-800 p-4 rounded-lg">
-                        <div className="text-xs text-gray-500 mb-1">Today&apos;s Traffic</div>
-                        <div className="text-2xl font-bold text-white">42,108</div>
+                  <div className="flex-1 space-y-4">
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 block">Ad Headline</label>
+                      <input type="text" value={adConfig.title} onChange={e => setAdConfig({...adConfig, title: e.target.value})} className="w-full bg-black border border-gray-800 rounded p-2 text-white text-sm focus:border-blue-500 outline-none" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 block">Sub-text / Pitch</label>
+                      <input type="text" value={adConfig.description} onChange={e => setAdConfig({...adConfig, description: e.target.value})} className="w-full bg-black border border-gray-800 rounded p-2 text-white text-sm focus:border-blue-500 outline-none" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 block">Button Text</label>
+                        <input type="text" value={adConfig.buttonText} onChange={e => setAdConfig({...adConfig, buttonText: e.target.value})} className="w-full bg-black border border-gray-800 rounded p-2 text-white text-sm focus:border-blue-500 outline-none" />
                       </div>
-                      <div className="bg-black border border-gray-800 p-4 rounded-lg">
-                        <div className="text-xs text-gray-500 mb-1">Est. Earnings</div>
-                        <div className="text-2xl font-bold text-green-400">$610.56</div>
+                      <div>
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 block">Target URL</label>
+                        <input type="text" value={adConfig.url} onChange={e => setAdConfig({...adConfig, url: e.target.value})} className="w-full bg-black border border-gray-800 rounded p-2 text-white text-sm focus:border-blue-500 outline-none" />
                       </div>
                     </div>
-                    
-                    <p className="text-sm text-gray-400 mb-4">Ad units are automatically injected into the sidebar, mid-article, and footer of all Nexus-generated properties.</p>
                   </div>
-                  
-                  <button onClick={() => showToast('Payout request for $610.56 submitted. Funds will arrive in 3-5 business days.')} className="w-full py-4 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-bold transition-all flex justify-center items-center gap-2">
-                    <Lock className="w-4 h-4" /> Request AdSense Payout (Net 30)
-                  </button>
                 </div>
               </div>
             </div>
 
             {/* Global Ad Slot Control */}
+
             <div className="bg-gray-900/50 border border-gray-800 p-8 rounded-xl">
               <div className="flex justify-between items-center mb-6">
                 <div>
@@ -990,3 +995,4 @@ function TabButton({ icon, label, active, onClick }: { icon: React.ReactNode, la
     </button>
   );
 }
+
