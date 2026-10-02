@@ -34,7 +34,7 @@ const AGENT_SKILLS = [
 ];
 
 interface Trend { id: number; topic: string; niche: string; score: number; }
-interface GenerationResults { blog?: string; tweets?: string[]; systemPrompt?: string; }
+interface GenerationResults { blog?: string; tweets?: string[]; systemPrompt?: string; imagePrompt?: string; }
 
 export default function NexusDashboard() {
   const [currentView, setCurrentView] = useState("dashboard");
@@ -910,11 +910,11 @@ export default function NexusDashboard() {
                     <TabButton active={activeTab === 'media'} onClick={() => setActiveTab('media')} icon={<ImageIcon />} label="Image Prompts" />
                   </div>
                   <div className="flex-1 p-6 overflow-y-auto bg-black relative group">
-                    <button onClick={() => copyToClipboard(activeTab === 'blog' ? results.blog : activeTab === 'twitter' ? results.tweets.join('\n\n') : results.imagePrompt)} className="absolute top-6 right-6 p-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-300 opacity-0 group-hover:opacity-100 flex items-center gap-2 text-sm">
+                    <button onClick={() => copyToClipboard(activeTab === 'blog' ? (results.blog ?? '') : activeTab === 'twitter' ? (results.tweets ?? []).join('\n\n') : (results.imagePrompt ?? ''))} className="absolute top-6 right-6 p-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-300 opacity-0 group-hover:opacity-100 flex items-center gap-2 text-sm">
                       <Copy className="w-4 h-4" /> Copy
                     </button>
                     {activeTab === 'blog' && <div className="prose prose-invert max-w-none"><pre className="text-gray-300 font-sans whitespace-pre-wrap">{results.blog}</pre></div>}
-                    {activeTab === 'twitter' && <div className="flex flex-col gap-4">{results.tweets.map((tweet: string, idx: number) => <div key={idx} className="bg-gray-900 border border-gray-800 p-4 rounded-xl max-w-xl"><div className="flex items-center gap-2 mb-2 text-gray-400"><MessageSquare className="w-4 h-4 text-blue-400" /><span className="text-xs font-semibold">Tweet {idx + 1}</span></div><p className="text-gray-200">{tweet}</p></div>)}</div>}
+                    {activeTab === 'twitter' && <div className="flex flex-col gap-4">{(results.tweets ?? []).map((tweet: string, idx: number) => <div key={idx} className="bg-gray-900 border border-gray-800 p-4 rounded-xl max-w-xl"><div className="flex items-center gap-2 mb-2 text-gray-400"><MessageSquare className="w-4 h-4 text-blue-400" /><span className="text-xs font-semibold">Tweet {idx + 1}</span></div><p className="text-gray-200">{tweet}</p></div>)}</div>}
                     {activeTab === 'media' && <div className="bg-gray-900 border border-gray-800 p-6 rounded-xl"><h4 className="text-sm font-semibold text-gray-400 mb-2 uppercase tracking-wider">Midjourney / DALL-E Prompt</h4><code className="text-blue-400 font-mono text-sm block bg-black p-4 rounded border border-gray-800">{results.imagePrompt}</code></div>}
                   </div>
                 </div>

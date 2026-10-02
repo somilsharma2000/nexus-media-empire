@@ -31,10 +31,16 @@ async function fetchTrends(feedUrl: string): Promise<string[]> {
   const res = await fetch(feedUrl, { next: { revalidate: 0 } });
   if (!res.ok) throw new Error(`RSS fetch failed: ${res.status} ${feedUrl}`);
   const xml = await res.text();
-  // Extract all <title> tag contents
-  const matches = [...xml.matchAll(/<title><!\[CDATA\[(.*?)\]\]><\/title>|<title>(.*?)<\/title>/gi)];
+  // Extract all <title> tag contents using exec loop (avoids downlevelIteration requirement)
+  const re = /<title><!\[CDATA\[(.*?)\]\]><\/title>|<title>(.*?)<\/title>/gi;
+  const titles: string[] = [];
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(xml)) !== null) {
+    const title = (m[1] || m[2] || '').trim();
+    if (title) titles.push(title);
+  }
   // Skip first match (feed-level title)
-  return matches.slice(1).map((m) => (m[1] || m[2] || '').trim()).filter(Boolean);
+  return titles.slice(1);
 }
 
 // ─── POST handler (cron-triggered) ────────────────────────────────────────

@@ -1,1 +1,36 @@
-{"cachedAt": null, "data": null}
+{
+  "cachedAt": "2026-10-02T16:50:21.518Z",
+  "data": {
+    "source": "demo",
+    "note": "Add GOOGLE_ADSENSE_CLIENT_ID and GOOGLE_ADSENSE_CLIENT_SECRET to connect real AdSense data",
+    "syncedAt": "2026-10-02T16:50:21.516Z",
+    "network": {
+      "todayRevenue": 0,
+      "weekRevenue": 0,
+      "monthRevenue": 0,
+      "pageviews": 0,
+      "rpm": 0,
+      "ctr": 0
+    },
+    "sites": [
+      {
+        "name": "The Trend Matrix",
+        "site": "news",
+        "revenue": 0,
+        "pageviews": 0
+      },
+      {
+        "name": "Crypto Daily",
+        "site": "crypto",
+        "revenue": 0,
+        "pageviews": 0
+      },
+      {
+        "name": "Wall St Insider",
+        "site": "finance",
+        "revenue": 0,
+        "pageviews": 0
+      }
+    ]
+  }
+}
