@@ -1,4 +1,8 @@
 {
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
   "crons": [
     { "path": "/api/pipeline/trend-scout", "schedule": "0 8 * * *" },
     { "path": "/api/pipeline/publish", "schedule": "0 9 * * *" },
