@@ -27,6 +27,17 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
+
+# sensitive runtime data (never commit secrets or logs)
+data/settings.json
+data/click_log.json
+data/pipeline_log.json
+data/alerts.json
+data/analytics_cache.json
+data/content_doctor_log.json
+data/sitemap_queue.json
+data/token_usage.json
 
 # vercel
 .vercel
