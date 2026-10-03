@@ -163,7 +163,12 @@ export default function FinanceSite() {
               {/* Main Feed */}
               <div className="md:w-2/3 flex flex-col gap-10">
                 {articles.map((article, i) => (
-                  <div key={article.id} className={`flex flex-col cursor-pointer group ${i !== articles.length -1 ? 'border-b border-gray-200 pb-10' : ''}`} onClick={() => alert("Simulated Article")}>
+                  <a key={article.id} href={`/finance/${article.slug || article.id}`} className={`flex flex-col cursor-pointer group ${i !== articles.length -1 ? 'border-b border-gray-200 pb-10' : ''}`}>
+                    {article.image && (
+                      <div className="h-56 rounded-xl overflow-hidden mb-4 bg-gray-100">
+                        <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                    )}
                     <div className="flex items-center gap-3 mb-3 font-sans">
                       <span className="text-xs font-bold text-amber-700 uppercase tracking-widest bg-amber-50 px-2 py-1">{article.category}</span>
                       <span className="text-xs text-gray-400 uppercase font-bold">{article.time}</span>
@@ -175,7 +180,7 @@ export default function FinanceSite() {
                       {article.excerpt}
                     </p>
                     <span className="text-sm font-bold font-sans text-gray-900 flex items-center gap-1 uppercase tracking-wider group-hover:text-amber-700">Continue Reading <ChevronRight className="w-4 h-4"/></span>
-                  </div>
+                  </a>
                 ))}
 
                 {/* Mid-feed Ad — dynamic or house fallback */}

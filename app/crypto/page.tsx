@@ -180,10 +180,14 @@ export default function CryptoSite() {
             <ArticleSearch niche="crypto" />
 
             {heroArticle && (
-              <div className="mb-16 border border-green-900/30 rounded-2xl overflow-hidden bg-gray-900/20 group cursor-pointer" onClick={() => alert("Simulated Article")}>
+              <a href={`/crypto/${heroArticle.slug || heroArticle.id}`} className="mb-16 border border-green-900/30 rounded-2xl overflow-hidden bg-gray-900/20 group cursor-pointer block">
                 <div className="relative h-[400px]">
                   <div className="absolute inset-0 bg-gradient-to-t from-[#020804] to-transparent z-10"></div>
-                  <div className={`absolute inset-0 ${heroArticle.image || 'bg-[url("https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=800&auto=format&fit=crop")] bg-cover bg-center'} opacity-40 group-hover:opacity-60 transition-opacity duration-700`}></div>
+                  <img 
+                    src={heroArticle.image || 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=1200&auto=format&fit=crop'} 
+                    alt={heroArticle.title}
+                    className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-700" 
+                  />
                   <div className="absolute bottom-0 left-0 w-full p-10 z-20">
                     <span className="text-green-500 font-mono text-xs font-bold tracking-widest uppercase mb-4 block">{heroArticle.category}</span>
                     <h2 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4 group-hover:text-green-400 transition-colors">
@@ -192,19 +196,24 @@ export default function CryptoSite() {
                     <p className="text-gray-400 text-lg max-w-3xl font-mono">{heroArticle.excerpt}</p>
                   </div>
                 </div>
-              </div>
+              </a>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {feedArticles.map((article) => (
-                <div key={article.id} className="group cursor-pointer flex flex-col border border-gray-900 hover:border-green-900/50 p-6 rounded-xl transition-colors bg-[#040c06]">
+                <a key={article.id} href={`/crypto/${article.slug || article.id}`} className="group cursor-pointer flex flex-col border border-gray-900 hover:border-green-900/50 p-6 rounded-xl transition-colors bg-[#040c06]">
+                  {article.image && (
+                    <div className="h-40 rounded-lg overflow-hidden mb-4 border border-gray-900">
+                      <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                  )}
                   <span className="text-xs font-mono text-green-500 mb-3">{article.category} // {article.time}</span>
                   <h4 className="text-xl font-bold text-white leading-tight mb-3 group-hover:text-green-400 transition-colors">
                     {article.title}
                   </h4>
                   <p className="text-gray-500 text-sm line-clamp-3 mb-4">{article.excerpt}</p>
                   <span className="mt-auto text-sm font-bold text-gray-400 flex items-center gap-1 group-hover:text-green-500 transition-colors">Read Report <ChevronRight className="w-4 h-4"/></span>
-                </div>
+                </a>
               ))}
 
               {/* Mid-feed Ad — dynamic or house fallback */}

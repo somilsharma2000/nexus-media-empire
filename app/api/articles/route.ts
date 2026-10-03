@@ -81,18 +81,46 @@ export async function POST(req: Request) {
   const cleanText = body.content.replace(/#/g, '').replace(/\*/g, '').trim();
   const excerpt = cleanText.substring(0, 160) + '...';
 
+  // Curated fallback photos
+  const photoLibrary: Record<string, string[]> = {
+    news: [
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop",
+    ],
+    crypto: [
+      "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1200&auto=format&fit=crop",
+    ],
+    finance: [
+      "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop",
+    ],
+  };
+
+  const niche = body.niche || (body.category === 'Crypto' ? 'crypto' : body.category === 'Finance' ? 'finance' : 'news');
+  const nichePhotos = photoLibrary[niche] || photoLibrary.news;
+  const selectedImage = body.image || nichePhotos[Math.floor(Math.random() * nichePhotos.length)];
+  const slug = (body.slug || title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
   const newArticle = {
-    id: Date.now(),
+    id: `art-${Date.now()}`,
     title: title,
-    category: body.category || 'AI & Tech',
+    niche: niche,
+    slug: slug,
+    category: body.category || (niche === 'crypto' ? 'Crypto' : niche === 'finance' ? 'Finance' : 'AI & Tech'),
     time: 'Just now',
     excerpt: excerpt,
     content: body.content,
     metaDescription: body.metaDescription || '',
     tweets: body.tweets || [],
-    image: "bg-gradient-to-br from-blue-900 to-black",
+    tweetThread: body.tweets || body.tweetThread || [],
+    image: selectedImage,
     featured: true,
-    status: 'draft',
+    status: body.status || 'draft',
+    publishedAt: body.status === 'published' ? new Date().toISOString() : null,
+    publishAt: body.publishAt || new Date().toISOString(),
+    viewCount: 0,
     qaStatus: 'pending',
     qaVerdict: null,
   };

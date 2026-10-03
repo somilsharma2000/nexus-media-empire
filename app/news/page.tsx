@@ -215,13 +215,17 @@ export default function PublicNewsSite() {
               
               {/* Main Hero */}
               {heroArticle && (
-                <div 
-                  className="lg:w-2/3 cursor-pointer group"
-                  onClick={() => alert("Simulated: Redirecting to full article...")}
+                <a 
+                  className="lg:w-2/3 cursor-pointer group block"
+                  href={`/news/${heroArticle.slug || heroArticle.id}`}
                 >
                   <div className="relative h-[500px] rounded-2xl overflow-hidden mb-6">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black z-10"></div>
-                    <div className={`absolute inset-0 ${heroArticle.image || 'bg-gradient-to-br from-blue-900 to-purple-900'} transition-transform duration-700 group-hover:scale-105`}></div>
+                    <img 
+                      src={heroArticle.image || 'https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1200&auto=format&fit=crop'} 
+                      alt={heroArticle.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
                     
                     {/* Category Tag */}
                     <div className="absolute top-6 left-6 z-20">
@@ -244,7 +248,7 @@ export default function PublicNewsSite() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </a>
               )}
 
               {/* Right Sidebar */}
@@ -268,7 +272,7 @@ export default function PublicNewsSite() {
                   </h3>
                   <div className="flex flex-col gap-6">
                     {sidebarArticles.map((article, idx) => (
-                      <div key={article.id} className="group cursor-pointer flex gap-4" onClick={() => alert("Simulated: Redirecting to full article...")}>
+                      <a key={article.id} href={`/news/${article.slug || article.id}`} className="group cursor-pointer flex gap-4">
                         <div className="text-3xl font-black text-gray-800 group-hover:text-blue-900 transition-colors">0{idx + 1}</div>
                         <div>
                           <h4 className="text-white font-bold leading-tight group-hover:text-blue-400 transition-colors line-clamp-2 mb-2">
@@ -276,7 +280,7 @@ export default function PublicNewsSite() {
                           </h4>
                           <span className="text-xs text-gray-500 font-bold uppercase tracking-widest">{article.category} &bull; {article.time}</span>
                         </div>
-                      </div>
+                      </a>
                     ))}
                   </div>
                 </div>
@@ -294,9 +298,14 @@ export default function PublicNewsSite() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {feedArticles.map((article) => (
-                    <div key={article.id} className="group cursor-pointer flex flex-col" onClick={() => alert("Simulated: Redirecting to full article...")}>
-                      <div className={`w-full h-48 rounded-2xl ${article.image || 'bg-gradient-to-br from-gray-900 to-black'} mb-4 border border-gray-800 relative overflow-hidden`}>
-                         <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">
+                    <a key={article.id} href={`/news/${article.slug || article.id}`} className="group cursor-pointer flex flex-col">
+                      <div className="w-full h-48 rounded-2xl mb-4 border border-gray-800 relative overflow-hidden bg-gray-950">
+                        <img 
+                          src={article.image || 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=600&auto=format&fit=crop'} 
+                          alt={article.title} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                        />
+                        <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">
                           {article.category}
                         </div>
                       </div>
@@ -307,7 +316,7 @@ export default function PublicNewsSite() {
                         {article.excerpt}
                       </p>
                       <span className="text-xs font-bold text-gray-500 uppercase tracking-wider mt-auto">{article.time}</span>
-                    </div>
+                    </a>
                   ))}
 
                   {/* Mid-feed Advertisement — dynamic slot or house fallback */}
