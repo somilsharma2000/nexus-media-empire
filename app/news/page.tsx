@@ -7,7 +7,7 @@ import CookieConsent from "../../components/CookieConsent";
 import ArticleSearch from "../../components/ArticleSearch";
 import NewsletterForm from "../../components/NewsletterForm";
 
-interface Article { id: number; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; }
+interface Article { id: number | string; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; slug?: string; niche?: string; }
 
 interface AdSlot {
   id: string;
