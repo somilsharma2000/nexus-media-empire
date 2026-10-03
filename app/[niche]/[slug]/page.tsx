@@ -5,6 +5,11 @@ import Link from "next/link";
 import { ArrowLeft, Clock, Calendar, Share2, Bookmark, CheckCircle, Tag, Eye, ChevronRight } from "lucide-react";
 import CookieConsent from "../../../components/CookieConsent";
 import NewsletterForm from "../../../components/NewsletterForm";
+import ReadingProgressBar from "../../../components/ReadingProgressBar";
+import ArticleAudioPlayer from "../../../components/ArticleAudioPlayer";
+import TableOfContents from "../../../components/TableOfContents";
+import AuthorBio from "../../../components/AuthorBio";
+import CommunityPoll from "../../../components/CommunityPoll";
 
 interface Article {
   id: string;
@@ -127,8 +132,11 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
 
   return (
     <div className="min-h-screen bg-[#050505] text-gray-200 font-sans selection:bg-blue-500/30">
+      {/* Scroll Progress Bar */}
+      <ReadingProgressBar />
+
       {/* Top Breadcrumb Nav */}
-      <nav className="border-b border-gray-900 bg-black/80 backdrop-blur-md sticky top-0 z-50">
+      <nav className="border-b border-gray-900 bg-black/80 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-6 h-16 flex justify-between items-center text-xs">
           <Link
             href={`/${params.niche}`}
@@ -173,6 +181,9 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
           {article.excerpt}
         </p>
 
+        {/* AI Audio Narration Widget */}
+        <ArticleAudioPlayer title={article.title} readTime="6 min" />
+
         {/* Hero Photo with Overlay Caption */}
         {article.image && (
           <div className="relative rounded-3xl overflow-hidden mb-12 border border-gray-800 shadow-2xl">
@@ -189,10 +200,19 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
           </div>
         )}
 
+        {/* Table of Contents */}
+        <TableOfContents content={article.content} />
+
         {/* Body Content */}
         <div className="prose prose-invert max-w-none text-gray-300">
           {formattedContent}
         </div>
+
+        {/* E-E-A-T Verified Author & Reviewer Box */}
+        <AuthorBio niche={article.niche} />
+
+        {/* Reader Sentiment Poll */}
+        <CommunityPoll />
 
         {/* Interactive Newsletter */}
         <div className="mt-14">

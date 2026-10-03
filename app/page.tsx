@@ -6,7 +6,7 @@ import {
   LayoutDashboard, BrainCircuit, Image as ImageIcon, X, Copy, ChevronRight, 
   TrendingUp, Briefcase, LineChart, Lock,
   Database, RefreshCw, Power, Sliders, Brain, Code2, Key, PieChart, BarChart, Layers,
-  Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock
+  Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock, Palette
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import RevenueDashboard from "../components/RevenueDashboard";
@@ -25,6 +25,7 @@ import ArticleManager from "../components/ArticleManager";
 import SocialDistribution from "../components/SocialDistribution";
 import BacklinkManager from "../components/BacklinkManager";
 import NewsletterManager from "../components/NewsletterManager";
+import PosterStudio from "../components/PosterStudio";
 
 
 const TRENDS = [
@@ -199,6 +200,7 @@ export default function NexusDashboard() {
           <NavItem icon={<RefreshCw />} label="⚡ Auto-Pilot Pipeline" active={currentView === 'autopilot'} onClick={() => setCurrentView('autopilot')} />
           <NavItem icon={<Layers />} label="💰 Ad Slots & Links" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
           <NavItem icon={<Share2 />} label="📲 Social Syndication" active={currentView === 'social'} onClick={() => setCurrentView('social')} />
+          <NavItem icon={<Palette />} label="🎨 Promo Poster Studio" active={currentView === 'posters'} onClick={() => setCurrentView('posters')} />
           <NavItem icon={<Link2 />} label="🔗 Backlink Authority" active={currentView === 'backlinks'} onClick={() => setCurrentView('backlinks')} />
           <NavItem icon={<Mail />} label="📧 Newsletter Hub" active={currentView === 'newsletter'} onClick={() => setCurrentView('newsletter')} />
           <NavItem icon={<Clock />} label="⏱️ Chrono Automations" active={currentView === 'automation'} onClick={() => setCurrentView('automation')} />
@@ -1107,6 +1109,17 @@ export default function NexusDashboard() {
             <p className="text-gray-400 mt-2">Manage reader subscriptions, draft executive briefings, and broadcast directly to cohort lists.</p>
           </header>
           <NewsletterManager />
+        </motion.div>
+      )}
+
+      {/* VIEW: POSTER STUDIO */}
+      {currentView === 'posters' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-8">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><Palette className="w-8 h-8 text-pink-500" /> Promo Poster Studio</h2>
+            <p className="text-gray-400 mt-2">Generate high-impact social media banners, Twitter cards, and YouTube title posters.</p>
+          </header>
+          <PosterStudio />
         </motion.div>
       )}
 
