@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { TrendingUp, Clock, ArrowRight, Share2, Menu, Search, Bookmark, ChevronRight, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CookieConsent from "../../components/CookieConsent";
+import ArticleSearch from "../../components/ArticleSearch";
+import NewsletterForm from "../../components/NewsletterForm";
 
 interface Article { id: number; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; }
 
@@ -205,6 +207,9 @@ export default function PublicNewsSite() {
           <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div></div>
         ) : (
           <>
+            {/* Real-Time Search */}
+            <ArticleSearch niche="news" />
+
             {/* HERO & SIDEBAR SECTION */}
             <div className="flex flex-col lg:flex-row gap-8 mb-16">
               
@@ -308,6 +313,9 @@ export default function PublicNewsSite() {
                   {/* Mid-feed Advertisement — dynamic slot or house fallback */}
                   {midFeedSlot ? <MidFeedAdCard slot={midFeedSlot} /> : <HouseAdCard />}
                 </div>
+
+                {/* Newsletter Subscribe */}
+                <NewsletterForm niche="news" variant="inline" />
               </div>
             )}
           </>

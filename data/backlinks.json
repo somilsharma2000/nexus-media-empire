@@ -1,0 +1,29 @@
+[
+  {
+    "id": "bl-1",
+    "platform": "Reddit",
+    "url": "https://reddit.com/r/technology/comments/ai-agents-guide",
+    "articleTitle": "What Is an AI Agent? A Plain-English Guide",
+    "addedAt": "2026-10-01T10:00:00.000Z",
+    "status": "active",
+    "clicks": 142
+  },
+  {
+    "id": "bl-2",
+    "platform": "Twitter",
+    "url": "https://x.com/thetrendmatrix/status/17892019283",
+    "articleTitle": "ChatGPT vs Claude vs Gemini: Which Should You Actually Use?",
+    "addedAt": "2026-10-02T14:30:00.000Z",
+    "status": "active",
+    "clicks": 289
+  },
+  {
+    "id": "bl-3",
+    "platform": "Medium",
+    "url": "https://medium.com/@thetrendmatrix/bitcoin-beginner-guide-2026",
+    "articleTitle": "What Is Bitcoin? A Complete Beginner's Guide",
+    "addedAt": "2026-10-02T18:00:00.000Z",
+    "status": "active",
+    "clicks": 94
+  }
+]

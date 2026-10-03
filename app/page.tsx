@@ -6,7 +6,7 @@ import {
   LayoutDashboard, BrainCircuit, Image as ImageIcon, X, Copy, ChevronRight, 
   TrendingUp, Briefcase, LineChart, Lock,
   Database, RefreshCw, Power, Sliders, Brain, Code2, Key, PieChart, BarChart, Layers,
-  Inbox, Share2, ShieldCheck
+  Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import RevenueDashboard from "../components/RevenueDashboard";
@@ -18,6 +18,13 @@ import RisingKeywords from "../components/RisingKeywords";
 import QAConfigPanel from "../components/QAConfigPanel";
 import CookieConsent from "../components/CookieConsent";
 import SettingsPanel from "../components/SettingsPanel";
+import ConnectionsHub from "../components/ConnectionsHub";
+import AutomationControls from "../components/AutomationControls";
+import TopicManager from "../components/TopicManager";
+import ArticleManager from "../components/ArticleManager";
+import SocialDistribution from "../components/SocialDistribution";
+import BacklinkManager from "../components/BacklinkManager";
+import NewsletterManager from "../components/NewsletterManager";
 
 
 const TRENDS = [
@@ -185,22 +192,20 @@ export default function NexusDashboard() {
           <h1 className="text-xl font-bold tracking-wider">NEXUS<span className="text-blue-500">AI</span></h1>
         </div>
         
-        <nav className="flex flex-col gap-2">
+        <nav className="flex flex-col gap-1.5 overflow-y-auto pr-1">
           <NavItem icon={<LayoutDashboard />} label="Command Center" active={currentView === 'dashboard'} onClick={() => setCurrentView('dashboard')} />
-          <NavItem icon={<Inbox />} label="QA & Approvals" active={currentView === 'approvals'} onClick={() => setCurrentView('approvals')} />
-          <NavItem icon={<PieChart />} label="Global Analytics" active={currentView === 'analytics'} onClick={() => setCurrentView('analytics')} />
-          <NavItem icon={<TrendingUp />} label="Monetization Engine" active={currentView === 'revenue'} onClick={() => setCurrentView('revenue')} />
-          <NavItem icon={<Share2 />} label="SEO & Distribution" active={currentView === 'distribution'} onClick={() => setCurrentView('distribution')} />
-          <div className="my-2 border-t border-gray-800"></div>
-          <NavItem icon={<Brain />} label="Agent Skills Matrix" active={currentView === 'skills'} onClick={() => setCurrentView('skills')} />
-          <NavItem icon={<Database />} label="Trend Pipeline" active={currentView === 'pipeline'} onClick={() => setCurrentView('pipeline')} />
-          <NavItem icon={<Globe />} label="Empire Network" active={currentView === 'network'} onClick={() => setCurrentView('network')} />
-          <NavItem icon={<Sliders />} label="Agent Config" active={currentView === 'config'} onClick={() => setCurrentView('config')} />
-          <NavItem icon={<RefreshCw />} label="Auto-Pilot Pipeline" active={currentView === 'autopilot'} onClick={() => setCurrentView('autopilot')} />
-          <NavItem icon={<Layers />} label="Ad Slots & Affiliates" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
-          <NavItem icon={<ShieldCheck />} label="System Health" active={currentView === 'health'} onClick={() => setCurrentView('health')} />
-          <NavItem icon={<BarChart />} label="SEO Keywords" active={currentView === 'seo'} onClick={() => setCurrentView('seo')} />
-          <NavItem icon={<Brain />} label="QA Gate Config" active={currentView === 'qaconfig'} onClick={() => setCurrentView('qaconfig')} />
+          <NavItem icon={<Sparkles />} label="📚 Article Vault" active={currentView === 'articles'} onClick={() => setCurrentView('articles')} />
+          <NavItem icon={<Tag />} label="🎯 Topic Ingestion" active={currentView === 'topics'} onClick={() => setCurrentView('topics')} />
+          <NavItem icon={<RefreshCw />} label="⚡ Auto-Pilot Pipeline" active={currentView === 'autopilot'} onClick={() => setCurrentView('autopilot')} />
+          <NavItem icon={<Layers />} label="💰 Ad Slots & Links" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
+          <NavItem icon={<Share2 />} label="📲 Social Syndication" active={currentView === 'social'} onClick={() => setCurrentView('social')} />
+          <NavItem icon={<Link2 />} label="🔗 Backlink Authority" active={currentView === 'backlinks'} onClick={() => setCurrentView('backlinks')} />
+          <NavItem icon={<Mail />} label="📧 Newsletter Hub" active={currentView === 'newsletter'} onClick={() => setCurrentView('newsletter')} />
+          <NavItem icon={<Clock />} label="⏱️ Chrono Automations" active={currentView === 'automation'} onClick={() => setCurrentView('automation')} />
+          <NavItem icon={<Globe />} label="🔌 Account Connections" active={currentView === 'connections'} onClick={() => setCurrentView('connections')} />
+          <NavItem icon={<BarChart />} label="📈 SEO Opportunities" active={currentView === 'seo'} onClick={() => setCurrentView('seo')} />
+          <NavItem icon={<ShieldCheck />} label="🛡️ System Health" active={currentView === 'health'} onClick={() => setCurrentView('health')} />
+          <NavItem icon={<Brain />} label="🧠 QA Gate Config" active={currentView === 'qaconfig'} onClick={() => setCurrentView('qaconfig')} />
           <NavItem icon={<Key />} label="⚙️ Settings & Keys" active={currentView === 'settings'} onClick={() => setCurrentView('settings')} />
         </nav>
 
@@ -1025,6 +1030,83 @@ export default function NexusDashboard() {
             <p className="text-gray-400 mt-2">Configure all credentials here. No terminal required. Paste values directly into the fields below.</p>
           </header>
           <SettingsPanel />
+        </motion.div>
+      )}
+
+      {/* VIEW: ARTICLE VAULT */}
+      {currentView === 'articles' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-8">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><Sparkles className="w-8 h-8 text-purple-500" /> Content Vault & Editor</h2>
+            <p className="text-gray-400 mt-2">Manage, preview, edit, and release high-grade evergreen articles across all network publications.</p>
+          </header>
+          <ArticleManager />
+        </motion.div>
+      )}
+
+      {/* VIEW: TOPIC INGESTION */}
+      {currentView === 'topics' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-8">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><Tag className="w-8 h-8 text-yellow-500" /> Topic Angle Ingestion</h2>
+            <p className="text-gray-400 mt-2">Feed evergreen keywords, prioritize high-value angles, and run one-click article generation.</p>
+          </header>
+          <TopicManager />
+        </motion.div>
+      )}
+
+      {/* VIEW: CHRONO AUTOMATIONS */}
+      {currentView === 'automation' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-8">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><Clock className="w-8 h-8 text-cyan-500" /> Chrono Automation Engine</h2>
+            <p className="text-gray-400 mt-2">Fine-grained control over cron schedules, execution intervals, and instantaneous manual overrides.</p>
+          </header>
+          <AutomationControls />
+        </motion.div>
+      )}
+
+      {/* VIEW: ACCOUNT CONNECTIONS */}
+      {currentView === 'connections' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-8">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><Globe className="w-8 h-8 text-blue-500" /> Account Integrations Hub</h2>
+            <p className="text-gray-400 mt-2">Live connection statuses and setup links for OpenAI, Google AdSense, Telegram, Twitter, Reddit, and Supabase.</p>
+          </header>
+          <ConnectionsHub />
+        </motion.div>
+      )}
+
+      {/* VIEW: SOCIAL SYNDICATION */}
+      {currentView === 'social' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-8">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><Share2 className="w-8 h-8 text-blue-400" /> Social Syndication & Threads</h2>
+            <p className="text-gray-400 mt-2">Distribute multi-tweet threads and social summaries to X, Reddit, and Medium with canonical backlinks.</p>
+          </header>
+          <SocialDistribution />
+        </motion.div>
+      )}
+
+      {/* VIEW: BACKLINK AUTHORITY */}
+      {currentView === 'backlinks' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-8">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><Link2 className="w-8 h-8 text-indigo-400" /> Backlink & Domain Authority</h2>
+            <p className="text-gray-400 mt-2">Registry of all inbound citations, Reddit discussion threads, and external authority anchors.</p>
+          </header>
+          <BacklinkManager />
+        </motion.div>
+      )}
+
+      {/* VIEW: NEWSLETTER HUB */}
+      {currentView === 'newsletter' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-8">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><Mail className="w-8 h-8 text-purple-400" /> Email Newsletter Hub</h2>
+            <p className="text-gray-400 mt-2">Manage reader subscriptions, draft executive briefings, and broadcast directly to cohort lists.</p>
+          </header>
+          <NewsletterManager />
         </motion.div>
       )}
 

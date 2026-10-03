@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { TrendingUp, Clock, Share2, Menu, Search, Bookmark, ChevronRight, Zap } from "lucide-react";
 import CookieConsent from "../../components/CookieConsent";
+import ArticleSearch from "../../components/ArticleSearch";
+import NewsletterForm from "../../components/NewsletterForm";
 
 interface Article { id: number; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; }
 
@@ -175,6 +177,8 @@ export default function CryptoSite() {
           <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>
         ) : (
           <>
+            <ArticleSearch niche="crypto" />
+
             {heroArticle && (
               <div className="mb-16 border border-green-900/30 rounded-2xl overflow-hidden bg-gray-900/20 group cursor-pointer" onClick={() => alert("Simulated Article")}>
                 <div className="relative h-[400px]">
@@ -206,9 +210,24 @@ export default function CryptoSite() {
               {/* Mid-feed Ad — dynamic or house fallback */}
               {midFeedSlot ? <MidFeedAdCard slot={midFeedSlot} /> : <HouseAdCard />}
             </div>
+
+            <NewsletterForm niche="crypto" variant="inline" />
           </>
         )}
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-green-900/30 bg-[#020804] py-10 px-6 mt-16">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+          <div>CRYPTO DAILY &copy; 2026 • Decentralized Market Intelligence</div>
+          <div className="flex gap-6">
+            <a href="/crypto/about" className="hover:text-green-400">About</a>
+            <a href="/crypto/privacy-policy" className="hover:text-green-400">Privacy</a>
+            <a href="/crypto/terms" className="hover:text-green-400">Terms</a>
+            <a href="/crypto/contact" className="hover:text-green-400">Contact</a>
+          </div>
+        </div>
+      </footer>
 
       {/* Cookie Consent Banner */}
       <CookieConsent />

@@ -1,0 +1,317 @@
+[
+  {
+    "id": "top-1",
+    "topic": "What Is an AI Agent? A Plain-English Guide",
+    "niche": "news",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.672Z"
+  },
+  {
+    "id": "top-2",
+    "topic": "ChatGPT vs Claude vs Gemini: Which Should You Actually Use?",
+    "niche": "news",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-3",
+    "topic": "What Is RAG? How AI Chatbots Know Things",
+    "niche": "news",
+    "priority": "medium",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-4",
+    "topic": "How to Automate a Small Business with No-Code Tools",
+    "niche": "news",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-5",
+    "topic": "Best AI Tools for Solo Founders (2026)",
+    "niche": "news",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-6",
+    "topic": "AI Coding Assistants Explained: Copilot vs Cursor vs Claude Code",
+    "niche": "news",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-7",
+    "topic": "What Is an API? Explained Simply",
+    "niche": "news",
+    "priority": "medium",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-8",
+    "topic": "How to Start a Newsletter from Zero",
+    "niche": "news",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-9",
+    "topic": "How to Spot AI-Generated Content",
+    "niche": "news",
+    "priority": "medium",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-10",
+    "topic": "What Happens to Your Data When You Use AI Tools",
+    "niche": "news",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-11",
+    "topic": "How Much Does It Cost to Build a Website in 2026",
+    "niche": "news",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-12",
+    "topic": "Local SEO: How Small Businesses Get Found on Google",
+    "niche": "news",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-13",
+    "topic": "What Is Cloud Computing? A Beginner's Guide",
+    "niche": "news",
+    "priority": "medium",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-14",
+    "topic": "Automation vs AI: What's the Difference?",
+    "niche": "news",
+    "priority": "medium",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-15",
+    "topic": "How to Learn AI Skills Without a Technical Background",
+    "niche": "news",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-16",
+    "topic": "What Is Bitcoin? A Complete Beginner's Guide",
+    "niche": "crypto",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-17",
+    "topic": "How to Buy Your First Cryptocurrency Safely",
+    "niche": "crypto",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-18",
+    "topic": "Cold Wallet vs Hot Wallet: Storing Crypto Safely",
+    "niche": "crypto",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-19",
+    "topic": "What Is a Bitcoin ETF and How Does It Work?",
+    "niche": "crypto",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-20",
+    "topic": "7 Crypto Scam Red Flags Everyone Should Know",
+    "niche": "crypto",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-21",
+    "topic": "What Is Blockchain Technology in Plain English",
+    "niche": "crypto",
+    "priority": "medium",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-22",
+    "topic": "How Crypto Taxes Work in India (2026)",
+    "niche": "crypto",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-23",
+    "topic": "Stablecoins Explained: What They Are and Why They Matter",
+    "niche": "crypto",
+    "priority": "medium",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-24",
+    "topic": "What Is DeFi? A Beginner's Introduction",
+    "niche": "crypto",
+    "priority": "medium",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-25",
+    "topic": "Dollar-Cost Averaging vs Lump Sum: Which Makes Sense",
+    "niche": "crypto",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-26",
+    "topic": "How to Start Investing with ₹500",
+    "niche": "finance",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-27",
+    "topic": "Index Funds vs ETFs: What's the Difference?",
+    "niche": "finance",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-28",
+    "topic": "What Is Compound Interest (And Why It Beats Saving)",
+    "niche": "finance",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-29",
+    "topic": "How Much Emergency Fund Do You Actually Need?",
+    "niche": "finance",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-30",
+    "topic": "How to Build a Credit Score in India",
+    "niche": "finance",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-31",
+    "topic": "PPF vs ELSS vs NPS: A Simple Comparison",
+    "niche": "finance",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-32",
+    "topic": "What Is an IPO and Should Beginners Care?",
+    "niche": "finance",
+    "priority": "medium",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-33",
+    "topic": "Inflation Explained: Why Your Money Buys Less Every Year",
+    "niche": "finance",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-34",
+    "topic": "How to Read a Balance Sheet in 10 Minutes",
+    "niche": "finance",
+    "priority": "medium",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  },
+  {
+    "id": "top-35",
+    "topic": "Dividend Investing for Absolute Beginners",
+    "niche": "finance",
+    "priority": "high",
+    "isActive": true,
+    "timesUsed": 1,
+    "lastUsed": "2026-10-03T08:02:23.673Z"
+  }
+]

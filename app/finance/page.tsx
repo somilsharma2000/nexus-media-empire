@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { ChevronRight, BarChart2 } from "lucide-react";
 import CookieConsent from "../../components/CookieConsent";
+import ArticleSearch from "../../components/ArticleSearch";
+import NewsletterForm from "../../components/NewsletterForm";
 
 interface Article { id: number; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; }
 
@@ -154,46 +156,63 @@ export default function FinanceSite() {
         {loading ? (
           <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-amber-600 border-t-transparent rounded-full animate-spin"></div></div>
         ) : (
-          <div className="flex flex-col md:flex-row gap-12">
-            
-            {/* Main Feed */}
-            <div className="md:w-2/3 flex flex-col gap-10">
-              {articles.map((article, i) => (
-                <div key={article.id} className={`flex flex-col cursor-pointer group ${i !== articles.length -1 ? 'border-b border-gray-200 pb-10' : ''}`} onClick={() => alert("Simulated Article")}>
-                  <div className="flex items-center gap-3 mb-3 font-sans">
-                    <span className="text-xs font-bold text-amber-700 uppercase tracking-widest bg-amber-50 px-2 py-1">{article.category}</span>
-                    <span className="text-xs text-gray-400 uppercase font-bold">{article.time}</span>
+          <>
+            <ArticleSearch niche="finance" />
+
+            <div className="flex flex-col md:flex-row gap-12">
+              {/* Main Feed */}
+              <div className="md:w-2/3 flex flex-col gap-10">
+                {articles.map((article, i) => (
+                  <div key={article.id} className={`flex flex-col cursor-pointer group ${i !== articles.length -1 ? 'border-b border-gray-200 pb-10' : ''}`} onClick={() => alert("Simulated Article")}>
+                    <div className="flex items-center gap-3 mb-3 font-sans">
+                      <span className="text-xs font-bold text-amber-700 uppercase tracking-widest bg-amber-50 px-2 py-1">{article.category}</span>
+                      <span className="text-xs text-gray-400 uppercase font-bold">{article.time}</span>
+                    </div>
+                    <h2 className="text-3xl font-bold text-gray-900 leading-tight mb-4 group-hover:text-amber-700 transition-colors">
+                      {article.title}
+                    </h2>
+                    <p className="text-gray-600 text-lg leading-relaxed mb-4 font-serif">
+                      {article.excerpt}
+                    </p>
+                    <span className="text-sm font-bold font-sans text-gray-900 flex items-center gap-1 uppercase tracking-wider group-hover:text-amber-700">Continue Reading <ChevronRight className="w-4 h-4"/></span>
                   </div>
-                  <h2 className="text-3xl font-bold text-gray-900 leading-tight mb-4 group-hover:text-amber-700 transition-colors">
-                    {article.title}
-                  </h2>
-                  <p className="text-gray-600 text-lg leading-relaxed mb-4 font-serif">
-                    {article.excerpt}
-                  </p>
-                  <span className="text-sm font-bold font-sans text-gray-900 flex items-center gap-1 uppercase tracking-wider group-hover:text-amber-700">Continue Reading <ChevronRight className="w-4 h-4"/></span>
-                </div>
-              ))}
+                ))}
 
-              {/* Mid-feed Ad — dynamic or house fallback */}
-              {midFeedSlot ? <MidFeedAdCard slot={midFeedSlot} /> : <HouseAdCard />}
-            </div>
+                {/* Mid-feed Ad — dynamic or house fallback */}
+                {midFeedSlot ? <MidFeedAdCard slot={midFeedSlot} /> : <HouseAdCard />}
+              </div>
 
-            {/* Sidebar Data */}
-            <div className="md:w-1/3">
-              <div className="bg-gray-100 p-6 border-t-4 border-amber-600">
-                <h3 className="font-black font-sans uppercase text-gray-900 mb-6 flex items-center gap-2"><BarChart2 className="w-5 h-5"/> Market Indices</h3>
-                <div className="flex flex-col gap-4 font-sans font-bold">
-                  <div className="flex justify-between items-center border-b border-gray-200 pb-3"><span>S&P 500</span><span className="text-green-600">+1.24%</span></div>
-                  <div className="flex justify-between items-center border-b border-gray-200 pb-3"><span>DOW JONES</span><span className="text-green-600">+0.89%</span></div>
-                  <div className="flex justify-between items-center border-b border-gray-200 pb-3"><span>NASDAQ</span><span className="text-green-600">+1.75%</span></div>
-                  <div className="flex justify-between items-center pb-1"><span>VIX</span><span className="text-red-600">-4.20%</span></div>
+              {/* Sidebar Data */}
+              <div className="md:w-1/3 space-y-8">
+                <div className="bg-gray-100 p-6 border-t-4 border-amber-600">
+                  <h3 className="font-black font-sans uppercase text-gray-900 mb-6 flex items-center gap-2"><BarChart2 className="w-5 h-5"/> Market Indices</h3>
+                  <div className="flex flex-col gap-4 font-sans font-bold">
+                    <div className="flex justify-between items-center border-b border-gray-200 pb-3"><span>S&P 500</span><span className="text-green-600">+1.24%</span></div>
+                    <div className="flex justify-between items-center border-b border-gray-200 pb-3"><span>DOW JONES</span><span className="text-green-600">+0.89%</span></div>
+                    <div className="flex justify-between items-center border-b border-gray-200 pb-3"><span>NASDAQ</span><span className="text-green-600">+1.75%</span></div>
+                    <div className="flex justify-between items-center pb-1"><span>VIX</span><span className="text-red-600">-4.20%</span></div>
+                  </div>
                 </div>
+
+                <NewsletterForm niche="finance" variant="sidebar" />
               </div>
             </div>
-
-          </div>
+          </>
         )}
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 bg-gray-50 py-10 px-6 mt-16 text-gray-600 text-xs font-sans">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 font-bold">
+          <div>WALL ST INSIDER &copy; 2026 • Quantitative Financial Intelligence</div>
+          <div className="flex gap-6">
+            <a href="/finance/about" className="hover:text-amber-700">About</a>
+            <a href="/finance/privacy-policy" className="hover:text-amber-700">Privacy</a>
+            <a href="/finance/terms" className="hover:text-amber-700">Terms</a>
+            <a href="/finance/contact" className="hover:text-amber-700">Contact</a>
+          </div>
+        </div>
+      </footer>
 
       {/* Cookie Consent Banner */}
       <CookieConsent />
