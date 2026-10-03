@@ -10,6 +10,7 @@ import ArticleAudioPlayer from "../../../components/ArticleAudioPlayer";
 import TableOfContents from "../../../components/TableOfContents";
 import AuthorBio from "../../../components/AuthorBio";
 import CommunityPoll from "../../../components/CommunityPoll";
+import InteractiveCalculator from "../../../components/InteractiveCalculator";
 
 interface Article {
   id: string;
@@ -207,6 +208,11 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
         <div className="prose prose-invert max-w-none text-gray-300">
           {formattedContent}
         </div>
+
+        {/* Interactive Growth Simulator for Finance / Crypto */}
+        {(article.niche === "finance" || article.niche === "crypto") && (
+          <InteractiveCalculator type={article.niche === "crypto" ? "dca" : "compound"} />
+        )}
 
         {/* E-E-A-T Verified Author & Reviewer Box */}
         <AuthorBio niche={article.niche} />
