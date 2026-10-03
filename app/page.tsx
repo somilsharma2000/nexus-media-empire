@@ -17,6 +17,7 @@ import PipelineStatus from "../components/PipelineStatus";
 import RisingKeywords from "../components/RisingKeywords";
 import QAConfigPanel from "../components/QAConfigPanel";
 import CookieConsent from "../components/CookieConsent";
+import SettingsPanel from "../components/SettingsPanel";
 
 
 const TRENDS = [
@@ -200,6 +201,7 @@ export default function NexusDashboard() {
           <NavItem icon={<ShieldCheck />} label="System Health" active={currentView === 'health'} onClick={() => setCurrentView('health')} />
           <NavItem icon={<BarChart />} label="SEO Keywords" active={currentView === 'seo'} onClick={() => setCurrentView('seo')} />
           <NavItem icon={<Brain />} label="QA Gate Config" active={currentView === 'qaconfig'} onClick={() => setCurrentView('qaconfig')} />
+          <NavItem icon={<Key />} label="⚙️ Settings & Keys" active={currentView === 'settings'} onClick={() => setCurrentView('settings')} />
         </nav>
 
         <div className="mt-auto bg-gray-900/50 p-4 rounded-xl border border-gray-800">
@@ -1012,6 +1014,17 @@ export default function NexusDashboard() {
             <p className="text-gray-400 mt-2">Tune the AI self-reviewer thresholds, budget cap, and auto-publish behaviour without touching code.</p>
           </header>
           <QAConfigPanel />
+        </motion.div>
+      )}
+
+      {/* NEW VIEW: SETTINGS & KEYS */}
+      {currentView === 'settings' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-10">
+            <h2 className="text-3xl font-bold flex items-center gap-3"><Key className="w-8 h-8 text-yellow-500" /> Settings & API Keys</h2>
+            <p className="text-gray-400 mt-2">Configure all credentials here. No terminal required. Paste values directly into the fields below.</p>
+          </header>
+          <SettingsPanel />
         </motion.div>
       )}
 
