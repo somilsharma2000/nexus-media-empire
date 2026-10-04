@@ -1,9 +1,9 @@
 {
-  "cachedAt": "2026-10-03T21:44:02.091Z",
+  "cachedAt": "2026-10-04T07:46:35.905Z",
   "data": {
     "source": "demo",
     "note": "Add GOOGLE_ADSENSE_CLIENT_ID and GOOGLE_ADSENSE_CLIENT_SECRET to connect real AdSense data",
-    "syncedAt": "2026-10-03T21:44:02.089Z",
+    "syncedAt": "2026-10-04T07:46:35.903Z",
     "network": {
       "todayRevenue": 0,
       "weekRevenue": 0,

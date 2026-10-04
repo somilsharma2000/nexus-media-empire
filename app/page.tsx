@@ -26,6 +26,7 @@ import SocialDistribution from "../components/SocialDistribution";
 import BacklinkManager from "../components/BacklinkManager";
 import NewsletterManager from "../components/NewsletterManager";
 import PosterStudio from "../components/PosterStudio";
+import GodModeHub from "../components/GodModeHub";
 
 
 const TRENDS = [
@@ -194,6 +195,7 @@ export default function NexusDashboard() {
         </div>
         
         <nav className="flex flex-col gap-1.5 overflow-y-auto pr-1">
+          <NavItem icon={<Zap className="text-yellow-400" />} label="⚡ GOD-MODE Hub" active={currentView === 'godmode'} onClick={() => setCurrentView('godmode')} />
           <NavItem icon={<LayoutDashboard />} label="Command Center" active={currentView === 'dashboard'} onClick={() => setCurrentView('dashboard')} />
           <NavItem icon={<Sparkles />} label="📚 Article Vault" active={currentView === 'articles'} onClick={() => setCurrentView('articles')} />
           <NavItem icon={<Tag />} label="🎯 Topic Ingestion" active={currentView === 'topics'} onClick={() => setCurrentView('topics')} />
@@ -1120,6 +1122,13 @@ export default function NexusDashboard() {
             <p className="text-gray-400 mt-2">Generate high-impact social media banners, Twitter cards, and YouTube title posters.</p>
           </header>
           <PosterStudio />
+        </motion.div>
+      )}
+
+      {/* VIEW: GOD-MODE HUB */}
+      {currentView === 'godmode' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <GodModeHub />
         </motion.div>
       )}
 
