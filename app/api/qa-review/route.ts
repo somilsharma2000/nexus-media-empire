@@ -127,20 +127,31 @@ export async function POST(request: Request) {
   // 4. Call OpenAI
   const openai = new OpenAI({ apiKey });
 
-  const systemPrompt = `You are a strict editorial QA reviewer. Evaluate the article and return ONLY valid JSON:
+  const systemPrompt = `You are a strict, adversarial editorial QA reviewer and fact-checker (ex-editor-in-chief).
+Evaluate the article across 5 rigorous dimensions and return ONLY valid JSON:
 {
   "scores": {
     "factualSoundness": <1-10>,
+    "humanAuthenticity": <1-10>,
     "originality": <1-10>,
     "readability": <1-10>,
     "seoStructure": <1-10>
   },
   "averageScore": <1-10>,
   "factualClaimsToVerify": ["claim 1", "claim 2"],
+  "humanTouchNotes": "Specific feedback on tone, burstiness, and lack of AI cliches",
   "verdict": "APPROVE" | "REVISE" | "REJECT",
   "revisionInstructions": "specific instructions if REVISE",
   "rejectionReason": "reason if REJECT"
 }
+
+GRADING CRITERIA:
+- factualSoundness: Are data points, dates, formulas, and technical steps accurate and verifiable?
+- humanAuthenticity: Does it read like an experienced human practitioner? Reject if flooded with robotic AI clichés ("delve", "tapestry", "moreover").
+- originality: High information gain and clear structural value vs generic SERP fluff.
+- readability: High burstiness (natural sentence length variation) and engaging cadence.
+- seoStructure: GEO summary block, clean subheadings, micro-tables.
+
 Approve if average >= ${config.approveThreshold}. Revise if ${config.reviseThreshold}-${config.approveThreshold - 1}. Reject if below ${config.reviseThreshold}.`;
 
   let completion: OpenAI.Chat.Completions.ChatCompletion;

@@ -54,7 +54,6 @@ async function callOpenAIWithRetry(
       return result as OpenAI.Chat.Completions.ChatCompletion;
     } catch (err: unknown) {
       lastError = err;
-      // Check for OpenAI rate-limit (429) or a generic error with status 429
       const status = (err as { status?: number })?.status;
       if (status === 429 && attempt < maxAttempts - 1) {
         await new Promise((res) => setTimeout(res, delays[attempt]));
@@ -90,7 +89,7 @@ export async function POST(request: Request) {
   const { topic, category } = body as { topic: string; category: string; format?: string };
   const rawFormat = body.format as string | undefined;
 
-  // 3. Resolve format (randomise if not provided or unrecognised)
+  // 3. Resolve format
   const format: string =
     rawFormat && FORMAT_INSTRUCTIONS[rawFormat]
       ? rawFormat
@@ -98,14 +97,12 @@ export async function POST(request: Request) {
 
   // 4. Budget guard
   const budgetUsd = parseFloat(process.env.MAX_MONTHLY_AI_BUDGET ?? '20');
-  const usage = await readTokenUsage();
-  const month = currentMonth();
+  const thisMonth = currentMonth();
+  let usage = await readTokenUsage();
 
-  // Reset if new month
-  if (usage.month !== month) {
-    usage.month = month;
-    usage.tokensUsed = 0;
-    usage.estimatedCost = 0;
+  if (usage.month !== thisMonth) {
+    usage = { month: thisMonth, tokensUsed: 0, estimatedCost: 0 };
+    await writeTokenUsage(usage);
   }
 
   if (usage.estimatedCost >= budgetUsd) {
@@ -120,69 +117,114 @@ export async function POST(request: Request) {
     );
   }
 
-  // 5. Build prompts
-  const systemPrompt = `You are an elite media journalist. Generate a GEO-optimized content package.
-Return ONLY a valid JSON object with these exact keys:
-{
-  "article": "Full markdown article starting with # H1 Title. Must include: Key Takeaways bullet list, statistics, subheadings (##), and 1200-1500 words.",
-  "metaDescription": "SEO meta description under 160 characters",
-  "tweetThread": ["Tweet 1 (hook)", "Tweet 2", "Tweet 3", "Tweet 4", "Tweet 5", "Tweet 6 (CTA)"]
-}`;
-
-  const userPrompt = `${FORMAT_INSTRUCTIONS[format]} about: ${topic}. Category: ${category}. Make it authoritative, cite statistics, and format for Perplexity/Google AI Overview citation.`;
-
-  // 6. Call OpenAI with retry
   const openai = new OpenAI({ apiKey });
+  let totalInputTokens = 0;
+  let totalOutputTokens = 0;
 
-  let completion: OpenAI.Chat.Completions.ChatCompletion;
   try {
-    completion = await callOpenAIWithRetry(openai, {
+    // ══════════════════════════════════════════════════════════════════════════
+    // PASS 1: CORE TECHNICAL & FACTUAL DRAFT
+    // ══════════════════════════════════════════════════════════════════════════
+    const pass1System = `You are a Principal Tech & Financial Journalist. Write an exhaustive, highly authoritative, empirical 1200-1500 word article.
+Requirements:
+- Start with # H1 Title
+- Include a blockquote with Key Takeaways (3-4 bullet points)
+- Include at least 1 structured comparison Markdown table
+- Include concrete 2026 data points, empirical benchmarks, and clear step-by-step frameworks
+- Structure with clear ## and ### headings`;
+
+    const pass1User = `${FORMAT_INSTRUCTIONS[format]} about: "${topic}". Category: "${category}". Target high search intent and GEO citation.`;
+
+    const pass1Res = await callOpenAIWithRetry(openai, {
       model: 'gpt-4o-mini',
-      temperature: 0.8,
+      temperature: 0.7,
       max_tokens: 2500,
-      response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user',   content: userPrompt },
+        { role: 'system', content: pass1System },
+        { role: 'user', content: pass1User },
       ],
     });
+
+    const rawDraft = pass1Res.choices[0]?.message?.content ?? '';
+    totalInputTokens += pass1Res.usage?.prompt_tokens ?? 0;
+    totalOutputTokens += pass1Res.usage?.completion_tokens ?? 0;
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // PASS 2: THE HUMAN TOUCH & VOICE REFINER (HUMANIZER LAYER)
+    // ══════════════════════════════════════════════════════════════════════════
+    const pass2System = `You are an elite Senior Human Editor (ex-Bloomberg, Wired, Financial Times).
+Your job is to HUMANtransfer the provided draft into an authentic, deeply engaging, human-written masterpiece.
+
+CRITICAL HUMANIZATION RULES:
+1. BAN ALL AI CLICHÉS: Delete words like "delve into", "testament to", "tapestry", "in today's digital landscape", "furthermore", "moreover", "vital role", "in conclusion".
+2. BURSTINESS & PERPLEXITY: Vary sentence lengths dramatically. Mix punchy 3-to-5 word sentences with deep analytical breakdowns. Avoid robotic rhythm.
+3. AUTHENTIC VOICE: Write with confident practitioner nuance ("When we tested this in production...", "Here is the trap 90% of beginners fall into...", "Let's be blunt:").
+4. ZERO HALLUCINATION: Preserve all core technical accuracy, tables, markdown structure, and factual anchors.
+5. GEO OPTIMIZED: The first 80 words must provide a direct, crystal-clear 50-word answer to search intent.
+
+Return ONLY a valid JSON object with these exact keys:
+{
+  "article": "The full humanized markdown article",
+  "metaDescription": "SEO meta description under 155 characters written with human punchiness",
+  "tweetThread": [
+    "Tweet 1 (Viral Hook)",
+    "Tweet 2 (Core Counter-Intuitive Truth)",
+    "Tweet 3 (Key Breakdown)",
+    "Tweet 4 (Real-world Data/Gotcha)",
+    "Tweet 5 (Actionable Checklist)",
+    "Tweet 6 (CTA link)"
+  ],
+  "humanizationNotes": "Brief summary of stylistic improvements made (e.g. burstiness injected, AI tropes removed)"
+}`;
+
+    const pass2Res = await callOpenAIWithRetry(openai, {
+      model: 'gpt-4o-mini',
+      temperature: 0.85, // Higher temperature for natural human flair
+      max_tokens: 3000,
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: pass2System },
+        { role: 'user', content: `Humanize and elevate this article draft:\n\n${rawDraft}` },
+      ],
+    });
+
+    totalInputTokens += pass2Res.usage?.prompt_tokens ?? 0;
+    totalOutputTokens += pass2Res.usage?.completion_tokens ?? 0;
+
+    const parsed = JSON.parse(pass2Res.choices[0]?.message?.content ?? '{}') as {
+      article?: string;
+      metaDescription?: string;
+      tweetThread?: string[];
+      humanizationNotes?: string;
+    };
+
+    if (!parsed.article) {
+      throw new Error('Humanizer pass failed to produce article content');
+    }
+
+    // 5. Update token usage
+    const callCost = calcCost(totalInputTokens, totalOutputTokens);
+    usage.tokensUsed += totalInputTokens + totalOutputTokens;
+    usage.estimatedCost = parseFloat((usage.estimatedCost + callCost).toFixed(4));
+    await writeTokenUsage(usage);
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        blog: parsed.article,
+        metaDescription: parsed.metaDescription ?? '',
+        tweets: parsed.tweetThread ?? [],
+        humanizationNotes: parsed.humanizationNotes ?? 'AI clichés purged; human burstiness & practitioner voice applied.',
+        tokensUsed: totalInputTokens + totalOutputTokens,
+        estimatedCost: callCost,
+        budgetRemaining: parseFloat(Math.max(0, budgetUsd - usage.estimatedCost).toFixed(4)),
+      },
+    });
   } catch (err: unknown) {
-    console.error('[generate] OpenAI call failed:', err);
+    console.error('[API /api/generate] Error:', err);
     return NextResponse.json(
-      { error: 'OpenAI request failed', details: String(err) },
-      { status: 502 },
+      { error: (err as Error).message ?? 'Generation failed', code: 'GENERATION_ERROR' },
+      { status: 500 },
     );
   }
-
-  // 7. Parse result
-  const raw = completion.choices[0]?.message?.content ?? '{}';
-  let parsed: { article?: string; metaDescription?: string; tweetThread?: string[] };
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    return NextResponse.json({ error: 'Failed to parse AI response JSON' }, { status: 502 });
-  }
-
-  const { article = '', metaDescription = '', tweetThread = [] } = parsed;
-
-  // 8. Token accounting
-  const inputTokens  = completion.usage?.prompt_tokens     ?? 0;
-  const outputTokens = completion.usage?.completion_tokens ?? 0;
-  const callCost     = calcCost(inputTokens, outputTokens);
-
-  usage.tokensUsed   += inputTokens + outputTokens;
-  usage.estimatedCost = parseFloat((usage.estimatedCost + callCost).toFixed(6));
-  await writeTokenUsage(usage);
-
-  // 9. Return
-  return NextResponse.json({
-    success: true,
-    data: {
-      blog:            article,
-      metaDescription,
-      tweets:          tweetThread,
-      tokensUsed:      inputTokens + outputTokens,
-      estimatedCost:   callCost,
-    },
-  });
 }
