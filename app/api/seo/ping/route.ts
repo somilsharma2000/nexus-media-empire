@@ -27,7 +27,11 @@ export async function POST(request: Request) {
   }
 
   const apiKey = process.env.GOOGLE_INDEXING_API_KEY;
+  const indexNowKey = process.env.INDEXNOW_KEY || 'nexus-media-index-key';
+  let googlePingsuccess = false;
+  let indexNowSuccess = false;
 
+  // 1. Google Indexing API
   if (apiKey) {
     try {
       const res = await fetch(
@@ -38,19 +42,44 @@ export async function POST(request: Request) {
           body: JSON.stringify({ url, type: 'URL_UPDATED' }),
         }
       );
-      if (!res.ok) throw new Error(`Google Indexing API error: ${res.status}`);
-      return NextResponse.json({ success: true, method: 'indexing_api' });
+      if (res.ok) googlePingsuccess = true;
     } catch (err) {
-      console.error('[SEO Ping] Google Indexing API failed, falling back to queue:', err);
+      console.error('[SEO Ping] Google Indexing API failed:', err);
     }
   }
 
-  // Fallback: add to sitemap queue
+  // 2. IndexNow Protocol (Bing, DuckDuckGo, Yahoo, AI engines)
+  try {
+    const host = new URL(url).host;
+    const indexNowRes = await fetch('https://api.indexnow.org/indexnow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({
+        host,
+        key: indexNowKey,
+        keyLocation: `https://${host}/${indexNowKey}.txt`,
+        urlList: [url]
+      })
+    });
+    if (indexNowRes.ok || indexNowRes.status === 200 || indexNowRes.status === 202) {
+      indexNowSuccess = true;
+    }
+  } catch (err) {
+    console.error('[SEO Ping] IndexNow ping failed:', err);
+  }
+
+  // Fallback / Audit queue
   const queue = await readQueue();
   if (!queue.includes(url)) {
     queue.push(url);
     await writeQueue(queue);
   }
 
-  return NextResponse.json({ success: true, method: 'sitemap_queue' });
+  return NextResponse.json({
+    success: true,
+    url,
+    google: googlePingsuccess ? 'submitted' : 'skipped_or_queued',
+    indexNow: indexNowSuccess ? 'broadcasted_to_bing_and_duckduckgo' : 'queued',
+    timestamp: new Date().toISOString()
+  });
 }
