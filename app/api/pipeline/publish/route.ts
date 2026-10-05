@@ -68,8 +68,9 @@ export async function POST(req: Request) {
     // Ping SEO for each published article
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3002';
     for (const article of toPublish) {
-      publishedTitles.push(article.title);
-      const articleUrl = `${siteUrl}/news/${article.id}`;
+      const articleNiche = article.niche || article.category?.toLowerCase() || 'news';
+      const articleSlug = article.slug || String(article.id);
+      const articleUrl = `${siteUrl}/${articleNiche}/${articleSlug}`;
       try {
         await fetch(`${siteUrl}/api/seo/ping`, {
           method: 'POST',
