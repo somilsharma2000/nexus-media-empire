@@ -12,7 +12,8 @@ export function middleware(request: NextRequest) {
   if (pathname === '/' || pathname === '/dashboard') {
     const sessionToken =
       request.cookies.get('authjs.session-token')?.value ||
-      request.cookies.get('__Secure-authjs.session-token')?.value;
+      request.cookies.get('__Secure-authjs.session-token')?.value ||
+      request.cookies.get('next-auth.session-token')?.value;
 
     if (!sessionToken) {
       const loginUrl = new URL('/admin/login', request.url);
@@ -27,12 +28,12 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths EXCEPT:
-     * - _next/static, _next/image, favicon.ico
-     * - public frontends: /news, /crypto, /finance
-     * - api routes (protected at handler level)
-     * - admin login page
+     * Match all request paths except for:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico
+     * - public images/media
      */
-    '/((?!_next/static|_next/image|favicon.ico|news|crypto|finance|admin/login|api|go).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
