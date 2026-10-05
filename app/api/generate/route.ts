@@ -75,14 +75,22 @@ const FORMAT_KEYS = Object.keys(FORMAT_INSTRUCTIONS) as Array<keyof typeof FORMA
 
 // ─── POST /api/generate ───────────────────────────────────────────────────────
 export async function POST(request: Request) {
-  // 1. API key guard
-  const apiKey = process.env.OPENAI_API_KEY;
+  // 1. API key guard (Supports NVIDIA NIM and OpenAI)
+  const apiKey = process.env.NVIDIA_API_KEY || process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
-      { error: 'OPENAI_API_KEY not configured', code: 'NO_API_KEY' },
+      { error: 'NVIDIA_API_KEY or OPENAI_API_KEY not configured', code: 'NO_API_KEY' },
       { status: 503 },
     );
   }
+
+  const isNvidia = !!process.env.NVIDIA_API_KEY;
+  const baseURL = isNvidia 
+    ? (process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1')
+    : (process.env.OPENAI_BASE_URL || undefined);
+  const selectedModel = isNvidia
+    ? (process.env.NVIDIA_MODEL || 'meta/llama-3.3-70b-instruct')
+    : (process.env.OPENAI_MODEL || 'gpt-4o-mini');
 
   // 2. Parse body
   const body = await request.json();
@@ -117,7 +125,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const openai = new OpenAI({ apiKey });
+  const openai = new OpenAI({ apiKey, baseURL });
   let totalInputTokens = 0;
   let totalOutputTokens = 0;
 
@@ -136,7 +144,7 @@ Requirements:
     const pass1User = `${FORMAT_INSTRUCTIONS[format]} about: "${topic}". Category: "${category}". Target high search intent and GEO citation.`;
 
     const pass1Res = await callOpenAIWithRetry(openai, {
-      model: 'gpt-4o-mini',
+      model: selectedModel,
       temperature: 0.7,
       max_tokens: 2500,
       messages: [
@@ -178,7 +186,7 @@ Return ONLY a valid JSON object with these exact keys:
 }`;
 
     const pass2Res = await callOpenAIWithRetry(openai, {
-      model: 'gpt-4o-mini',
+      model: selectedModel,
       temperature: 0.85, // Higher temperature for natural human flair
       max_tokens: 3000,
       response_format: { type: 'json_object' },

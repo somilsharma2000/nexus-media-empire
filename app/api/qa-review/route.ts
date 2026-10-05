@@ -97,15 +97,22 @@ async function updateTokenUsage(inputTokens: number, outputTokens: number) {
 }
 
 // ─── POST /api/qa-review ──────────────────────────────────────────────────────
-export async function POST(request: Request) {
-  // 1. API key guard
-  const apiKey = process.env.OPENAI_API_KEY;
+  // 1. API key guard (Supports NVIDIA NIM and OpenAI)
+  const apiKey = process.env.NVIDIA_API_KEY || process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
-      { error: 'OPENAI_API_KEY not configured', code: 'NO_API_KEY' },
+      { error: 'NVIDIA_API_KEY or OPENAI_API_KEY not configured', code: 'NO_API_KEY' },
       { status: 503 },
     );
   }
+
+  const isNvidia = !!process.env.NVIDIA_API_KEY;
+  const baseURL = isNvidia 
+    ? (process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1')
+    : (process.env.OPENAI_BASE_URL || undefined);
+  const selectedModel = isNvidia
+    ? (process.env.NVIDIA_MODEL || 'meta/llama-3.3-70b-instruct')
+    : (process.env.OPENAI_MODEL || 'gpt-4o-mini');
 
   // 2. Parse body
   const body = await request.json();
@@ -124,8 +131,8 @@ export async function POST(request: Request) {
     requireQAForPublish: true,
   });
 
-  // 4. Call OpenAI
-  const openai = new OpenAI({ apiKey });
+  // 4. Call OpenAI / NVIDIA
+  const openai = new OpenAI({ apiKey, baseURL });
 
   const systemPrompt = `You are a strict, adversarial editorial QA reviewer and fact-checker (ex-editor-in-chief).
 Evaluate the article across 5 rigorous dimensions and return ONLY valid JSON:
@@ -159,7 +166,7 @@ Approve if average >= ${config.approveThreshold}. Revise if ${config.reviseThres
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     completion = await (openai.chat.completions.create as any)(
       {
-        model: 'gpt-4o-mini',
+        model: selectedModel,
         temperature: 0.3,
         max_tokens: 800,
         response_format: { type: 'json_object' },

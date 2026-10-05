@@ -90,7 +90,10 @@ export default function CryptoSite() {
       const res = await fetch('/api/articles');
       const data = await res.json();
       // Filter ONLY Crypto articles (or fallback if none exist to show the engine works)
-      const cryptoNews = data.filter((a: Article) => a.category.toLowerCase().includes('crypto') || a.category.toLowerCase().includes('finance'));
+      const cryptoNews = data.filter((a: Article) => {
+        const cat = (a.category || a.niche || "").toLowerCase();
+        return cat.includes('crypto') || cat.includes('bitcoin') || cat.includes('solana') || cat.includes('defi');
+      });
       setArticles(cryptoNews.length > 0 ? cryptoNews : data); 
     } catch (e) {
       console.error(e);

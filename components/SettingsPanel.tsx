@@ -21,12 +21,28 @@ const SETTING_GROUPS: { title: string; icon: React.ReactNode; color: string; set
     color: "yellow",
     settings: [
       {
+        key: "NVIDIA_API_KEY",
+        label: "NVIDIA AI API Key (Preferred)",
+        description: "Zero rate limit high-throughput generation via NVIDIA NIM. Get at build.nvidia.com",
+        placeholder: "nvapi-...",
+        isSecret: true,
+        required: false,
+        helpUrl: "https://build.nvidia.com",
+      },
+      {
+        key: "NVIDIA_MODEL",
+        label: "NVIDIA Model Name",
+        description: "Model to use for writing (e.g. meta/llama-3.3-70b-instruct or nvidia/llama-3.1-nemotron-70b-instruct).",
+        placeholder: "meta/llama-3.3-70b-instruct",
+        required: false,
+      },
+      {
         key: "OPENAI_API_KEY",
-        label: "OpenAI API Key",
+        label: "OpenAI API Key (Fallback)",
         description: "Powers article generation and QA review. Get yours at platform.openai.com/api-keys",
         placeholder: "sk-proj-...",
         isSecret: true,
-        required: true,
+        required: false,
         helpUrl: "https://platform.openai.com/api-keys",
       },
       {

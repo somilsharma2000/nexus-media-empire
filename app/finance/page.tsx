@@ -92,7 +92,10 @@ export default function FinanceSite() {
     try {
       const res = await fetch('/api/articles');
       const data = await res.json();
-      const financeNews = data.filter((a: Article) => a.category.toLowerCase().includes('finance') || a.category.toLowerCase().includes('market'));
+      const financeNews = data.filter((a: Article) => {
+        const cat = (a.category || a.niche || "").toLowerCase();
+        return cat.includes('finance') || cat.includes('market') || cat.includes('invest') || cat.includes('tax') || cat.includes('wealth');
+      });
       setArticles(financeNews.length > 0 ? financeNews : data);
     } catch (e) {
       console.error(e);
