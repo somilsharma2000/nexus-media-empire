@@ -6,7 +6,7 @@ import {
   LayoutDashboard, BrainCircuit, Image as ImageIcon, X, Copy, ChevronRight, 
   TrendingUp, Briefcase, LineChart, Lock,
   Database, RefreshCw, Power, Sliders, Brain, Code2, Key, PieChart, BarChart, Layers,
-  Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock, Palette
+  Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock, Palette, Package, Flame
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import RevenueDashboard from "../components/RevenueDashboard";
@@ -28,6 +28,8 @@ import NewsletterManager from "../components/NewsletterManager";
 import PosterStudio from "../components/PosterStudio";
 import GodModeHub from "../components/GodModeHub";
 import OmniSocialDashboard from "../components/OmniSocialDashboard";
+import DigitalProductManager from "../components/DigitalProductManager";
+import ViralHookStudio from "../components/ViralHookStudio";
 
 
 const TRENDS = [
@@ -202,6 +204,8 @@ export default function NexusDashboard() {
           <NavItem icon={<Tag />} label="🎯 Topic Ingestion" active={currentView === 'topics'} onClick={() => setCurrentView('topics')} />
           <NavItem icon={<RefreshCw />} label="⚡ Auto-Pilot Pipeline" active={currentView === 'autopilot'} onClick={() => setCurrentView('autopilot')} />
           <NavItem icon={<Layers />} label="💰 Ad Slots & Links" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
+          <NavItem icon={<Package className="text-emerald-400" />} label="📦 Digital Products" active={currentView === 'products'} onClick={() => setCurrentView('products')} />
+          <NavItem icon={<Flame className="text-amber-400" />} label="🔥 Viral Hook Studio" active={currentView === 'hooks'} onClick={() => setCurrentView('hooks')} />
           <NavItem icon={<Share2 className="text-cyan-400" />} label="🚀 Omni-Brand Socials" active={currentView === 'omnisocial'} onClick={() => setCurrentView('omnisocial')} />
           <NavItem icon={<Share2 />} label="📲 Social Syndication" active={currentView === 'social'} onClick={() => setCurrentView('social')} />
           <NavItem icon={<Palette />} label="🎨 Promo Poster Studio" active={currentView === 'posters'} onClick={() => setCurrentView('posters')} />
@@ -1138,6 +1142,38 @@ export default function NexusDashboard() {
       {currentView === 'omnisocial' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <OmniSocialDashboard />
+        </motion.div>
+      )}
+
+      {/* VIEW: DIGITAL PRODUCT FUNNEL */}
+      {currentView === 'products' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-8">
+            <h2 className="text-3xl font-bold flex items-center gap-3">
+              <Package className="w-8 h-8 text-emerald-400" />
+              Digital Product Funnel & Intent Matcher
+            </h2>
+            <p className="text-gray-400 mt-2">
+              Attach high-converting digital downloads, checklists, and templates to matching articles with 100% net profit margin.
+            </p>
+          </header>
+          <DigitalProductManager />
+        </motion.div>
+      )}
+
+      {/* VIEW: VIRAL HOOK STUDIO */}
+      {currentView === 'hooks' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <header className="mb-8">
+            <h2 className="text-3xl font-bold flex items-center gap-3">
+              <Flame className="w-8 h-8 text-amber-500" />
+              Viral Hook Synthesis & Copy Studio
+            </h2>
+            <p className="text-gray-400 mt-2">
+              Generate scroll-stopping psychological hooks across all 7 viral archetypes with 1-click clipboard copy.
+            </p>
+          </header>
+          <ViralHookStudio />
         </motion.div>
       )}
 
