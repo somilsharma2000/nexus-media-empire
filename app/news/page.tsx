@@ -170,19 +170,6 @@ export default function PublicNewsSite() {
       {/* Brand Sponsor Takeover Banner */}
       <BrandTakeoverBanner niche="news" />
 
-
-      {/* Breaking News Ticker */}
-      <div className="bg-blue-600 text-white text-xs font-bold uppercase tracking-widest py-1.5 px-4 flex items-center overflow-hidden whitespace-nowrap">
-        <span className="bg-black text-blue-400 px-2 py-0.5 rounded mr-4 z-10 flex items-center gap-1"><Zap className="w-3 h-3"/> BREAKING</span>
-        <div className="animate-marquee inline-block">
-          {articles.map((a, i) => (
-            <span key={i} className="mx-4">{a.title} &bull;</span>
-          ))}
-          <span className="mx-4">Bitcoin surges past $120k mark &bull;</span>
-          <span className="mx-4">EU drafts new AI regulation framework &bull;</span>
-        </div>
-      </div>
-
       {/* Premium Navbar */}
       <nav className="border-b border-gray-900 bg-black/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">

@@ -58,27 +58,27 @@ export default function GodModeLiveTicker({ niche = "all" }: { niche?: string })
   }, []);
 
   return (
-    <div className="bg-[#03060a] border-b border-gray-900/90 text-xs py-1.5 px-4 overflow-hidden relative select-none font-mono">
+    <div className="bg-[#020509] border-b border-gray-900 text-xs py-1.5 px-4 overflow-hidden relative select-none font-mono">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         
         {/* Left Status Pulse */}
-        <div className="hidden sm:flex items-center gap-2 shrink-0 border-r border-gray-800 pr-4">
+        <div className="hidden sm:flex items-center gap-2 shrink-0 border-r border-gray-800/80 pr-4">
           <span className={`w-2 h-2 rounded-full ${pulse ? "bg-cyan-400 scale-125" : "bg-emerald-400"} transition-all duration-300 shadow-[0_0_8px_rgba(52,211,153,0.8)]`} />
-          <span className="text-[10px] font-bold text-white uppercase tracking-wider">LIVE TELEMETRY</span>
-          <span className="text-[10px] text-gray-500 bg-gray-900 px-1.5 py-0.5 rounded border border-gray-800">
-            NEXUS CORE
+          <span className="text-[10px] font-bold text-gray-200 tracking-wider">LIVE TELEMETRY</span>
+          <span className="text-[9px] text-gray-400 bg-gray-900/80 px-1.5 py-0.5 rounded border border-gray-800 font-mono">
+            NEXUS
           </span>
         </div>
 
         {/* Marquee Streaming Items */}
-        <div className="flex-1 overflow-hidden whitespace-nowrap relative">
-          <div className="inline-flex items-center gap-6 animate-marquee">
-            {displayItems.concat(displayItems).map((item, idx) => (
+        <div className="flex-1 overflow-hidden whitespace-nowrap relative mask-fade-edges">
+          <div className="animate-ticker items-center gap-4">
+            {displayItems.concat(displayItems).concat(displayItems).map((item, idx) => (
               <div
                 key={idx}
-                className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-lg bg-[#070c14] border border-gray-800/80 hover:border-blue-500/50 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-md bg-[#070b12] border border-gray-800/70 hover:border-blue-500/40 transition-colors cursor-pointer shrink-0"
               >
-                <span className="font-bold text-gray-200 text-[11px]">{item.symbol}</span>
+                <span className="font-bold text-gray-300 text-[11px]">{item.symbol}</span>
                 <span className="text-gray-400 text-[11px]">{item.price}</span>
                 <span
                   className={`text-[10px] font-bold flex items-center gap-0.5 ${
@@ -94,10 +94,10 @@ export default function GodModeLiveTicker({ niche = "all" }: { niche?: string })
         </div>
 
         {/* Right Sentiment Gauge */}
-        <div className="hidden lg:flex items-center gap-2 shrink-0 pl-4 border-l border-gray-800 text-[11px]">
-          <span className="text-gray-400">Market Mood:</span>
-          <span className="text-emerald-400 font-bold bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded-full text-[10px]">
-            ⚡ Extreme Greed (78)
+        <div className="hidden lg:flex items-center gap-2 shrink-0 pl-4 border-l border-gray-800/80 text-[11px]">
+          <span className="text-gray-500 text-[10px] uppercase font-mono">Market Mood:</span>
+          <span className="text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-800/60 px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1">
+            <Zap className="w-2.5 h-2.5" /> Extreme Greed (78)
           </span>
         </div>
 

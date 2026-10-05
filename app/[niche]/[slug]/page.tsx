@@ -228,7 +228,7 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
         />
 
         {/* AI Audio Narration Widget */}
-        <ArticleAudioPlayer title={article.title} readTime="6 min" />
+        <ArticleAudioPlayer title={article.title} readTime="6 min" content={article.content} />
 
         {/* LLM / GEO Search Engine Quick Verdict Card */}
         <LlmAnswerBox
