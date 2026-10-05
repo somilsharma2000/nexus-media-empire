@@ -27,6 +27,7 @@ import BacklinkManager from "../components/BacklinkManager";
 import NewsletterManager from "../components/NewsletterManager";
 import PosterStudio from "../components/PosterStudio";
 import GodModeHub from "../components/GodModeHub";
+import OmniSocialDashboard from "../components/OmniSocialDashboard";
 
 
 const TRENDS = [
@@ -201,6 +202,7 @@ export default function NexusDashboard() {
           <NavItem icon={<Tag />} label="🎯 Topic Ingestion" active={currentView === 'topics'} onClick={() => setCurrentView('topics')} />
           <NavItem icon={<RefreshCw />} label="⚡ Auto-Pilot Pipeline" active={currentView === 'autopilot'} onClick={() => setCurrentView('autopilot')} />
           <NavItem icon={<Layers />} label="💰 Ad Slots & Links" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
+          <NavItem icon={<Share2 className="text-cyan-400" />} label="🚀 Omni-Brand Socials" active={currentView === 'omnisocial'} onClick={() => setCurrentView('omnisocial')} />
           <NavItem icon={<Share2 />} label="📲 Social Syndication" active={currentView === 'social'} onClick={() => setCurrentView('social')} />
           <NavItem icon={<Palette />} label="🎨 Promo Poster Studio" active={currentView === 'posters'} onClick={() => setCurrentView('posters')} />
           <NavItem icon={<Link2 />} label="🔗 Backlink Authority" active={currentView === 'backlinks'} onClick={() => setCurrentView('backlinks')} />
@@ -1129,6 +1131,13 @@ export default function NexusDashboard() {
       {currentView === 'godmode' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <GodModeHub />
+        </motion.div>
+      )}
+
+      {/* VIEW: OMNI-BRAND SOCIAL MATRIX */}
+      {currentView === 'omnisocial' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <OmniSocialDashboard />
         </motion.div>
       )}
 
