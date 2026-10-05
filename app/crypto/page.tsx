@@ -6,6 +6,9 @@ import CookieConsent from "../../components/CookieConsent";
 import ArticleSearch from "../../components/ArticleSearch";
 import NewsletterForm from "../../components/NewsletterForm";
 import BrandTakeoverBanner from "../../components/BrandTakeoverBanner";
+import GodModeLiveTicker from "../../components/GodModeLiveTicker";
+import GodModeWhaleTracker from "../../components/GodModeWhaleTracker";
+
 
 
 interface Article { id: number | string; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; slug?: string; niche?: string; }
@@ -148,8 +151,12 @@ export default function CryptoSite() {
         </div>
       </div>
 
+      {/* Live God-Mode Crypto Ticker */}
+      <GodModeLiveTicker niche="crypto" />
+
       {/* Brand Sponsor Takeover Banner */}
       <BrandTakeoverBanner niche="crypto" />
+
 
       <div className="bg-green-600 text-black text-xs font-bold uppercase tracking-widest py-1.5 px-4 flex items-center overflow-hidden whitespace-nowrap">
         <span className="bg-black text-green-400 px-2 py-0.5 rounded mr-4 z-10 flex items-center gap-1"><Zap className="w-3 h-3"/> LIVE TICKER</span>
@@ -236,7 +243,11 @@ export default function CryptoSite() {
               {midFeedSlot ? <MidFeedAdCard slot={midFeedSlot} /> : <HouseAdCard />}
             </div>
 
+            {/* Live On-Chain Whale & Smart Money Radar */}
+            <GodModeWhaleTracker />
+
             <NewsletterForm niche="crypto" variant="inline" />
+
           </>
         )}
       </main>

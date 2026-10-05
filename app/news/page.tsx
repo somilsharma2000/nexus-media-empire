@@ -7,6 +7,8 @@ import CookieConsent from "../../components/CookieConsent";
 import ArticleSearch from "../../components/ArticleSearch";
 import NewsletterForm from "../../components/NewsletterForm";
 import BrandTakeoverBanner from "../../components/BrandTakeoverBanner";
+import GodModeLiveTicker from "../../components/GodModeLiveTicker";
+
 
 
 interface Article { id: number | string; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; slug?: string; niche?: string; }
@@ -162,8 +164,12 @@ export default function PublicNewsSite() {
       />
 
       
+      {/* Live God-Mode Market & Intelligence Ticker */}
+      <GodModeLiveTicker niche="news" />
+
       {/* Brand Sponsor Takeover Banner */}
       <BrandTakeoverBanner niche="news" />
+
 
       {/* Breaking News Ticker */}
       <div className="bg-blue-600 text-white text-xs font-bold uppercase tracking-widest py-1.5 px-4 flex items-center overflow-hidden whitespace-nowrap">

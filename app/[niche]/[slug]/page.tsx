@@ -19,6 +19,9 @@ import ExitIntentModal from "../../../components/ExitIntentModal";
 import SmartBehavioralAdUnit from "../../../components/SmartBehavioralAdUnit";
 import SmartBehavioralPill from "../../../components/SmartBehavioralPill";
 import BrandTakeoverBanner from "../../../components/BrandTakeoverBanner";
+import GodModeLiveTicker from "../../../components/GodModeLiveTicker";
+import GodModeArticleCopilot from "../../../components/GodModeArticleCopilot";
+
 
 
 interface Article {
@@ -164,8 +167,12 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
       {/* Exit Intent Lead Capture Modal */}
       <ExitIntentModal niche={article.niche} />
 
+      {/* Live God-Mode Telemetry Ticker */}
+      <GodModeLiveTicker niche={article.niche} />
+
       {/* Brand Sponsor Takeover Banner */}
       <BrandTakeoverBanner niche={article.niche} />
+
 
       {/* Top Breadcrumb Nav */}
       <nav className="border-b border-gray-900 bg-black/80 backdrop-blur-md sticky top-0 z-40">
@@ -273,8 +280,17 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
           <InteractiveCalculator type={article.niche === "crypto" ? "dca" : "compound"} />
         )}
 
+        {/* GOD-MODE AI Article Copilot, Takeaways & Sentiment Barometer */}
+        <GodModeArticleCopilot 
+          title={article.title} 
+          niche={article.niche} 
+          content={article.content} 
+          excerpt={article.excerpt} 
+        />
+
         {/* Floating High-Intent Behavioral Trigger Pill */}
         <SmartBehavioralPill niche={article.niche} />
+
 
         {/* E-E-A-T Verified Author & Reviewer Box */}
         <AuthorBio niche={article.niche} />

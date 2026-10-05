@@ -6,6 +6,9 @@ import CookieConsent from "../../components/CookieConsent";
 import ArticleSearch from "../../components/ArticleSearch";
 import NewsletterForm from "../../components/NewsletterForm";
 import BrandTakeoverBanner from "../../components/BrandTakeoverBanner";
+import GodModeLiveTicker from "../../components/GodModeLiveTicker";
+import GodModeMacroRadar from "../../components/GodModeMacroRadar";
+
 
 
 interface Article { id: number | string; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; slug?: string; niche?: string; }
@@ -147,8 +150,12 @@ export default function FinanceSite() {
         </div>
       </div>
 
+      {/* Live God-Mode Macro Ticker */}
+      <GodModeLiveTicker niche="finance" />
+
       {/* Brand Sponsor Takeover Banner */}
       <BrandTakeoverBanner niche="finance" />
+
 
       <header className="border-b-4 border-gray-900 bg-white sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 h-24 flex justify-between items-center">
@@ -216,7 +223,11 @@ export default function FinanceSite() {
                 <NewsletterForm niche="finance" variant="sidebar" />
               </div>
             </div>
+
+            {/* Quantitative Macro & Valuation Radar */}
+            <GodModeMacroRadar />
           </>
+
         )}
       </main>
 
