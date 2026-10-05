@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Share2, Radio, Send, CheckCircle, Clock, ExternalLink, RefreshCw } from "lucide-react";
+import { formatDateTime } from "@/lib/format";
 
 interface SocialLog {
   id: string;
@@ -200,7 +201,7 @@ export default function SocialDistribution() {
                     <span className="text-gray-500">•</span>
                     <span className="text-gray-300 truncate max-w-sm">{log.title}</span>
                   </div>
-                  <div className="text-[11px] text-gray-500">{new Date(log.timestamp).toLocaleString()}</div>
+                  <div className="text-[11px] text-gray-500">{formatDateTime(log.timestamp)}</div>
                 </div>
 
                 <div className="flex items-center gap-3">

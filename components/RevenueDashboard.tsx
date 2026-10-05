@@ -11,6 +11,7 @@ import {
   Wifi,
   WifiOff,
 } from "lucide-react";
+import { formatNumber } from "@/lib/format";
 
 interface SiteRevenue {
   name: string;
@@ -197,7 +198,7 @@ export default function RevenueDashboard() {
         <StatCard
           icon={<Eye className="w-4 h-4 text-purple-400" />}
           label="Pageviews"
-          value={data.network.pageviews.toLocaleString()}
+          value={formatNumber(data.network.pageviews)}
         />
         <StatCard
           icon={<BarChart2 className="w-4 h-4 text-yellow-400" />}
@@ -274,7 +275,7 @@ export default function RevenueDashboard() {
                   </div>
                   <div className="flex items-center gap-4 text-xs text-gray-400">
                     <span>
-                      {site.pageviews.toLocaleString()} views
+                      {formatNumber(site.pageviews)} views
                     </span>
                     <span className="font-bold text-green-400 text-sm">
                       ${fmt(site.revenue)}

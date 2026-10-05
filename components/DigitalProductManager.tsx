@@ -20,7 +20,7 @@ import {
   Zap
 } from "lucide-react";
 import InstantProductCheckoutModal from "./InstantProductCheckoutModal";
-
+import { formatNumber } from "@/lib/format";
 
 interface DigitalProduct {
   id: string;
@@ -197,7 +197,7 @@ export default function DigitalProductManager() {
             <span className="text-xs text-gray-400 font-bold uppercase">Digital Product Gross</span>
             <DollarSign className="w-5 h-5 text-emerald-400" />
           </div>
-          <p className="text-3xl font-black text-white">${totalRevenue.toLocaleString()}</p>
+          <p className="text-3xl font-black text-white">${formatNumber(totalRevenue)}</p>
           <p className="text-xs text-emerald-400 mt-1 flex items-center gap-1 font-mono">
             <TrendingUp className="w-3 h-3" /> 100% Net Profit Margin ($0 COGS)
           </p>
@@ -208,7 +208,7 @@ export default function DigitalProductManager() {
             <span className="text-xs text-gray-400 font-bold uppercase">Total Digital Downloads</span>
             <Download className="w-5 h-5 text-blue-400" />
           </div>
-          <p className="text-3xl font-black text-white">{totalSales.toLocaleString()}</p>
+          <p className="text-3xl font-black text-white">{formatNumber(totalSales)}</p>
           <p className="text-xs text-gray-400 mt-1 font-mono">Instant PDF & Sheet Access</p>
         </div>
 
@@ -299,7 +299,7 @@ export default function DigitalProductManager() {
                   <div className="flex items-center gap-4">
                     <div className="text-right font-mono">
                       <p className="text-sm font-bold text-white">{product.salesCount} sales</p>
-                      <p className="text-xs text-emerald-400">${product.revenue.toLocaleString()}</p>
+                      <p className="text-xs text-emerald-400">${formatNumber(product.revenue)}</p>
                     </div>
 
                     <button

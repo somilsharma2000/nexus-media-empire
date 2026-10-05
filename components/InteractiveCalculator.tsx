@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Calculator, TrendingUp, DollarSign } from "lucide-react";
+import { formatNumber } from "@/lib/format";
 
 interface CalculatorProps {
   type?: "compound" | "dca";
@@ -74,19 +75,19 @@ export default function InteractiveCalculator({ type = "compound" }: CalculatorP
         <div className="p-3 bg-gray-950 rounded-xl border border-gray-900">
           <span className="text-[11px] text-gray-500 uppercase font-semibold">Total Invested</span>
           <div className="text-base font-bold font-mono text-gray-300 mt-0.5">
-            ${totalInvested.toLocaleString()}
+            ${formatNumber(totalInvested)}
           </div>
         </div>
         <div className="p-3 bg-gray-950 rounded-xl border border-gray-900">
           <span className="text-[11px] text-gray-500 uppercase font-semibold">Est. Wealth Created</span>
           <div className="text-base font-bold font-mono text-green-400 mt-0.5">
-            +${totalGains.toLocaleString()}
+            +${formatNumber(totalGains)}
           </div>
         </div>
         <div className="p-3 bg-emerald-950/40 rounded-xl border border-emerald-900/60">
           <span className="text-[11px] text-emerald-400 uppercase font-bold">Future Portfolio Value</span>
           <div className="text-xl font-black font-mono text-white mt-0.5">
-            ${futureValue.toLocaleString()}
+            ${formatNumber(futureValue)}
           </div>
         </div>
       </div>

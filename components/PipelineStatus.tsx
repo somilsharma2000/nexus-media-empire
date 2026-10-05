@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { formatDateTime } from '@/lib/format';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 interface StepState {
@@ -255,7 +256,7 @@ export default function PipelineStatus() {
                       <span className="text-sm truncate max-w-[60%]">{a.title}</span>
                       <div className="text-right text-sm text-gray-400">
                         <div className="text-blue-400">{formatMinutes(a.minutesUntil)}</div>
-                        <div className="text-xs">{new Date(a.publishAt).toLocaleString()}</div>
+                        <div className="text-xs">{formatDateTime(a.publishAt)}</div>
                       </div>
                     </div>
                   ))}

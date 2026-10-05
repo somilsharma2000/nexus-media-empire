@@ -18,6 +18,7 @@ import {
   ArrowRight,
   RefreshCw
 } from "lucide-react";
+import { formatNumber } from "@/lib/format";
 
 export default function GodModeHub() {
   // Master Autopilot State
@@ -187,7 +188,7 @@ export default function GodModeHub() {
             <div className="text-right">
               <div className="text-xs text-gray-400">Projected Monthly</div>
               <div className="text-xl font-black text-emerald-400">
-                \${totalProjectedMonthly.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}/mo
+                ${formatNumber(Math.round(totalProjectedMonthly))}/mo
               </div>
             </div>
           </div>
@@ -197,7 +198,7 @@ export default function GodModeHub() {
             <div>
               <div className="flex justify-between text-gray-300 font-medium mb-1.5">
                 <span>Monthly Network Pageviews</span>
-                <span className="text-blue-400 font-bold font-mono">{monthlyTraffic.toLocaleString()} views</span>
+                <span className="text-blue-400 font-bold font-mono">{formatNumber(monthlyTraffic)} views</span>
               </div>
               <input
                 type="range"
@@ -214,7 +215,7 @@ export default function GodModeHub() {
             <div>
               <div className="flex justify-between text-gray-300 font-medium mb-1.5">
                 <span>Blended Ad RPM (Tech/Finance/Crypto)</span>
-                <span className="text-emerald-400 font-bold font-mono">\${averageRpm} / 1k views</span>
+                <span className="text-emerald-400 font-bold font-mono">${averageRpm} / 1k views</span>
               </div>
               <input
                 type="range"
@@ -248,7 +249,7 @@ export default function GodModeHub() {
             <div>
               <div className="flex justify-between text-gray-300 font-medium mb-1.5">
                 <span>Newsletter Audience Size</span>
-                <span className="text-amber-400 font-bold font-mono">{newsletterSubscribers.toLocaleString()} subscribers</span>
+                <span className="text-amber-400 font-bold font-mono">{formatNumber(newsletterSubscribers)} subscribers</span>
               </div>
               <input
                 type="range"
@@ -266,15 +267,15 @@ export default function GodModeHub() {
           <div className="grid grid-cols-3 gap-3 pt-3 border-t border-gray-800 text-center">
             <div className="bg-gray-950 p-3 rounded-2xl border border-gray-800">
               <div className="text-[10px] text-gray-400">AdSense / Display</div>
-              <div className="text-sm font-bold text-white">\${Math.round(calculatedAdSenseRevenue).toLocaleString()}</div>
+              <div className="text-sm font-bold text-white">${formatNumber(Math.round(calculatedAdSenseRevenue))}</div>
             </div>
             <div className="bg-gray-950 p-3 rounded-2xl border border-gray-800">
               <div className="text-[10px] text-gray-400">Affiliate / CPA</div>
-              <div className="text-sm font-bold text-white">\${Math.round(calculatedAffiliateRevenue).toLocaleString()}</div>
+              <div className="text-sm font-bold text-white">${formatNumber(Math.round(calculatedAffiliateRevenue))}</div>
             </div>
             <div className="bg-gray-950 p-3 rounded-2xl border border-gray-800">
               <div className="text-[10px] text-gray-400">Newsletter Sponsors</div>
-              <div className="text-sm font-bold text-white">\${Math.round(calculatedNewsletterRevenue).toLocaleString()}</div>
+              <div className="text-sm font-bold text-white">${formatNumber(Math.round(calculatedNewsletterRevenue))}</div>
             </div>
           </div>
         </div>

@@ -17,6 +17,7 @@ import {
   RefreshCw,
   Edit2
 } from "lucide-react";
+import { formatNumber } from "@/lib/format";
 
 interface SponsorInquiry {
   id: string;
@@ -254,7 +255,7 @@ export default function SponsorManager() {
                 </div>
                 <div className="text-right">
                   <div className="text-[10px] text-gray-500 uppercase">Impressions</div>
-                  <div className="text-gray-300 font-bold">{s.impressionsDelivered.toLocaleString()}</div>
+                  <div className="text-gray-300 font-bold">{formatNumber(s.impressionsDelivered)}</div>
                 </div>
               </div>
 

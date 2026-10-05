@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Link2, Plus, Trash2, ExternalLink, ShieldCheck, CheckCircle } from "lucide-react";
+import { formatNumber } from "@/lib/format";
 
 interface Backlink {
   id: string;
@@ -100,7 +101,7 @@ export default function BacklinkManager() {
         </div>
         <div className="p-4 rounded-xl bg-gray-950 border border-gray-800">
           <span className="text-xs text-gray-400">Estimated Referral Clicks</span>
-          <div className="text-2xl font-bold text-green-400 mt-1">{totalClicks.toLocaleString()}</div>
+          <div className="text-2xl font-bold text-green-400 mt-1">{formatNumber(totalClicks)}</div>
         </div>
         <div className="p-4 rounded-xl bg-gray-950 border border-gray-800">
           <span className="text-xs text-gray-400">Domain Rating Impact</span>

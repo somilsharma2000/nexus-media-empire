@@ -24,6 +24,7 @@ import {
   Award
 } from "lucide-react";
 import CookieConsent from "../../components/CookieConsent";
+import { formatNumber } from "../../lib/format";
 
 export default function AdvertisePage() {
   const [budgetSlider, setBudgetSlider] = useState<number>(2500);
@@ -195,7 +196,7 @@ export default function AdvertisePage() {
             <div className="flex justify-between items-center">
               <span className="text-xs font-mono text-gray-400 uppercase font-bold">Planned Monthly Budget</span>
               <span className="text-2xl font-black text-white font-mono text-emerald-400">
-                ${budgetSlider.toLocaleString()} <span className="text-xs text-gray-500 font-normal">/ month</span>
+                ${formatNumber(budgetSlider)} <span className="text-xs text-gray-500 font-normal">/ month</span>
               </span>
             </div>
             <input
@@ -219,19 +220,19 @@ export default function AdvertisePage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="bg-[#03060a] p-5 rounded-2xl border border-gray-800 text-center space-y-1">
               <div className="text-xs font-mono text-gray-400">Guaranteed Impressions</div>
-              <div className="text-2xl font-black text-white">{estimatedImpressions.toLocaleString()}</div>
+              <div className="text-2xl font-black text-white">{formatNumber(estimatedImpressions)}</div>
               <div className="text-[10px] text-blue-400 font-mono">${cpmRate} CPM Benchmark</div>
             </div>
 
             <div className="bg-[#03060a] p-5 rounded-2xl border border-gray-800 text-center space-y-1">
               <div className="text-xs font-mono text-gray-400">Projected Qualified Clicks</div>
-              <div className="text-2xl font-black text-emerald-400">{estimatedClicks.toLocaleString()}</div>
+              <div className="text-2xl font-black text-emerald-400">{formatNumber(estimatedClicks)}</div>
               <div className="text-[10px] text-gray-500 font-mono">2.8% Average CTR</div>
             </div>
 
             <div className="bg-[#03060a] p-5 rounded-2xl border border-gray-800 text-center space-y-1">
               <div className="text-xs font-mono text-gray-400">Projected B2B Leads</div>
-              <div className="text-2xl font-black text-purple-400">{estimatedLeads.toLocaleString()}</div>
+              <div className="text-2xl font-black text-purple-400">{formatNumber(estimatedLeads)}</div>
               <div className="text-[10px] text-gray-500 font-mono">High-Intent Founders</div>
             </div>
 

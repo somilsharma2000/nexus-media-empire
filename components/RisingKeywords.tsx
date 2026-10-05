@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { formatNumber } from '@/lib/format';
 
 interface Keyword {
   keyword: string;
@@ -97,7 +98,7 @@ export default function RisingKeywords() {
                   <td className="py-2 pr-4 font-medium">{kw.keyword}</td>
                   <td className="py-2 pr-4">{kw.position}</td>
                   <td className="py-2 pr-4">{kw.clicks}</td>
-                  <td className="py-2 pr-4">{kw.impressions.toLocaleString()}</td>
+                  <td className="py-2 pr-4">{formatNumber(kw.impressions)}</td>
                   <td className={`py-2 pr-4 font-bold ${trendColor(kw.trend)}`}>
                     {trendIcon(kw.trend)}
                   </td>

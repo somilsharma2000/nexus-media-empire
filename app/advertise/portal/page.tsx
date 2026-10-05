@@ -17,6 +17,8 @@ import {
   Layers
 } from "lucide-react";
 import CookieConsent from "../../../components/CookieConsent";
+import { formatNumber } from "../../../lib/format";
+
 
 interface CampaignData {
   id: string;
@@ -227,9 +229,9 @@ export default function SponsorPortalPage() {
                   <span>Delivered Impressions</span>
                   <Eye className="w-4 h-4 text-blue-400" />
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-white">{selectedBrand.impressionsDelivered.toLocaleString()}</div>
+                <div className="text-2xl sm:text-3xl font-black text-white">{formatNumber(selectedBrand.impressionsDelivered)}</div>
                 <div className="text-[11px] text-gray-500 font-mono">
-                  Goal: {selectedBrand.impressionsGoal.toLocaleString()} ({progress}%)
+                  Goal: {formatNumber(selectedBrand.impressionsGoal)} ({progress}%)
                 </div>
                 <div className="w-full bg-gray-900 h-1.5 rounded-full overflow-hidden mt-2">
                   <div className="bg-blue-500 h-full rounded-full" style={{ width: `${progress}%` }} />
@@ -241,7 +243,7 @@ export default function SponsorPortalPage() {
                   <span>Verified Clicks</span>
                   <MousePointer className="w-4 h-4 text-emerald-400" />
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-white">{selectedBrand.uniqueClicks.toLocaleString()}</div>
+                <div className="text-2xl sm:text-3xl font-black text-white">{formatNumber(selectedBrand.uniqueClicks)}</div>
                 <div className="text-[11px] text-emerald-400 font-mono">
                   100% Bot-Filtered Attribution
                 </div>
@@ -290,7 +292,7 @@ export default function SponsorPortalPage() {
                         <span className="font-mono text-emerald-400 font-bold">{p.clicks} clicks</span>
                       </div>
                       <div className="flex justify-between items-center text-[11px] text-gray-500 font-mono">
-                        <span>{p.views.toLocaleString()} impressions</span>
+                        <span>{formatNumber(p.views)} impressions</span>
                         <span>{((p.clicks / p.views) * 100).toFixed(2)}% CTR</span>
                       </div>
                     </div>

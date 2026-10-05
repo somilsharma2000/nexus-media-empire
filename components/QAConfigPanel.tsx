@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { formatNumber } from '@/lib/format';
 
 interface QAConfig {
   approveThreshold: number;
@@ -196,7 +197,7 @@ export default function QAConfigPanel() {
             <span>${usage.remainingUsd.toFixed(4)} remaining of ${usage.budgetUsd}</span>
           </div>
           <p className="text-xs text-gray-500">
-            {usage.tokensUsed.toLocaleString()} tokens used this month
+            {formatNumber(usage.tokensUsed)} tokens used this month
           </p>
         </div>
       )}
