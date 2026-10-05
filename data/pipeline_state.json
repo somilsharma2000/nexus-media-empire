@@ -1,5 +1,16 @@
 {
-  "trend_scout": { "status": "active", "consecutiveFailures": 0 },
-  "qa_review": { "status": "active", "consecutiveFailures": 0 },
-  "publisher": { "status": "active", "consecutiveFailures": 0 }
+  "trend_scout": {
+    "status": "active",
+    "consecutiveFailures": 0,
+    "lastRun": "2026-10-05T19:58:11.564Z"
+  },
+  "qa_review": {
+    "status": "active",
+    "consecutiveFailures": 0
+  },
+  "publisher": {
+    "status": "active",
+    "consecutiveFailures": 0,
+    "lastRun": "2026-10-05T19:58:13.704Z"
+  }
 }

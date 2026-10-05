@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "timestamp": "2026-10-05T19:58:10.545Z",
+    "step": "trend_scout",
+    "status": "failure",
+    "detail": "RSS fetch error for Tech: RSS fetch failed: 404 https://trends.google.com/trends/trendingsearches/daily/rss?geo=US&category=15"
+  },
+  {
+    "timestamp": "2026-10-05T19:58:11.041Z",
+    "step": "trend_scout",
+    "status": "failure",
+    "detail": "RSS fetch error for Crypto: RSS fetch failed: 404 https://trends.google.com/trends/trendingsearches/daily/rss?geo=US&category=1025"
+  },
+  {
+    "timestamp": "2026-10-05T19:58:11.546Z",
+    "step": "trend_scout",
+    "status": "failure",
+    "detail": "RSS fetch error for Finance: RSS fetch failed: 404 https://trends.google.com/trends/trendingsearches/daily/rss?geo=US&category=7"
+  },
+  {
+    "timestamp": "2026-10-05T19:58:11.562Z",
+    "step": "trend_scout",
+    "status": "info",
+    "detail": "No unique topics found after dedup"
+  },
+  {
+    "timestamp": "2026-10-05T19:58:13.702Z",
+    "step": "publisher",
+    "status": "success",
+    "detail": "Published 1 articles: Best AI Tools for Solo Founders (2026)"
+  }
+]

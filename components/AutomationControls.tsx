@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Play, Pause, RefreshCw, Clock, CheckCircle, AlertTriangle, ShieldCheck, Zap } from "lucide-react";
+import { Play, Pause, RefreshCw, Clock, CheckCircle, AlertTriangle, ShieldCheck, Zap, Activity } from "lucide-react";
 
 interface JobConfig {
   id: string;
@@ -148,59 +148,61 @@ export default function AutomationControls() {
   };
 
   return (
-    <div className="space-y-6 max-w-6xl">
-      <div className="flex items-center justify-between bg-gray-950 p-6 rounded-2xl border border-gray-800">
+    <div className="w-full space-y-6">
+      {/* Master Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#080d16] p-6 rounded-2xl border border-gray-800/80 gap-4 shadow-xl">
         <div>
-          <h3 className="text-xl font-bold text-white flex items-center gap-2">
-            <Clock className="w-5 h-5 text-purple-400" /> Autonomous Chrono-Engine
+          <h3 className="text-xl font-bold text-white flex items-center gap-2.5">
+            <Clock className="w-5 h-5 text-teal-400" /> Autonomous Chrono-Engine
           </h3>
           <p className="text-xs text-gray-400 mt-1">
-            Master execution schedule. Toggle routines on/off or execute immediate ad-hoc runs.
+            Master background cron execution schedule. Toggle daemons on/off or execute immediate ad-hoc runs.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5 px-3 py-1 bg-green-950/60 border border-green-800 text-green-400 text-xs font-semibold rounded-full">
+        <div className="flex items-center gap-3 self-start sm:self-auto">
+          <span className="flex items-center gap-1.5 px-3 py-1 bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 text-xs font-mono font-semibold rounded-full shadow-inner">
             <ShieldCheck className="w-3.5 h-3.5" /> All Daemons Operational
           </span>
         </div>
       </div>
 
+      {/* Jobs Grid */}
       <div className="grid grid-cols-1 gap-4">
         {jobs.map((job) => (
           <div
             key={job.id}
-            className={`p-5 rounded-2xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+            className={`p-6 rounded-2xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-5 ${
               job.enabled
-                ? "bg-gray-950/80 border-gray-800/80 hover:border-gray-700"
-                : "bg-gray-950/30 border-gray-900 opacity-60"
+                ? "bg-[#080d16] border-gray-800/80 hover:border-gray-700 shadow-lg"
+                : "bg-[#06090f]/60 border-gray-900 opacity-60"
             }`}
           >
-            <div className="space-y-1.5 flex-1">
-              <div className="flex items-center gap-3">
-                <h4 className="font-bold text-white text-base">{job.name}</h4>
+            <div className="space-y-2 flex-1">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h4 className="font-bold text-white text-base tracking-tight">{job.name}</h4>
                 <span
-                  className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
+                  className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full font-medium ${
                     job.enabled
-                      ? "bg-purple-900/30 text-purple-300 border border-purple-800/50"
-                      : "bg-gray-800 text-gray-400"
+                      ? "bg-purple-950/60 text-purple-300 border border-purple-800/50"
+                      : "bg-gray-900 text-gray-400 border border-gray-800"
                   }`}
                 >
                   {job.schedule}
                 </span>
               </div>
-              <p className="text-xs text-gray-400 max-w-2xl">{job.description}</p>
-              <div className="flex items-center gap-4 text-xs text-gray-500 pt-1">
-                <span>Last Run: <strong className="text-gray-300">{job.lastRun || "Never"}</strong></span>
+              <p className="text-xs text-gray-400 leading-relaxed max-w-3xl">{job.description}</p>
+              <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 pt-1 font-mono">
+                <span>Last Run: <strong className="text-gray-300 font-normal">{job.lastRun || "Never"}</strong></span>
                 <span>•</span>
-                <span>Next Scheduled: <strong className="text-blue-400">{job.nextRun}</strong></span>
+                <span>Next Scheduled: <strong className="text-blue-400 font-normal">{job.nextRun}</strong></span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 self-end md:self-center">
+            <div className="flex items-center gap-3 self-start md:self-center shrink-0">
               <button
                 onClick={() => handleRunNow(job)}
                 disabled={runningJob === job.id}
-                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-xs font-semibold flex items-center gap-2 border border-gray-700 transition-all"
+                className="px-4 py-2.5 bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs font-mono font-semibold flex items-center gap-2 border border-gray-700/80 transition-all active:scale-[0.98] disabled:opacity-50"
               >
                 <Zap className={`w-3.5 h-3.5 text-yellow-400 ${runningJob === job.id ? "animate-spin" : ""}`} />
                 {runningJob === job.id ? "Executing..." : "Run Now"}
@@ -208,13 +210,13 @@ export default function AutomationControls() {
 
               <button
                 onClick={() => toggleJob(job.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all ${
+                className={`px-4 py-2.5 rounded-xl text-xs font-mono font-semibold flex items-center gap-2 transition-all active:scale-[0.98] ${
                   job.enabled
-                    ? "bg-green-950/80 hover:bg-green-900 text-green-300 border border-green-800"
-                    : "bg-gray-800 hover:bg-gray-700 text-gray-400 border border-gray-700"
+                    ? "bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-800/60 shadow-lg shadow-emerald-950/30"
+                    : "bg-gray-900 hover:bg-gray-800 text-gray-400 border border-gray-800"
                 }`}
               >
-                {job.enabled ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
+                {job.enabled ? <Play className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400/30" /> : <Pause className="w-3.5 h-3.5" />}
                 {job.enabled ? "Active" : "Paused"}
               </button>
             </div>
@@ -224,12 +226,12 @@ export default function AutomationControls() {
 
       {message && (
         <div
-          className={`p-4 rounded-xl text-xs font-mono flex items-center gap-2 ${
-            message.ok ? "bg-green-950/60 text-green-300 border border-green-900" : "bg-red-950/60 text-red-300 border border-red-900"
+          className={`p-4 rounded-xl text-xs font-mono flex items-center gap-2.5 ${
+            message.ok ? "bg-emerald-950/60 text-emerald-300 border border-emerald-800/60" : "bg-red-950/60 text-red-300 border border-red-800/60"
           }`}
         >
-          {message.ok ? <CheckCircle className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
-          {message.text}
+          {message.ok ? <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> : <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />}
+          <span>{message.text}</span>
         </div>
       )}
     </div>

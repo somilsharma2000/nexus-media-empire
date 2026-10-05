@@ -31,14 +31,11 @@ import OmniSocialDashboard from "../components/OmniSocialDashboard";
 import DigitalProductManager from "../components/DigitalProductManager";
 import ViralHookStudio from "../components/ViralHookStudio";
 
-
 const TRENDS = [
-  { id: 1, topic: "OpenAI Strawberry Model Leaks", score: 98, niche: "AI & Tech" },
-  { id: 2, topic: "Solana DeFi Exploit", score: 92, niche: "Crypto" },
-  { id: 3, topic: "Remote Work Tax Laws 2026", score: 85, niche: "Finance" },
+  { id: 1, topic: "OpenAI Strawberry Model Architecture Analysis", score: 98, niche: "AI & Tech" },
+  { id: 2, topic: "Solana DeFi Exploit and Liquidity Recovery", score: 92, niche: "Crypto" },
+  { id: 3, topic: "Remote Work Tax Regulations 2026 Executive Guide", score: 85, niche: "Finance" },
 ];
-
-
 
 const AGENT_SKILLS = [
   { name: "SEO Master Agent", prompt: "You are an elite SEO journalist. Analyze the provided trending topic and write a highly engaging, 1500-word article. Use LSI keywords, H2/H3 tags, and a hook that retains readership. Output strictly in Markdown.", temp: "0.4" },
@@ -50,12 +47,30 @@ interface Trend { id: number; topic: string; niche: string; score: number; }
 interface GenerationResults { blog?: string; tweets?: string[]; systemPrompt?: string; imagePrompt?: string; }
 
 export default function NexusDashboard() {
-  const [currentView, setCurrentView] = useState("dashboard");
+  const [currentView, setCurrentView] = useState("godmode");
   const [toast, setToast] = useState<{message: string, type: string} | null>(null);
-  const showToast = (message: string, type = 'success') => { setToast({message, type}); setTimeout(() => setToast(null), 3000); };
+  const showToast = (message: string, type = 'success') => { 
+    setToast({message, type}); 
+    setTimeout(() => setToast(null), 3000); 
+  };
+  
   const [selectedTrend, setSelectedTrend] = useState<Trend | null>(null);
-  const [adConfig, setAdConfig] = useState({ title: 'Need Enterprise Level SEO?', description: 'Nexus generates 1,000+ AI optimized articles daily.', buttonText: 'Book a Demo Today', url: 'https://nexus-saas.com', injectionFrequency: 3 });
-  const saveAdConfig = async () => { try { await fetch('/api/ads', { method: 'POST', body: JSON.stringify({ activeAd: adConfig }) }); showToast('Monetization settings deployed across network!'); } catch { showToast('Failed to deploy', 'error'); } };
+  const [adConfig, setAdConfig] = useState({ 
+    title: 'Need Enterprise Level SEO?', 
+    description: 'Nexus generates 1,000+ AI optimized articles daily.', 
+    buttonText: 'Book a Demo Today', 
+    url: 'https://nexus-saas.com', 
+    injectionFrequency: 3 
+  });
+  
+  const saveAdConfig = async () => { 
+    try { 
+      await fetch('/api/ads', { method: 'POST', body: JSON.stringify({ activeAd: adConfig }) }); 
+      showToast('Monetization settings deployed across network!'); 
+    } catch { 
+      showToast('Failed to deploy', 'error'); 
+    } 
+  };
   
   // Generation & Results States
   const [isGenerating, setIsGenerating] = useState(false);
@@ -70,16 +85,15 @@ export default function NexusDashboard() {
 
   // Network State
   const [networks, setNetworks] = useState([
-    { id: 1, name: "Tech Subdomain", domain: "tech.thetrendmatrix.com", status: "Connected", color: "text-blue-400" },
-    { id: 2, name: "Crypto Subdomain", domain: "crypto.thetrendmatrix.com", status: "Connected", color: "text-purple-400" },
-    { id: 3, name: "Finance Subdomain", domain: "finance.thetrendmatrix.com", status: "Connected", color: "text-green-400" },
-    { id: 4, name: "Health & Biohacking", domain: "health.thetrendmatrix.com", status: "Awaiting DNS", color: "text-red-400" }
+    { id: 1, name: "The Trend Matrix (Tech)", domain: "tech.thetrendmatrix.com", status: "Connected", color: "text-blue-400" },
+    { id: 2, name: "Crypto Daily", domain: "crypto.thetrendmatrix.com", status: "Connected", color: "text-purple-400" },
+    { id: 3, name: "Wall St Insider", domain: "finance.thetrendmatrix.com", status: "Connected", color: "text-green-400" },
+    { id: 4, name: "Biohacking & Health", domain: "health.thetrendmatrix.com", status: "Awaiting DNS", color: "text-red-400" }
   ]);
   const [networkLoading, setNetworkLoading] = useState<number | null>(null);
 
   const handleToggleNetwork = (id: number) => {
     setNetworkLoading(id);
-    // Simulate DNS/OAuth propagation delay
     setTimeout(() => {
       setNetworks(networks.map(n => {
         if (n.id === id) {
@@ -88,7 +102,7 @@ export default function NexusDashboard() {
         return n;
       }));
       setNetworkLoading(null);
-    }, 2000);
+    }, 1500);
   };
 
   // Live Scraper Simulation
@@ -108,8 +122,6 @@ export default function NexusDashboard() {
 
   const handlePublish = async () => {
     setIsPublishing(true);
-    
-    // Actually publish to our local database to power the public news site
     try {
       if (results && results.blog) {
         await fetch('/api/articles', {
@@ -129,8 +141,10 @@ export default function NexusDashboard() {
     setTimeout(() => {
       setIsPublishing(false);
       setIsPublished(true);
-      setAssetCount(prev => prev + 3); showToast('Assets successfully published!'); setTimeout(() => { setShowModal(false); setCurrentView('dashboard'); }, 1500);
-    }, 2000);
+      setAssetCount(prev => prev + 3); 
+      showToast('Assets successfully published across network!'); 
+      setTimeout(() => { setShowModal(false); setCurrentView('dashboard'); }, 1500);
+    }, 1800);
   };
 
   const startGeneration = async (trend: Trend) => {
@@ -145,10 +159,10 @@ export default function NexusDashboard() {
       "Initializing Deep-Thinker Agent...",
       "Scraping latest sources...",
       "Drafting SEO Optimized Blog Post...",
-      "Writing 10-part Twitter Thread...",
-      "Generating Midjourney Prompts...",
-      "Compiling Newsletter...",
-      "Finalizing multi-channel assets..."
+      "Writing 7-part Twitter Thread...",
+      "Generating Midjourney Visual Prompts...",
+      "Compiling Newsletter Snippets...",
+      "Finalizing multi-channel distribution assets..."
     ];
 
     let currentTask = 0;
@@ -186,35 +200,43 @@ export default function NexusDashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-black text-gray-100 font-sans overflow-hidden selection:bg-blue-500/30">
+    <div className="flex h-screen w-screen bg-[#030508] text-gray-100 font-sans overflow-hidden selection:bg-blue-500/30">
       
-      {/* Sidebar */}
-      <aside className="w-72 border-r border-gray-850 bg-[#07090e] p-5 flex flex-col justify-between shrink-0 select-none">
-        <div className="flex flex-col gap-6 overflow-hidden">
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-6 right-6 z-50 px-4 py-3 bg-[#0d131f] border border-blue-500/40 text-blue-300 rounded-xl shadow-2xl flex items-center gap-2 text-xs font-mono backdrop-blur-xl">
+          <Activity className="w-4 h-4 text-blue-400" />
+          <span>{toast.message}</span>
+        </div>
+      )}
+
+      {/* Sidebar Navigation */}
+      <aside className="w-72 border-r border-gray-850 bg-[#06080d] p-5 flex flex-col justify-between shrink-0 select-none overflow-hidden h-full z-20">
+        <div className="flex flex-col gap-6 overflow-hidden flex-1">
           <div className="flex items-center gap-3 px-2 pt-1">
-            <div className="p-2 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl shadow-lg shadow-blue-900/40">
+            <div className="p-2 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl shadow-lg shadow-blue-900/40 border border-blue-400/30">
               <BrainCircuit className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-base font-black tracking-wider text-white">
+              <h1 className="text-base font-black tracking-wider text-white flex items-center gap-1.5">
                 NEXUS<span className="text-blue-500">MEDIA</span>
               </h1>
               <p className="text-[10px] text-gray-500 font-mono tracking-widest uppercase">Autonomous Network</p>
             </div>
           </div>
           
-          <nav className="flex flex-col gap-5 overflow-y-auto pr-1 text-xs">
-            {/* CORE */}
+          <nav className="flex flex-col gap-5 overflow-y-auto pr-1 text-xs custom-scrollbar">
+            {/* EXECUTIVE COMMAND */}
             <div className="space-y-1">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1.5 font-mono">Executive Command</p>
+              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Executive Command</p>
               <NavItem icon={<Zap className="text-amber-400" />} label="God-Mode Hub" active={currentView === 'godmode'} onClick={() => setCurrentView('godmode')} />
               <NavItem icon={<LayoutDashboard className="text-blue-400" />} label="Command Center" active={currentView === 'dashboard'} onClick={() => setCurrentView('dashboard')} />
               <NavItem icon={<ShieldCheck className="text-emerald-400" />} label="System Health" active={currentView === 'health'} onClick={() => setCurrentView('health')} />
             </div>
 
-            {/* CONTENT */}
+            {/* CONTENT ENGINE */}
             <div className="space-y-1">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1.5 font-mono">Content Engine</p>
+              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Content Engine</p>
               <NavItem icon={<Sparkles className="text-purple-400" />} label="Article Vault" active={currentView === 'articles'} onClick={() => setCurrentView('articles')} />
               <NavItem icon={<Tag className="text-cyan-400" />} label="Topic Ingestion" active={currentView === 'topics'} onClick={() => setCurrentView('topics')} />
               <NavItem icon={<RefreshCw className="text-blue-400" />} label="Auto-Pilot Pipeline" active={currentView === 'autopilot'} onClick={() => setCurrentView('autopilot')} />
@@ -223,7 +245,7 @@ export default function NexusDashboard() {
 
             {/* MONETIZATION */}
             <div className="space-y-1">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1.5 font-mono">Monetization</p>
+              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Monetization</p>
               <NavItem icon={<Layers className="text-amber-400" />} label="Ad Slot Manager" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
               <NavItem icon={<Link2 className="text-emerald-400" />} label="Affiliate Bounties" active={currentView === 'affiliates'} onClick={() => setCurrentView('affiliates')} />
               <NavItem icon={<Package className="text-emerald-400" />} label="Digital Product Funnel" active={currentView === 'products'} onClick={() => setCurrentView('products')} />
@@ -232,7 +254,7 @@ export default function NexusDashboard() {
 
             {/* GROWTH & SOCIAL */}
             <div className="space-y-1">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1.5 font-mono">Growth & Social</p>
+              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Growth & Social</p>
               <NavItem icon={<Share2 className="text-cyan-400" />} label="Omni-Brand Socials" active={currentView === 'omnisocial'} onClick={() => setCurrentView('omnisocial')} />
               <NavItem icon={<Flame className="text-amber-400" />} label="Viral Hook Studio" active={currentView === 'hooks'} onClick={() => setCurrentView('hooks')} />
               <NavItem icon={<Palette className="text-pink-400" />} label="Promo Poster Studio" active={currentView === 'posters'} onClick={() => setCurrentView('posters')} />
@@ -241,9 +263,9 @@ export default function NexusDashboard() {
               <NavItem icon={<Link2 className="text-blue-400" />} label="Backlink Authority" active={currentView === 'backlinks'} onClick={() => setCurrentView('backlinks')} />
             </div>
 
-            {/* CONTROLS */}
+            {/* INFRASTRUCTURE */}
             <div className="space-y-1">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1.5 font-mono">Infrastructure</p>
+              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Infrastructure</p>
               <NavItem icon={<Clock className="text-teal-400" />} label="Chrono Automations" active={currentView === 'automation'} onClick={() => setCurrentView('automation')} />
               <NavItem icon={<Globe className="text-blue-400" />} label="Account Connections" active={currentView === 'connections'} onClick={() => setCurrentView('connections')} />
               <NavItem icon={<Key className="text-amber-400" />} label="Settings & API Keys" active={currentView === 'settings'} onClick={() => setCurrentView('settings')} />
@@ -251,9 +273,10 @@ export default function NexusDashboard() {
           </nav>
         </div>
 
-        <div className="bg-gray-950/80 p-3.5 rounded-2xl border border-gray-850 mt-4">
+        {/* System Telemetry Footer */}
+        <div className="bg-[#090d14] p-3.5 rounded-2xl border border-gray-800/80 mt-4 shrink-0">
           <div className="flex justify-between items-center mb-1.5">
-            <span className="text-[10px] font-bold text-gray-500 font-mono uppercase">System Load</span>
+            <span className="text-[10px] font-bold text-gray-400 font-mono uppercase">System Load</span>
             <span className="text-[10px] text-emerald-400 font-mono font-bold flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Optimal
             </span>
@@ -268,674 +291,394 @@ export default function NexusDashboard() {
         </div>
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 p-8 relative flex flex-col h-full overflow-y-auto">
-        
-        {/* VIEW: COMMAND CENTER */}
-        {currentView === 'dashboard' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-full">
-            <header className="flex justify-between items-center mb-10">
-              <div>
-                <h2 className="text-2xl font-bold">Welcome back, Commander.</h2>
-                <p className="text-gray-400 text-sm mt-1">Your AI employees are ready. System status: Optimal.</p>
-              </div>
-              <div className="flex items-center gap-4 bg-gray-900/80 px-4 py-2 rounded-full border border-gray-800 shadow-inner">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]"></span>
-                <span className="text-sm font-medium tracking-wide">AUTO-PILOT ACTIVE</span>
-              </div>
-            </header>
+      {/* Main Content Area - Full Width & Cleanly Centered */}
+      <main className="flex-1 min-w-0 p-6 md:p-8 lg:p-10 relative flex flex-col h-screen overflow-y-auto bg-[#030508]">
+        <div className="w-full max-w-7xl mx-auto space-y-8 pb-16">
+          
+          {/* VIEW: GOD-MODE MASTER CONTROL */}
+          {currentView === 'godmode' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
+              <GodModeHub />
+            </motion.div>
+          )}
 
-            <div className="grid grid-cols-3 gap-6 mb-8">
-              <StatCard title="Active Agents" value="5" icon={<Terminal className="w-5 h-5 text-purple-400" />} onClick={() => setCurrentView('config')} />
-              <StatCard title="Assets Generated (24h)" value={assetCount.toString()} icon={<Zap className="w-5 h-5 text-yellow-400" />} onClick={() => setCurrentView('analytics')} />
-              <StatCard title="Est. Revenue Impact" value={`$${(assetCount * 8.73).toFixed(0)}`} icon={<Activity className="w-5 h-5 text-green-400" />} onClick={() => setCurrentView('revenue')} />
-            </div>
-
-            {/* CRON Auto-Pilot Scheduler */}
-            <div className="bg-gradient-to-r from-gray-900 to-black border border-gray-800 p-6 rounded-xl mb-8 flex items-center justify-between shadow-lg">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-blue-900/30 rounded-lg flex items-center justify-center border border-blue-800/50">
-                  <RefreshCw className="w-6 h-6 text-blue-400 animate-spin" />
-                </div>
+          {/* VIEW: COMMAND CENTER */}
+          {currentView === 'dashboard' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-8">
+              <header className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                 <div>
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">CRON Auto-Pilot Scheduler</h3>
-                  <p className="text-sm text-gray-400">System is autonomously scraping trends and publishing to 15 domains.</p>
+                  <h2 className="text-3xl font-black tracking-tight text-white">Executive Command Center</h2>
+                  <p className="text-gray-400 text-sm mt-1">Autonomous multi-agent media empire. All workers operating at peak efficiency.</p>
                 </div>
+                <div className="flex items-center gap-3 bg-[#080d16] px-4 py-2 rounded-full border border-gray-800 self-start md:self-auto shadow-inner">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]"></span>
+                  <span className="text-xs font-mono font-semibold text-emerald-400">AUTO-PILOT ACTIVE</span>
+                </div>
+              </header>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <StatCard title="Active Agent Daemons" value="5 Core Daemons" icon={<Terminal className="w-5 h-5 text-purple-400" />} onClick={() => setCurrentView('automation')} />
+                <StatCard title="Articles In Network" value={assetCount.toString()} icon={<Zap className="w-5 h-5 text-amber-400" />} onClick={() => setCurrentView('articles')} />
+                <StatCard title="Projected Monthly Impact" value={`$${(assetCount * 14.80).toFixed(0)}`} icon={<Activity className="w-5 h-5 text-emerald-400" />} onClick={() => setCurrentView('analytics')} />
               </div>
-              <div className="flex items-center gap-6">
-                <div className="text-right">
-                  <p className="text-xs text-gray-500 font-bold uppercase mb-1">Next Run In</p>
-                  <p className="text-xl font-mono text-white">01:42:15</p>
-                </div>
-                <button onClick={() => showToast('Auto-Pilot paused. System requires manual approval for publishing.')} className="px-6 py-2 bg-red-900/40 hover:bg-red-900/60 text-red-400 border border-red-900/50 rounded-lg font-bold transition-all text-sm">
-                  Pause System
-                </button>
-              </div>
-            </div>
 
-            {/* Network Monetization — Real Revenue Dashboard */}
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><LineChart className="w-5 h-5 text-blue-400"/> Network Monetization</h3>
-              <RevenueDashboard />
-            </div>
-
-            <h3 className="text-lg font-semibold mb-4 border-b border-gray-800 pb-2">Live Trend Scraper</h3>
-            <div className="grid gap-4 relative">
-              {TRENDS.map(trend => (
-                <div key={trend.id} className="p-5 rounded-xl border border-gray-800 bg-gray-900/40 hover:border-gray-700 transition-all">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-[10px] uppercase font-bold px-2 py-1 rounded bg-gray-800 text-gray-300">{trend.niche}</span>
-                        <span className="text-[10px] uppercase font-bold px-2 py-1 rounded bg-green-900/30 text-green-400 border border-green-800/50 flex items-center gap-1">
-                          <Activity className="w-3 h-3"/> SCORE: {trend.score}
-                        </span>
-                      </div>
-                      <h4 className="font-semibold text-lg text-white">{trend.topic}</h4>
-                    </div>
-                    <button 
-                      className="px-6 py-2.5 bg-white text-black hover:bg-gray-200 rounded-lg font-semibold flex items-center gap-2"
-                      onClick={() => startGeneration(trend)}
-                    >
-                      <Play className="w-4 h-4 fill-current" /> Generate Empire
-                    </button>
+              {/* CRON Auto-Pilot Scheduler */}
+              <div className="bg-[#080d16] border border-gray-800 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-blue-950/60 rounded-xl flex items-center justify-center border border-blue-800/50">
+                    <RefreshCw className="w-6 h-6 text-blue-400 animate-spin" />
                   </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Live Agent Activity Terminal */}
-            <div className="mt-8 bg-black border border-gray-800 rounded-xl overflow-hidden flex flex-col">
-              <div className="bg-gray-900 border-b border-gray-800 px-4 py-2 flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <Terminal className="w-4 h-4 text-gray-400" />
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Live Agent Telemetry</span>
-                </div>
-                <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
-                </div>
-              </div>
-              <div className="p-4 h-48 overflow-y-auto font-mono text-[11px] leading-relaxed flex flex-col justify-end relative">
-                <div className="absolute inset-0 bg-gradient-to-t from-transparent to-black pointer-events-none z-10"></div>
-                <div className="flex flex-col gap-1 text-gray-500 relative z-0">
-                  <p><span>[10:04:12]</span> <span className="text-blue-400">[SYS]</span> Initializing worker nodes...</p>
-                  <p><span>[10:04:15]</span> <span className="text-purple-400">[API]</span> Connected to Twitter Firehose (Rate limit: 450/15m)</p>
-                  <p><span>[10:04:18]</span> <span className="text-yellow-400">[AGENT-1]</span> Deep-scan initiated on /r/Entrepreneur</p>
-                  <p><span>[10:05:22]</span> <span className="text-green-400">[NETWORK]</span> Ping received from tech.thetrendmatrix.com (Latency: 14ms)</p>
-                  <p><span>[10:05:45]</span> <span className="text-blue-400">[SYS]</span> Memory footprint optimization complete.</p>
-                  <p><span>[10:06:01]</span> <span className="text-purple-400">[API]</span> Midjourney proxy handshake successful (v6 engine)</p>
-                  <p><span>[10:06:33]</span> <span className="text-yellow-400">[AGENT-2]</span> Scraping competitors for keyword overlap...</p>
-                  <p><span>[10:07:11]</span> <span className="text-blue-400">[SYS]</span> Idle loop. Awaiting Commander input.</p>
-                  <p className="text-green-400 flex items-center gap-2"><span>[10:07:15]</span> <span>[SYS]</span> System ready <span className="w-2 h-3 bg-green-400 animate-pulse inline-block"></span></p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* VIEW: AGENT SKILLS MATRIX (NEW "BRAINS" VIEW) */}
-        {currentView === 'skills' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <header className="mb-10">
-              <h2 className="text-3xl font-bold flex items-center gap-3"><Brain className="w-8 h-8 text-pink-500" /> Agent Skills Matrix</h2>
-              <p className="text-gray-400 mt-2">The core &quot;Brains&quot; of the system. These are the underlying System Prompts that control how each AI agent behaves.</p>
-            </header>
-            <div className="grid gap-6">
-              {AGENT_SKILLS.map((skill, i) => (
-                <div key={i} className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><Code2 className="w-5 h-5 text-blue-400"/> {skill.name}</h3>
-                    <span className="px-3 py-1 bg-black rounded-lg border border-gray-800 text-xs text-gray-400 font-mono">Temp: {skill.temp}</span>
-                  </div>
-                  <div className="bg-black p-4 rounded-lg border border-gray-800 font-mono text-sm text-green-400 leading-relaxed shadow-inner">
-                    {skill.prompt}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* VIEW: TREND PIPELINE */}
-        {currentView === 'pipeline' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <header className="mb-10">
-              <h2 className="text-3xl font-bold flex items-center gap-3"><Database className="w-8 h-8 text-purple-500" /> Live Scraping Network</h2>
-              <p className="text-gray-400 mt-2">Active data firehoses currently feeding the AI engine. <span className="text-green-400 animate-pulse">Monitoring in real-time.</span></p>
-            </header>
-            <div className="bg-gray-900/50 border border-gray-800 rounded-xl overflow-hidden mb-8">
-              <table className="w-full text-left text-sm text-gray-400">
-                <thead className="bg-gray-900 text-gray-300 uppercase font-bold text-xs border-b border-gray-800">
-                  <tr><th className="px-6 py-4">Data Source</th><th className="px-6 py-4">Status</th><th className="px-6 py-4">Items Scanned (Live)</th><th className="px-6 py-4">Ping</th></tr>
-                </thead>
-                <tbody className="divide-y divide-gray-800 font-mono">
-                  <tr className="hover:bg-gray-800/30"><td className="px-6 py-4 font-semibold text-white flex items-center gap-2 font-sans"><MessageSquare className="w-4 h-4 text-blue-400"/> X (Twitter) Firehose</td><td className="px-6 py-4 text-green-400"><div className="flex items-center gap-2"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> Live</div></td><td className="px-6 py-4 text-blue-300">{scannedItems.twitter.toLocaleString()}</td><td className="px-6 py-4">24ms</td></tr>
-                  <tr className="hover:bg-gray-800/30"><td className="px-6 py-4 font-semibold text-white flex items-center gap-2 font-sans"><Activity className="w-4 h-4 text-orange-400"/> Reddit /r/Entrepreneur</td><td className="px-6 py-4 text-green-400"><div className="flex items-center gap-2"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> Live</div></td><td className="px-6 py-4 text-blue-300">{scannedItems.reddit.toLocaleString()}</td><td className="px-6 py-4">45ms</td></tr>
-                  <tr className="hover:bg-gray-800/30"><td className="px-6 py-4 font-semibold text-white flex items-center gap-2 font-sans"><Globe className="w-4 h-4 text-green-400"/> Google News RSS</td><td className="px-6 py-4 text-green-400"><div className="flex items-center gap-2"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> Live</div></td><td className="px-6 py-4 text-blue-300">{scannedItems.news.toLocaleString()}</td><td className="px-6 py-4">12ms</td></tr>
-                </tbody>
-              </table>
-            </div>
-
-            <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2"><Activity className="w-5 h-5 text-purple-400" /> Extracted Anomalies & Virality Vectors</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-10">
-              {TRENDS.map((trend, i) => (
-                <div key={i} className="bg-gray-900 border border-gray-800 p-5 rounded-xl transition-all hover:border-gray-700 hover:shadow-[0_0_15px_rgba(168,85,247,0.1)]">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <span className="text-xs font-bold px-2 py-1 bg-gray-800 text-gray-300 rounded border border-gray-700">{trend.niche}</span>
-                      <h4 className="font-bold text-white text-lg mt-2">{trend.topic}</h4>
-                    </div>
-                    <span className={`text-xs font-bold px-2 py-1 rounded-full border ${trend.score > 90 ? 'bg-red-900/20 text-red-400 border-red-900/50' : 'bg-orange-900/20 text-orange-400 border-orange-900/50'}`}>
-                      ðŸ”¥ {trend.score}/100 Virality
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mt-4 pt-4 border-t border-gray-800/50">
-                    <div className="flex items-center gap-1"><MessageSquare className="w-4 h-4" /> {(Math.random() * 5000 + 1000).toFixed(0)} mentions</div>
-                    <div className="flex items-center gap-1"><Activity className="w-4 h-4" /> Rising Fast</div>
-                    <button onClick={() => { setCurrentView('dashboard'); startGeneration(trend); }} className="ml-auto text-blue-400 hover:text-blue-300 font-semibold text-xs transition-colors">
-                      Send to Command Center â†’
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* VIEW: QA & APPROVALS */}
-        {currentView === 'approvals' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-full">
-            <header className="mb-10">
-              <h2 className="text-3xl font-bold flex items-center gap-3"><Inbox className="w-8 h-8 text-yellow-500" /> QA & Human Approvals</h2>
-              <p className="text-gray-400 mt-2">Review AI-generated drafts before they are syndicated to the Empire Network.</p>
-            </header>
-
-            <div className="space-y-6">
-              {/* Draft 1 */}
-              <div className="bg-gray-900/50 border border-gray-800 rounded-xl overflow-hidden">
-                <div className="p-6 border-b border-gray-800 flex justify-between items-start">
                   <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="px-3 py-1 bg-yellow-900/30 text-yellow-500 text-xs font-bold rounded-full border border-yellow-900/50 flex items-center gap-1"><ShieldCheck className="w-3 h-3"/> PENDING REVIEW</span>
-                      <span className="text-gray-500 text-xs">Destination: crypto.thetrendmatrix.com</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2">Ethereum Layer-2s: The Hidden Gas Fees No One Talks About</h3>
-                    <p className="text-sm text-gray-400 line-clamp-2">While Layer-2 solutions promised to democratize Ethereum by slashing transaction costs, recent on-chain data reveals a hidden premium that arbitrage bots are exploiting...</p>
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">Chrono Auto-Pilot Ingestion</h3>
+                    <p className="text-xs text-gray-400 mt-0.5">Scraping global trends and deploying evergreen content across network subdomains.</p>
                   </div>
+                </div>
+                <div className="flex items-center gap-6">
                   <div className="text-right">
-                    <p className="text-xs text-gray-500 mb-1">AI Confidence</p>
-                    <p className="text-2xl font-bold text-green-400">96%</p>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase font-mono mb-0.5">Next Ingestion</p>
+                    <p className="text-lg font-mono font-bold text-white">00:42:15</p>
                   </div>
-                </div>
-                <div className="p-4 bg-black/40 flex justify-end gap-4">
-                  <button onClick={() => showToast('Asset rejected. Feedback loop initiated to retrain the writing model.', 'error')} className="px-6 py-2 text-sm font-bold text-red-400 hover:text-red-300 transition-colors">Reject & Retrain AI</button>
-                  <button onClick={() => showToast('Opening rich text Markdown editor...')} className="px-6 py-2 text-sm font-bold bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors flex items-center gap-2"><Code2 className="w-4 h-4"/> Edit Markdown</button>
-                  <button onClick={() => showToast('Asset approved! Syndicating to the Empire Network...')} className="px-6 py-2 text-sm font-bold bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors shadow-[0_0_15px_rgba(34,197,94,0.3)]">Approve & Publish</button>
+                  <button onClick={() => showToast('Auto-Pilot paused. Switched to manual approval.')} className="px-5 py-2.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-900/50 rounded-xl font-bold transition-all text-xs font-mono">
+                    Pause Chrono
+                  </button>
                 </div>
               </div>
 
-              {/* Draft 2 */}
-              <div className="bg-gray-900/50 border border-gray-800 rounded-xl overflow-hidden">
-                <div className="p-6 border-b border-gray-800 flex justify-between items-start">
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="px-3 py-1 bg-yellow-900/30 text-yellow-500 text-xs font-bold rounded-full border border-yellow-900/50 flex items-center gap-1"><ShieldCheck className="w-3 h-3"/> PENDING REVIEW</span>
-                      <span className="text-gray-500 text-xs">Destination: health.thetrendmatrix.com</span>
+              {/* Real Revenue Dashboard */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <LineChart className="w-5 h-5 text-blue-400"/> Network Monetization Stream
+                </h3>
+                <RevenueDashboard />
+              </div>
+
+              {/* Live Trend Scraper */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <Flame className="w-5 h-5 text-amber-400"/> Live Topic Signals
+                </h3>
+                <div className="grid gap-4">
+                  {TRENDS.map(trend => (
+                    <div key={trend.id} className="p-5 rounded-2xl border border-gray-800 bg-[#080d16] hover:border-gray-700 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-gray-800 text-gray-300 font-mono">{trend.niche}</span>
+                          <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-emerald-950/50 text-emerald-400 border border-emerald-800/50 flex items-center gap-1 font-mono">
+                            <Activity className="w-3 h-3"/> VIRALITY SCORE: {trend.score}
+                          </span>
+                        </div>
+                        <h4 className="font-bold text-base text-white">{trend.topic}</h4>
+                      </div>
+                      <button 
+                        className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-xs flex items-center gap-2 transition-all shadow-lg shadow-blue-600/20 self-start md:self-auto"
+                        onClick={() => startGeneration(trend)}
+                      >
+                        <Play className="w-3.5 h-3.5 fill-current" /> Generate Full Asset Suite
+                      </button>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">The Longevity Protocol: 3 Supplements Silicon Valley CEOs Are Hoarding</h3>
-                    <p className="text-sm text-gray-400 line-clamp-2">Biohacking has evolved from cold plunges to cellular regeneration. Here are the three controversial compounds currently dominating executive health routines...</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500 mb-1">AI Confidence</p>
-                    <p className="text-2xl font-bold text-yellow-400">88%</p>
-                  </div>
-                </div>
-                <div className="p-4 bg-black/40 flex justify-end gap-4">
-                  <button onClick={() => showToast('Asset rejected. Feedback loop initiated to retrain the writing model.', 'error')} className="px-6 py-2 text-sm font-bold text-red-400 hover:text-red-300 transition-colors">Reject & Retrain AI</button>
-                  <button onClick={() => showToast('Opening rich text Markdown editor...')} className="px-6 py-2 text-sm font-bold bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors flex items-center gap-2"><Code2 className="w-4 h-4"/> Edit Markdown</button>
-                  <button onClick={() => showToast('Asset approved! Syndicating to the Empire Network...')} className="px-6 py-2 text-sm font-bold bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors shadow-[0_0_15px_rgba(34,197,94,0.3)]">Approve & Publish</button>
+                  ))}
                 </div>
               </div>
-            </div>
-          </motion.div>
-        )}
 
-        {/* VIEW: GLOBAL ANALYTICS */}
-        {currentView === 'analytics' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <header className="mb-10">
-              <h2 className="text-3xl font-bold flex items-center gap-3"><PieChart className="w-8 h-8 text-blue-500" /> Global Traffic Analytics</h2>
-              <p className="text-gray-400 mt-2">Macro-level performance monitoring across all domains powered by the Nexus Engine.</p>
-            </header>
+              {/* Live Agent Activity Terminal */}
+              <div className="bg-black border border-gray-800 rounded-2xl overflow-hidden flex flex-col shadow-2xl">
+                <div className="bg-[#080d16] border-b border-gray-800 px-4 py-3 flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <Terminal className="w-4 h-4 text-gray-400" />
+                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider font-mono">Live Multi-Agent Telemetry Stream</span>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
+                  </div>
+                </div>
+                <div className="p-4 h-48 overflow-y-auto font-mono text-[11px] leading-relaxed flex flex-col justify-end relative">
+                  <div className="flex flex-col gap-1 text-gray-500 relative z-0">
+                    <p><span>[01:14:12]</span> <span className="text-blue-400">[SYS]</span> Initializing autonomous worker daemons...</p>
+                    <p><span>[01:14:15]</span> <span className="text-purple-400">[SEO]</span> Google Indexing API handshake confirmed</p>
+                    <p><span>[01:14:18]</span> <span className="text-yellow-400">[AGENT-1]</span> Deep-scan initiated on trending Google RSS feeds</p>
+                    <p><span>[01:15:22]</span> <span className="text-emerald-400">[NETWORK]</span> Health check ping received from thetrendmatrix.com (12ms)</p>
+                    <p><span>[01:15:45]</span> <span className="text-blue-400">[SYS]</span> Vector memory & local cache optimized</p>
+                    <p className="text-emerald-400 flex items-center gap-2"><span>[01:16:00]</span> <span>[SYS]</span> System fully operational <span className="w-2 h-3 bg-emerald-400 animate-pulse inline-block"></span></p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
-            {/* Revenue overview — pulls from AdSense API */}
-            <div className="mb-8">
+          {/* VIEW: SYSTEM HEALTH */}
+          {currentView === 'health' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <ShieldCheck className="w-8 h-8 text-emerald-400" /> System Health & Telemetry
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Autonomous monitoring — site uptime, revenue anomalies, and instant failover alerts.</p>
+              </header>
+              <AlertFeed />
+            </motion.div>
+          )}
+
+          {/* VIEW: ARTICLE VAULT */}
+          {currentView === 'articles' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Sparkles className="w-8 h-8 text-purple-400" /> Article Vault & Publishing Desk
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Manage, preview, edit, and release high-grade evergreen articles across all publications.</p>
+              </header>
+              <ArticleManager />
+            </motion.div>
+          )}
+
+          {/* VIEW: TOPIC INGESTION */}
+          {currentView === 'topics' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Tag className="w-8 h-8 text-cyan-400" /> Topic Ingestion & Angle Queue
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Feed evergreen keywords, prioritize high-value angles, and trigger one-click article generation.</p>
+              </header>
+              <TopicManager />
+            </motion.div>
+          )}
+
+          {/* VIEW: AUTOPILOT PIPELINE */}
+          {currentView === 'autopilot' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <RefreshCw className="w-8 h-8 text-blue-400" /> Autonomous Publishing Pipeline
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Monitor the autonomous content cycle — Trend Scout, QA Gate Review, and Scheduled Release.</p>
+              </header>
+              <PipelineStatus />
+            </motion.div>
+          )}
+
+          {/* VIEW: QA CONFIG */}
+          {currentView === 'qaconfig' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Brain className="w-8 h-8 text-pink-400" /> AI QA Gate & Reviewer Thresholds
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Tune the AI self-reviewer thresholds, budget cap, and auto-publish behavior without touching code.</p>
+              </header>
+              <QAConfigPanel />
+            </motion.div>
+          )}
+
+          {/* VIEW: AD SLOT MANAGER */}
+          {currentView === 'adslots' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Layers className="w-8 h-8 text-amber-400" /> Ad Slot & Placement Engine
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Deploy high-RPM responsive ad units across header, mid-feed, and sidebar placements.</p>
+              </header>
+              <AdSlotManager />
+            </motion.div>
+          )}
+
+          {/* VIEW: AFFILIATE MANAGER */}
+          {currentView === 'affiliates' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Link2 className="w-8 h-8 text-emerald-400" /> High-Ticket Affiliate Bounties
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Cloaked affiliate links (/go/slug) with click tracking and dynamic context matching.</p>
+              </header>
+              <AffiliateManager />
+            </motion.div>
+          )}
+
+          {/* VIEW: DIGITAL PRODUCTS */}
+          {currentView === 'products' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Package className="w-8 h-8 text-emerald-400" /> High-Margin Digital Products ($0 COGS)
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">100% margin digital product funnels: Cheatsheets, Notion Templates, and Calculators.</p>
+              </header>
+              <DigitalProductManager />
+            </motion.div>
+          )}
+
+          {/* VIEW: REVENUE & ANALYTICS */}
+          {currentView === 'analytics' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <TrendingUp className="w-8 h-8 text-green-400" /> Multi-Domain Revenue & Analytics
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Real-time earnings telemetry across AdSense, direct advertisers, and affiliate conversions.</p>
+              </header>
               <RevenueDashboard />
-            </div>
+            </motion.div>
+          )}
 
-            <div className="grid grid-cols-4 gap-6 mb-8">
-              <div className="bg-gray-900/50 border border-gray-800 p-6 rounded-xl">
-                <p className="text-xs text-gray-500 font-bold uppercase mb-2">Total Pageviews (30D)</p>
-                <p className="text-3xl font-bold text-white">1.2M</p>
-                <p className="text-sm text-green-400 mt-2 flex items-center gap-1"><TrendingUp className="w-4 h-4"/> +24.5%</p>
-              </div>
-              <div className="bg-gray-900/50 border border-gray-800 p-6 rounded-xl">
-                <p className="text-xs text-gray-500 font-bold uppercase mb-2">Unique Visitors</p>
-                <p className="text-3xl font-bold text-white">840K</p>
-                <p className="text-sm text-green-400 mt-2 flex items-center gap-1"><TrendingUp className="w-4 h-4"/> +18.2%</p>
-              </div>
-              <div className="bg-gray-900/50 border border-gray-800 p-6 rounded-xl">
-                <p className="text-xs text-gray-500 font-bold uppercase mb-2">Avg Time on Page</p>
-                <p className="text-3xl font-bold text-white">3m 42s</p>
-                <p className="text-sm text-green-400 mt-2 flex items-center gap-1"><TrendingUp className="w-4 h-4"/> +12.0%</p>
-              </div>
-              <div className="bg-gray-900/50 border border-gray-800 p-6 rounded-xl">
-                <p className="text-xs text-gray-500 font-bold uppercase mb-2">Bounce Rate</p>
-                <p className="text-3xl font-bold text-white">41.2%</p>
-                <p className="text-sm text-green-400 mt-2 flex items-center gap-1"><TrendingUp className="w-4 h-4"/> -5.4%</p>
-              </div>
-            </div>
+          {/* VIEW: OMNI-BRAND SOCIALS */}
+          {currentView === 'omnisocial' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Share2 className="w-8 h-8 text-cyan-400" /> Omni-Brand Social Distribution
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Automated multi-network syndication across X/Twitter, Reddit, Medium, and LinkedIn.</p>
+              </header>
+              <OmniSocialDashboard />
+            </motion.div>
+          )}
 
-            <div className="grid md:grid-cols-2 gap-8 mb-8">
-              {/* Traffic Sources */}
-              <div className="bg-gray-900/50 border border-gray-800 p-6 rounded-xl">
-                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2"><BarChart className="w-5 h-5 text-purple-400"/> Acquisition Sources</h3>
-                <div className="space-y-6">
-                  <div>
-                    <div className="flex justify-between text-sm mb-2"><span className="text-gray-300">Organic Search (Google/Bing)</span><span className="font-bold">65%</span></div>
-                    <div className="w-full bg-gray-800 h-2 rounded-full overflow-hidden"><div className="bg-blue-500 h-full w-[65%]"></div></div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-2"><span className="text-gray-300">Social AI Agents (X/Reddit)</span><span className="font-bold">22%</span></div>
-                    <div className="w-full bg-gray-800 h-2 rounded-full overflow-hidden"><div className="bg-purple-500 h-full w-[22%]"></div></div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-2"><span className="text-gray-300">Direct / Newsletter</span><span className="font-bold">13%</span></div>
-                    <div className="w-full bg-gray-800 h-2 rounded-full overflow-hidden"><div className="bg-green-500 h-full w-[13%]"></div></div>
-                  </div>
-                </div>
-              </div>
+          {/* VIEW: VIRAL HOOK STUDIO */}
+          {currentView === 'hooks' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Flame className="w-8 h-8 text-amber-500" /> Viral Hook Synthesis Studio
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Generate scroll-stopping psychological hooks across all 7 viral archetypes with 1-click copy.</p>
+              </header>
+              <ViralHookStudio />
+            </motion.div>
+          )}
 
-              {/* Top Performing Assets */}
-              <div className="bg-gray-900/50 border border-gray-800 p-6 rounded-xl">
-                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2"><Activity className="w-5 h-5 text-yellow-400"/> Top Performing AI Assets</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-black border border-gray-800 rounded-lg">
-                    <div className="flex-1">
-                      <p className="text-sm text-white font-bold line-clamp-1">OpenAI&apos;s Next Move: What to Expect in 2027</p>
-                      <p className="text-xs text-gray-500 mt-1">tech.thetrendmatrix.com</p>
-                    </div>
-                    <div className="text-right ml-4">
-                      <p className="text-sm font-bold text-green-400">142K</p>
-                      <p className="text-[10px] text-gray-500 uppercase">Views</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-black border border-gray-800 rounded-lg">
-                    <div className="flex-1">
-                      <p className="text-sm text-white font-bold line-clamp-1">Bitcoin Breaks Resistance: Is $100K Inevitable?</p>
-                      <p className="text-xs text-gray-500 mt-1">crypto.thetrendmatrix.com</p>
-                    </div>
-                    <div className="text-right ml-4">
-                      <p className="text-sm font-bold text-green-400">89K</p>
-                      <p className="text-[10px] text-gray-500 uppercase">Views</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-black border border-gray-800 rounded-lg">
-                    <div className="flex-1">
-                      <p className="text-sm text-white font-bold line-clamp-1">The Truth About Intermittent Fasting</p>
-                      <p className="text-xs text-gray-500 mt-1">health.thetrendmatrix.com</p>
-                    </div>
-                    <div className="text-right ml-4">
-                      <p className="text-sm font-bold text-green-400">45K</p>
-                      <p className="text-[10px] text-gray-500 uppercase">Views</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
+          {/* VIEW: PROMO POSTER STUDIO */}
+          {currentView === 'posters' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Palette className="w-8 h-8 text-pink-400" /> Dynamic Visual Asset Generator
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Render high-CTR social posters, quote cards, and open-graph cover images in real time.</p>
+              </header>
+              <PosterStudio />
+            </motion.div>
+          )}
 
-        {/* VIEW: MONETIZATION ENGINE */}
-        {currentView === 'revenue' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <header className="mb-10">
-              <h2 className="text-3xl font-bold flex items-center gap-3"><TrendingUp className="w-8 h-8 text-green-500" /> Monetization Engine</h2>
-              <p className="text-gray-400 mt-2">Automate revenue generation. Configure ad networks and auto-inject affiliate links.</p>
-            </header>
+          {/* VIEW: SEO & KEYWORDS */}
+          {currentView === 'seo' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <BarChart className="w-8 h-8 text-purple-400" /> SEO & Rising Keyword Radar
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Identify breakout search terms and generate ranking articles with 1-click workflow.</p>
+              </header>
+              <RisingKeywords />
+            </motion.div>
+          )}
 
-            {/* Real Revenue Dashboard */}
-            <div className="mb-8">
-              <RevenueDashboard />
-            </div>
+          {/* VIEW: NEWSLETTER HUB */}
+          {currentView === 'newsletter' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Mail className="w-8 h-8 text-indigo-400" /> Email Newsletter Engine & Beehiiv Sync
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Manage owned subscriber audience, compose broadcast digests, and sync with Beehiiv.</p>
+              </header>
+              <NewsletterManager />
+            </motion.div>
+          )}
 
-            <div className="grid md:grid-cols-2 gap-8 mb-8">
-              {/* Affiliate Auto-Injector */}
-              <div className="bg-gray-900/50 border border-gray-800 p-8 rounded-xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent pointer-events-none"></div>
-                <div className="relative z-10">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><Briefcase className="w-5 h-5 text-green-400"/> Auto-Affiliate Injector</h3>
-                    <div className="w-14 h-8 bg-green-600 rounded-full relative cursor-pointer shadow-[0_0_15px_rgba(34,197,94,0.4)]"><div className="absolute right-1 top-1 w-6 h-6 bg-white rounded-full"></div></div>
-                  </div>
-                  <p className="text-sm text-gray-400 mb-6">AI automatically scans generated articles for high-intent keywords (e.g., &quot;best software&quot;, &quot;buy now&quot;) and dynamically wraps them in your affiliate links.</p>
-                  
-                  <div className="space-y-4">
-                    <div className="bg-black border border-gray-800 p-4 rounded-lg flex justify-between items-center">
-                      <div>
-                        <div className="text-white font-bold text-sm">Amazon Associates</div>
-                        <div className="text-xs text-gray-500">Tag: nexusmedia-20</div>
-                      </div>
-                      <span className="text-xs font-bold text-green-400 bg-green-900/30 px-2 py-1 rounded">ACTIVE</span>
-                    </div>
-                    <div className="bg-black border border-gray-800 p-4 rounded-lg flex justify-between items-center">
-                      <div>
-                        <div className="text-white font-bold text-sm">ClickBank API</div>
-                        <div className="text-xs text-gray-500">ID: TRENDMATRIX99</div>
-                      </div>
-                      <span className="text-xs font-bold text-green-400 bg-green-900/30 px-2 py-1 rounded">ACTIVE</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          {/* VIEW: BACKLINK AUTHORITY */}
+          {currentView === 'backlinks' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Link2 className="w-8 h-8 text-blue-400" /> Backlink Network & Citation Tracker
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Track high-DR inbound citations, Reddit discussions, and editorial mentions.</p>
+              </header>
+              <BacklinkManager />
+            </motion.div>
+          )}
 
-              {/* Dynamic Ad Injection Control */}
-              <div className="bg-gray-900/50 border border-gray-800 p-8 rounded-xl relative overflow-hidden group">
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><Globe className="w-5 h-5 text-blue-400"/> Dynamic Ad Injection</h3>
-                    <button onClick={saveAdConfig} className="text-xs font-bold text-white border border-blue-600 bg-blue-600 hover:bg-blue-500 px-4 py-1.5 rounded transition-colors shadow-[0_0_15px_rgba(37,99,235,0.4)]">DEPLOY TO NETWORK</button>
-                  </div>
-                  
-                  <div className="flex-1 space-y-4">
-                    <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 block">Ad Headline</label>
-                      <input type="text" value={adConfig.title} onChange={e => setAdConfig({...adConfig, title: e.target.value})} className="w-full bg-black border border-gray-800 rounded p-2 text-white text-sm focus:border-blue-500 outline-none" />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 block">Sub-text / Pitch</label>
-                      <input type="text" value={adConfig.description} onChange={e => setAdConfig({...adConfig, description: e.target.value})} className="w-full bg-black border border-gray-800 rounded p-2 text-white text-sm focus:border-blue-500 outline-none" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 block">Button Text</label>
-                        <input type="text" value={adConfig.buttonText} onChange={e => setAdConfig({...adConfig, buttonText: e.target.value})} className="w-full bg-black border border-gray-800 rounded p-2 text-white text-sm focus:border-blue-500 outline-none" />
-                      </div>
-                      <div>
-                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 block">Target URL</label>
-                        <input type="text" value={adConfig.url} onChange={e => setAdConfig({...adConfig, url: e.target.value})} className="w-full bg-black border border-gray-800 rounded p-2 text-white text-sm focus:border-blue-500 outline-none" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* VIEW: CHRONO AUTOMATIONS */}
+          {currentView === 'automation' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Clock className="w-8 h-8 text-teal-400" /> Chrono Automation Engine
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Master cron schedules, daemon execution intervals, and instantaneous manual overrides.</p>
+              </header>
+              <AutomationControls />
+            </motion.div>
+          )}
 
-            {/* Global Ad Slot Control */}
+          {/* VIEW: ACCOUNT CONNECTIONS */}
+          {currentView === 'connections' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Globe className="w-8 h-8 text-blue-400" /> Account Integrations Hub
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Live connection statuses for OpenAI, Google AdSense, Telegram Bot, Twitter, and PostgreSQL.</p>
+              </header>
+              <ConnectionsHub />
+            </motion.div>
+          )}
 
-            <div className="bg-gray-900/50 border border-gray-800 p-8 rounded-xl">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h3 className="text-xl font-bold text-white flex items-center gap-2"><Layers className="w-5 h-5 text-purple-400"/> Global Ad Slot Control (Admin)</h3>
-                  <p className="text-sm text-gray-400 mt-1">Directly inject your raw AdSense, Header Bidding, or Native Ad code across the entire 15-site network.</p>
-                </div>
-                <button onClick={() => showToast('Ad Tags successfully injected across all 15 domains in the Empire Network.')} className="px-6 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-bold transition-all shadow-[0_0_15px_rgba(147,51,234,0.3)]">
-                  Deploy to All Sites
-                </button>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Primary Sidebar Unit (300x250)</label>
-                  <textarea 
-                    className="w-full bg-black border border-gray-700 rounded-lg p-3 text-gray-400 font-mono text-xs h-24 focus:border-purple-500 focus:outline-none"
-                    defaultValue={`<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-NEXUS99"></script>\n<ins className="adsbygoogle" style={{display:"block"}} data-ad-client="ca-pub-NEXUS99" data-ad-slot="1234567890"></ins>\n<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>`}
-                  ></textarea>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Native Content Injection (Taboola/Outbrain)</label>
-                  <textarea 
-                    className="w-full bg-black border border-gray-700 rounded-lg p-3 text-gray-400 font-mono text-xs h-24 focus:border-purple-500 focus:outline-none"
-                    defaultValue={`<div id="taboola-below-article-thumbnails"></div>\n<script type="text/javascript">\n  window._taboola = window._taboola || [];\n  _taboola.push({ mode: 'thumbnails-a', container: 'taboola-below-article-thumbnails', placement: 'Below Article Thumbnails', target_type: 'mix' });\n</script>`}
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
+          {/* VIEW: SETTINGS & API KEYS */}
+          {currentView === 'settings' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <Key className="w-8 h-8 text-amber-400" /> Settings & Master Credentials
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Configure all network credentials securely. No terminal or redeployment required.</p>
+              </header>
+              <SettingsPanel />
+            </motion.div>
+          )}
 
-        {/* VIEW: SEO & DISTRIBUTION */}
-        {currentView === 'distribution' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <header className="mb-10">
-              <h2 className="text-3xl font-bold flex items-center gap-3"><Share2 className="w-8 h-8 text-blue-500" /> SEO & Social Distribution Swarm</h2>
-              <p className="text-gray-400 mt-2">Manage the automated traffic engines pumping viewers into your network.</p>
-            </header>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Twitter Bot Network */}
-              <div className="bg-gray-900/50 border border-gray-800 p-8 rounded-xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent pointer-events-none"></div>
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><Globe className="w-5 h-5 text-blue-400"/> X (Twitter) Bot Swarm</h3>
-                    <div className="w-14 h-8 bg-blue-600 rounded-full relative cursor-pointer shadow-[0_0_15px_rgba(37,99,235,0.4)]"><div className="absolute right-1 top-1 w-6 h-6 bg-white rounded-full"></div></div>
-                  </div>
-                  
-                  <div className="flex-1 space-y-4">
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="bg-black border border-gray-800 p-4 rounded-lg">
-                        <div className="text-xs text-gray-500 mb-1">Active Accounts</div>
-                        <div className="text-2xl font-bold text-white">84</div>
-                      </div>
-                      <div className="bg-black border border-gray-800 p-4 rounded-lg">
-                        <div className="text-xs text-gray-500 mb-1">Daily Tweets</div>
-                        <div className="text-2xl font-bold text-blue-400">1,240</div>
-                      </div>
-                    </div>
-                    
-                    <p className="text-sm text-gray-400">The Nexus Engine manages a fleet of niche-specific Twitter accounts. Whenever a new article is published, the swarm engages in a coordinated reply-and-retweet cascade, driving immediate viral traffic to the post.</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Programmatic Backlink Farm */}
-              <div className="bg-gray-900/50 border border-gray-800 p-8 rounded-xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-transparent pointer-events-none"></div>
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><Layers className="w-5 h-5 text-purple-400"/> Programmatic SEO Matrix</h3>
-                    <span className="text-xs font-bold text-purple-400 border border-purple-900/50 bg-purple-900/20 px-3 py-1 rounded-full">TIER 1 & 2 ACTIVE</span>
-                  </div>
-                  
-                  <div className="flex-1 space-y-4">
-                    <div className="bg-black border border-gray-800 p-4 rounded-lg">
-                      <div className="flex justify-between items-center mb-2">
-                        <div className="text-white font-bold text-sm">Tier 1 Backlinks (High DR Web2.0s)</div>
-                        <span className="text-xs font-bold text-green-400">241 Generated Today</span>
-                      </div>
-                      <div className="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden"><div className="bg-purple-500 h-full w-[85%]"></div></div>
-                    </div>
-                    <div className="bg-black border border-gray-800 p-4 rounded-lg">
-                      <div className="flex justify-between items-center mb-2">
-                        <div className="text-white font-bold text-sm">Tier 2 Profiles & Forum Injections</div>
-                        <span className="text-xs font-bold text-green-400">1,840 Generated Today</span>
-                      </div>
-                      <div className="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden"><div className="bg-purple-400 h-full w-[45%]"></div></div>
-                    </div>
-                    
-                    <p className="text-sm text-gray-400 mt-4">Articles are instantly cross-posted to a private network of Medium, WordPress, and Reddit clones with exact-match anchor text pointing back to your main properties.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* VIEW: EMPIRE NETWORK */}
-        {currentView === 'network' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <header className="mb-10">
-              <h2 className="text-3xl font-bold flex items-center gap-3"><Globe className="w-8 h-8 text-green-500" /> Empire Network</h2>
-              <p className="text-gray-400 mt-2">Manage your autonomous multi-niche subdomain empire.</p>
-            </header>
-              <div className="grid grid-cols-2 gap-6">
-                {networks.map((plat) => (
-                  <div key={plat.id} className="bg-gray-900 border border-gray-800 p-6 rounded-xl flex items-center justify-between transition-all">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-black rounded-lg border border-gray-800">
-                        <Power className={`w-6 h-6 ${plat.status === 'Connected' ? plat.color : 'text-gray-600'}`} />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-lg text-white">{plat.name}</h4>
-                        <p className="text-sm text-gray-500 font-mono">{plat.domain}</p>
-                      </div>
-                    </div>
-                    {networkLoading === plat.id ? (
-                      <button disabled className="px-4 py-2 bg-gray-800 text-gray-400 border border-gray-700 rounded-lg text-sm font-semibold flex items-center gap-2">
-                        <RefreshCw className="w-4 h-4 animate-spin" /> Syncing...
-                      </button>
-                    ) : plat.status === "Connected" ? (
-                      <button onClick={() => handleToggleNetwork(plat.id)} className="px-4 py-2 bg-red-900/20 text-red-400 border border-red-900/50 rounded-lg text-sm font-semibold hover:bg-red-900/40 transition-colors">
-                        Disconnect
-                      </button>
-                    ) : (
-                      <button onClick={() => handleToggleNetwork(plat.id)} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-500 transition-colors shadow-lg shadow-blue-500/20">
-                        Connect DNS
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-          </motion.div>
-        )}
-
-        {/* VIEW: AGENT CONFIG */}
-        {currentView === 'config' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <header className="mb-10">
-              <h2 className="text-3xl font-bold flex items-center gap-3"><Sliders className="w-8 h-8 text-pink-500" /> Agent Logic Tuning</h2>
-              <p className="text-gray-400 mt-2">Adjust the personality, creativity, and guardrails of your AI workforce.</p>
-            </header>
-            <div className="max-w-5xl flex gap-8">
-              {/* Left Column: Logic Tuning */}
-              <div className="flex-1 bg-gray-900/50 border border-gray-800 p-8 rounded-xl flex flex-col gap-8">
-                <div>
-                  <label className="block font-bold text-white mb-2">Global Brand Voice Prompt</label>
-                  <p className="text-sm text-gray-400 mb-3">This system prompt is appended to all Agent workflows.</p>
-                  <textarea 
-                    className="w-full bg-black border border-gray-700 rounded-lg p-4 text-green-400 font-mono text-sm h-32 focus:border-blue-500 focus:outline-none"
-                    defaultValue="Act as a Silicon Valley tech founder. Tone should be highly professional, punchy, and visionary. Avoid corporate jargon. Do not use emojis unless absolutely necessary. Write with extreme confidence."
-                  ></textarea>
-                </div>
-                <div className="border-t border-gray-800 pt-8">
-                  <div className="flex justify-between items-center mb-4">
-                    <label className="font-bold text-white">LLM Creativity Temperature</label>
-                    <span className="text-blue-400 font-mono bg-blue-900/20 px-2 py-1 rounded">0.7 / 1.0</span>
-                  </div>
-                  <input type="range" min="0" max="100" defaultValue="70" className="w-full accent-blue-500" />
-                  <div className="flex justify-between text-xs text-gray-500 mt-2 font-semibold"><span>Factual (0.0)</span><span>Balanced (0.7)</span><span>Chaotic (1.0)</span></div>
-                </div>
-                <div className="border-t border-gray-800 pt-8 flex items-center justify-between">
-                  <div>
-                    <h4 className="font-bold text-white">Require Human Approval</h4>
-                    <p className="text-sm text-gray-400">If disabled, the AI will publish instantly without confirmation.</p>
-                  </div>
-                  <div className="w-14 h-8 bg-blue-600 rounded-full relative cursor-pointer shadow-[0_0_15px_rgba(37,99,235,0.4)]"><div className="absolute right-1 top-1 w-6 h-6 bg-white rounded-full"></div></div>
-                </div>
-              </div>
-
-              {/* Right Column: Integrations & API Keys */}
-              <div className="flex-1 flex flex-col gap-6">
-                <div className="bg-gray-900/50 border border-gray-800 p-6 rounded-xl">
-                  <h3 className="font-bold text-white mb-4 flex items-center gap-2"><Key className="w-5 h-5 text-yellow-500" /> External API Connections</h3>
-                  <p className="text-sm text-gray-400 mb-6">Securely route your proprietary API keys through the Nexus Engine.</p>
-                  
-                  <div className="flex flex-col gap-4">
-                    {/* OpenAI */}
-                    <div className="bg-black border border-gray-800 p-4 rounded-lg">
-                      <div className="flex justify-between items-center mb-2">
-                        <div className="flex items-center gap-2 text-white font-bold"><Brain className="w-4 h-4 text-green-500"/> OpenAI Core</div>
-                        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 bg-green-900/30 text-green-400 border border-green-900/50 rounded">Connected</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <input type="password" value="sk-proj-a9F8jL2pXmN4qQ7..." readOnly className="flex-1 bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-gray-500 font-mono focus:outline-none" />
-                        <button onClick={() => showToast('API Key verified.')} className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-semibold">Edit</button>
-                      </div>
-                    </div>
-                    
-                    {/* Midjourney API */}
-                    <div className="bg-black border border-gray-800 p-4 rounded-lg">
-                      <div className="flex justify-between items-center mb-2">
-                        <div className="flex items-center gap-2 text-white font-bold"><ImageIcon className="w-4 h-4 text-purple-500"/> Midjourney Synthesis</div>
-                        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 bg-green-900/30 text-green-400 border border-green-900/50 rounded">Connected</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <input type="password" value="mj-api-v6-9x882ndP..." readOnly className="flex-1 bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-gray-500 font-mono focus:outline-none" />
-                        <button onClick={() => showToast('API Key verified.')} className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-semibold">Edit</button>
-                      </div>
-                    </div>
-
-                    {/* X / Twitter */}
-                    <div className="bg-black border border-gray-800 p-4 rounded-lg">
-                      <div className="flex justify-between items-center mb-2">
-                        <div className="flex items-center gap-2 text-white font-bold"><MessageSquare className="w-4 h-4 text-blue-400"/> X (Twitter) Pro API</div>
-                        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 bg-red-900/30 text-red-400 border border-red-900/50 rounded">Disconnected</span>
-                      </div>
-                      <button onClick={() => showToast('OAuth flow initiated. Connecting to X API v2...')} className="w-full py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white rounded text-sm font-semibold flex items-center justify-center gap-2 transition-colors">
-                        <Key className="w-4 h-4" /> Link OAuth App
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                
-                <button onClick={() => showToast('Configuration Saved. Changes will apply to all future asset generations.')} className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all">
-                  Save Configuration
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
+        </div>
       </main>
-      
-      {/* Simulation Matrix & Modals truncated to save context - they still exist exactly as before but I am keeping them out of this view for brevity since they render conditionally over the main screen */}
+
+      {/* Generation Progress Overlay */}
       <AnimatePresence>
         {isGenerating && (
           <motion.div 
-            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.95 }}
-            className="absolute bottom-8 right-8 w-96 bg-gray-950 border border-gray-800 rounded-xl shadow-2xl z-40"
+            exit={{ opacity: 0, y: 40, scale: 0.95 }}
+            className="fixed bottom-8 right-8 w-96 bg-[#090d14] border border-blue-500/30 rounded-2xl shadow-2xl z-50 overflow-hidden backdrop-blur-2xl"
           >
-            <div className="p-4 border-b border-gray-800 bg-gray-900/80 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <BrainCircuit className="w-5 h-5 text-blue-500 animate-pulse" />
-                <span className="font-semibold text-sm">Agentic Matrix Active</span>
+            <div className="p-4 border-b border-gray-800 bg-[#0c121d] flex justify-between items-center">
+              <div className="flex items-center gap-2.5">
+                <BrainCircuit className="w-5 h-5 text-blue-400 animate-pulse" />
+                <span className="font-bold text-xs text-white">Agent Generation Active</span>
               </div>
-              <span className="text-xs text-blue-400 font-mono">{progress}%</span>
+              <span className="text-xs text-blue-400 font-mono font-bold">{progress}%</span>
             </div>
             
-            <div className="p-4 flex flex-col gap-3 min-h-[220px] max-h-[300px] overflow-y-auto font-mono text-xs bg-black">
-              <div className="w-full bg-gray-900 h-1.5 rounded-full mb-2 overflow-hidden shadow-inner">
-                <div className="bg-blue-500 h-full rounded-full transition-all duration-300 relative" style={{ width: `${progress}%` }}>
+            <div className="p-4 flex flex-col gap-3 min-h-[220px] max-h-[300px] overflow-y-auto font-mono text-xs bg-black/60">
+              <div className="w-full bg-gray-900 h-1.5 rounded-full overflow-hidden">
+                <div className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-300 relative" style={{ width: `${progress}%` }}>
                   <div className="absolute top-0 left-0 w-full h-full bg-white/20 animate-pulse"></div>
                 </div>
               </div>
 
               {completedTasks.map((task, i) => (
-                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} key={i} className="flex items-start gap-2 text-gray-400">
-                  <CheckCircle className="w-4 h-4 text-green-500 shrink-0 mt-0.5" /><span>{task}</span>
+                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} key={i} className="flex items-start gap-2 text-gray-400 text-[11px]">
+                  <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" /><span>{task}</span>
                 </motion.div>
               ))}
 
               {progress === 100 && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 p-3 bg-green-950/30 border border-green-900/50 rounded text-green-400 flex flex-col gap-2">
-                  <span className="font-bold flex items-center gap-2"><CheckCircle className="w-4 h-4" /> Empire Assets Generated!</span>
-                  <button onClick={() => { setIsGenerating(false); setShowModal(true); }} className="w-full mt-2 py-2 bg-green-900 hover:bg-green-800 text-white rounded font-sans text-sm font-semibold flex justify-center items-center gap-2">
-                    Open Assets <ChevronRight className="w-4 h-4" />
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-2 p-3 bg-emerald-950/40 border border-emerald-800/50 rounded-xl text-emerald-300 flex flex-col gap-2">
+                  <span className="font-bold flex items-center gap-2 text-xs"><CheckCircle className="w-4 h-4" /> Empire Assets Ready!</span>
+                  <button onClick={() => { setIsGenerating(false); setShowModal(true); }} className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex justify-center items-center gap-1.5 transition-all">
+                    Open Results Modal <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </motion.div>
               )}
@@ -944,65 +687,53 @@ export default function NexusDashboard() {
         )}
       </AnimatePresence>
 
+      {/* Asset Review & Publish Modal */}
       <AnimatePresence>
         {showModal && results && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-8">
-            <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} className="bg-gray-950 border border-gray-800 rounded-2xl shadow-2xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden">
-              <div className="p-6 border-b border-gray-800 bg-gray-900 flex justify-between items-center">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-6">
+            <motion.div initial={{ scale: 0.96, y: 15 }} animate={{ scale: 1, y: 0 }} className="bg-[#090d14] border border-gray-800 rounded-3xl shadow-2xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden">
+              <div className="p-6 border-b border-gray-800 bg-[#0c121d] flex justify-between items-center">
                 <div>
-                  <h2 className="text-2xl font-bold text-white flex items-center gap-3"><Zap className="w-6 h-6 text-yellow-500" /> Generated Assets: {selectedTrend?.topic}</h2>
-                  <p className="text-gray-400 text-sm mt-1">Ready for 1-click publishing across all networks.</p>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2.5">
+                    <Zap className="w-5 h-5 text-amber-400" /> Generated Package: {selectedTrend?.topic}
+                  </h2>
+                  <p className="text-gray-400 text-xs mt-1">Multi-channel assets ready for instant release.</p>
                 </div>
-                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-gray-800 rounded-lg text-gray-400"><X className="w-6 h-6" /></button>
+                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-gray-800 rounded-xl text-gray-400"><X className="w-5 h-5" /></button>
               </div>
 
               {!isPublished ? (
                 <div className="flex flex-1 overflow-hidden">
-                  <div className="w-64 border-r border-gray-800 bg-gray-900/50 p-4 flex flex-col gap-2">
+                  <div className="w-64 border-r border-gray-800 bg-[#07090e] p-4 flex flex-col gap-2">
                     <TabButton active={activeTab === 'blog'} onClick={() => setActiveTab('blog')} icon={<Globe />} label="SEO Blog Article" />
                     <TabButton active={activeTab === 'twitter'} onClick={() => setActiveTab('twitter')} icon={<MessageSquare />} label="Twitter Thread" />
                     <TabButton active={activeTab === 'media'} onClick={() => setActiveTab('media')} icon={<ImageIcon />} label="Image Prompts" />
                   </div>
                   <div className="flex-1 p-6 overflow-y-auto bg-black relative group">
-                    <button onClick={() => copyToClipboard(activeTab === 'blog' ? (results.blog ?? '') : activeTab === 'twitter' ? (results.tweets ?? []).join('\n\n') : (results.imagePrompt ?? ''))} className="absolute top-6 right-6 p-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-300 opacity-0 group-hover:opacity-100 flex items-center gap-2 text-sm">
-                      <Copy className="w-4 h-4" /> Copy
+                    <button onClick={() => copyToClipboard(activeTab === 'blog' ? (results.blog ?? '') : activeTab === 'twitter' ? (results.tweets ?? []).join('\n\n') : (results.imagePrompt ?? ''))} className="absolute top-6 right-6 p-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-gray-300 opacity-0 group-hover:opacity-100 flex items-center gap-1.5 text-xs font-mono transition-opacity">
+                      <Copy className="w-3.5 h-3.5" /> Copy
                     </button>
-                    {activeTab === 'blog' && <div className="prose prose-invert max-w-none"><pre className="text-gray-300 font-sans whitespace-pre-wrap">{results.blog}</pre></div>}
-                    {activeTab === 'twitter' && <div className="flex flex-col gap-4">{(results.tweets ?? []).map((tweet: string, idx: number) => <div key={idx} className="bg-gray-900 border border-gray-800 p-4 rounded-xl max-w-xl"><div className="flex items-center gap-2 mb-2 text-gray-400"><MessageSquare className="w-4 h-4 text-blue-400" /><span className="text-xs font-semibold">Tweet {idx + 1}</span></div><p className="text-gray-200">{tweet}</p></div>)}</div>}
-                    {activeTab === 'media' && <div className="bg-gray-900 border border-gray-800 p-6 rounded-xl"><h4 className="text-sm font-semibold text-gray-400 mb-2 uppercase tracking-wider">Midjourney / DALL-E Prompt</h4><code className="text-blue-400 font-mono text-sm block bg-black p-4 rounded border border-gray-800">{results.imagePrompt}</code></div>}
+                    {activeTab === 'blog' && <div className="prose prose-invert max-w-none text-xs"><pre className="text-gray-300 font-sans whitespace-pre-wrap">{results.blog}</pre></div>}
+                    {activeTab === 'twitter' && <div className="flex flex-col gap-3">{(results.tweets ?? []).map((tweet: string, idx: number) => <div key={idx} className="bg-gray-900/60 border border-gray-800 p-4 rounded-xl max-w-xl"><div className="flex items-center gap-2 mb-2 text-gray-400"><MessageSquare className="w-4 h-4 text-blue-400" /><span className="text-xs font-semibold">Tweet {idx + 1}</span></div><p className="text-gray-200 text-xs">{tweet}</p></div>)}</div>}
+                    {activeTab === 'media' && <div className="bg-gray-900/60 border border-gray-800 p-6 rounded-xl"><h4 className="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider font-mono">Midjourney / DALL-E Prompt</h4><code className="text-blue-400 font-mono text-xs block bg-black p-4 rounded-xl border border-gray-800">{results.imagePrompt}</code></div>}
                   </div>
                 </div>
               ) : (
                 <div className="flex flex-1 flex-col items-center justify-center bg-black/50 p-8 text-center">
-                  <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mb-6 border border-green-500/50 shadow-[0_0_50px_rgba(34,197,94,0.3)]"><CheckCircle className="w-12 h-12 text-green-400" /></motion.div>
-                  <h3 className="text-3xl font-bold text-white mb-2">Empire Deployed!</h3>
-                  <p className="text-gray-400 mb-8 max-w-md">Your AI agents have successfully published the blog article, queued the Twitter thread, and sent the media prompts to your inbox.</p>
-                  <div className="flex gap-4 w-full max-w-lg">
-                    <div className="flex-1 bg-gray-900 border border-gray-800 p-4 rounded-xl flex items-center justify-between"><div className="flex items-center gap-3"><Globe className="w-5 h-5 text-blue-400" /> <span>Website</span></div><CheckCircle className="w-5 h-5 text-green-500" /></div>
-                    <div className="flex-1 bg-gray-900 border border-gray-800 p-4 rounded-xl flex items-center justify-between"><div className="flex items-center gap-3"><MessageSquare className="w-5 h-5 text-blue-400" /> <span>Social</span></div><CheckCircle className="w-5 h-5 text-green-500" /></div>
-                  </div>
+                  <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6 border border-emerald-500/50 shadow-[0_0_50px_rgba(16,185,129,0.3)]"><CheckCircle className="w-10 h-10 text-emerald-400" /></motion.div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Assets Deployed to Network</h3>
+                  <p className="text-gray-400 mb-8 max-w-md text-xs">Articles and social assets have been published and synced with indexing channels.</p>
                 </div>
               )}
               
-              <div className="p-4 border-t border-gray-800 bg-gray-900 flex justify-end gap-3">
-                {isPublished ? (
-                  <>
-                    <button onClick={() => { setShowModal(false); setIsPublished(false); setCurrentView('network'); }} className="px-6 py-2 text-gray-400 hover:text-white font-medium transition-colors">
-                      Back to Network
-                    </button>
-                    <button onClick={() => window.open('/news', '_blank')} className="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold flex items-center gap-2 shadow-[0_0_15px_rgba(37,99,235,0.4)] transition-all">
-                      <Globe className="w-4 h-4" /> View Live Site â†—
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button onClick={() => setShowModal(false)} className="px-6 py-2 text-gray-400 hover:text-white font-medium transition-colors">
-                      Cancel
-                    </button>
-                    <button onClick={handlePublish} disabled={isPublishing} className="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold flex items-center gap-2 shadow-[0_0_15px_rgba(37,99,235,0.4)] transition-all">
-                      {isPublishing ? <><Activity className="w-4 h-4 animate-spin" /> Broadcasting...</> : <><Globe className="w-4 h-4" /> Publish Everywhere Now</>}
-                    </button>
-                  </>
+              <div className="p-4 border-t border-gray-800 bg-[#0c121d] flex justify-end gap-3">
+                <button onClick={() => setShowModal(false)} className="px-5 py-2.5 text-gray-400 hover:text-white text-xs font-semibold transition-colors">
+                  Close
+                </button>
+                {!isPublished && (
+                  <button onClick={handlePublish} disabled={isPublishing} className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all">
+                    {isPublishing ? <><Activity className="w-4 h-4 animate-spin" /> Broadcasting...</> : <><Globe className="w-4 h-4" /> Publish to Live Sites</>}
+                  </button>
                 )}
               </div>
             </motion.div>
@@ -1010,210 +741,6 @@ export default function NexusDashboard() {
         )}
       </AnimatePresence>
 
-      {/* NEW VIEW: PIPELINE CONTROL */}
-      {currentView === 'autopilot' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-10">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><RefreshCw className="w-8 h-8 text-blue-500" /> Autonomous Pipeline</h2>
-            <p className="text-gray-400 mt-2">Monitor and control the fully autonomous content engine — trend scout, QA gate, and publisher.</p>
-          </header>
-          <PipelineStatus />
-        </motion.div>
-      )}
-
-      {/* VIEW: AD SLOT MANAGER */}
-      {currentView === 'adslots' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <AdSlotManager />
-        </motion.div>
-      )}
-
-      {/* VIEW: AFFILIATE MANAGER */}
-      {currentView === 'affiliates' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <AffiliateManager />
-        </motion.div>
-      )}
-
-      {/* NEW VIEW: SYSTEM HEALTH */}
-      {currentView === 'health' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-10">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><ShieldCheck className="w-8 h-8 text-green-500" /> System Health</h2>
-            <p className="text-gray-400 mt-2">Autonomous monitoring — site uptime, revenue anomalies, and alert feed.</p>
-          </header>
-          <AlertFeed />
-        </motion.div>
-      )}
-
-      {/* NEW VIEW: SEO & KEYWORDS */}
-      {currentView === 'seo' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-10">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><BarChart className="w-8 h-8 text-purple-500" /> SEO & Rising Keywords</h2>
-            <p className="text-gray-400 mt-2">Rising keyword opportunities — one click to generate a follow-up article and capture the ranking.</p>
-          </header>
-          <RisingKeywords />
-        </motion.div>
-      )}
-
-      {/* NEW VIEW: QA CONFIG */}
-      {currentView === 'qaconfig' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-10">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><Brain className="w-8 h-8 text-pink-500" /> AI QA Gate Config</h2>
-            <p className="text-gray-400 mt-2">Tune the AI self-reviewer thresholds, budget cap, and auto-publish behaviour without touching code.</p>
-          </header>
-          <QAConfigPanel />
-        </motion.div>
-      )}
-
-      {/* NEW VIEW: SETTINGS & KEYS */}
-      {currentView === 'settings' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-10">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><Key className="w-8 h-8 text-yellow-500" /> Settings & API Keys</h2>
-            <p className="text-gray-400 mt-2">Configure all credentials here. No terminal required. Paste values directly into the fields below.</p>
-          </header>
-          <SettingsPanel />
-        </motion.div>
-      )}
-
-      {/* VIEW: ARTICLE VAULT */}
-      {currentView === 'articles' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><Sparkles className="w-8 h-8 text-purple-500" /> Content Vault & Editor</h2>
-            <p className="text-gray-400 mt-2">Manage, preview, edit, and release high-grade evergreen articles across all network publications.</p>
-          </header>
-          <ArticleManager />
-        </motion.div>
-      )}
-
-      {/* VIEW: TOPIC INGESTION */}
-      {currentView === 'topics' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><Tag className="w-8 h-8 text-yellow-500" /> Topic Angle Ingestion</h2>
-            <p className="text-gray-400 mt-2">Feed evergreen keywords, prioritize high-value angles, and run one-click article generation.</p>
-          </header>
-          <TopicManager />
-        </motion.div>
-      )}
-
-      {/* VIEW: CHRONO AUTOMATIONS */}
-      {currentView === 'automation' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><Clock className="w-8 h-8 text-cyan-500" /> Chrono Automation Engine</h2>
-            <p className="text-gray-400 mt-2">Fine-grained control over cron schedules, execution intervals, and instantaneous manual overrides.</p>
-          </header>
-          <AutomationControls />
-        </motion.div>
-      )}
-
-      {/* VIEW: ACCOUNT CONNECTIONS */}
-      {currentView === 'connections' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><Globe className="w-8 h-8 text-blue-500" /> Account Integrations Hub</h2>
-            <p className="text-gray-400 mt-2">Live connection statuses and setup links for OpenAI, Google AdSense, Telegram, Twitter, Reddit, and Supabase.</p>
-          </header>
-          <ConnectionsHub />
-        </motion.div>
-      )}
-
-      {/* VIEW: SOCIAL SYNDICATION */}
-      {currentView === 'social' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><Share2 className="w-8 h-8 text-blue-400" /> Social Syndication & Threads</h2>
-            <p className="text-gray-400 mt-2">Distribute multi-tweet threads and social summaries to X, Reddit, and Medium with canonical backlinks.</p>
-          </header>
-          <SocialDistribution />
-        </motion.div>
-      )}
-
-      {/* VIEW: BACKLINK AUTHORITY */}
-      {currentView === 'backlinks' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><Link2 className="w-8 h-8 text-indigo-400" /> Backlink & Domain Authority</h2>
-            <p className="text-gray-400 mt-2">Registry of all inbound citations, Reddit discussion threads, and external authority anchors.</p>
-          </header>
-          <BacklinkManager />
-        </motion.div>
-      )}
-
-      {/* VIEW: NEWSLETTER HUB */}
-      {currentView === 'newsletter' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><Mail className="w-8 h-8 text-purple-400" /> Email Newsletter Hub</h2>
-            <p className="text-gray-400 mt-2">Manage reader subscriptions, draft executive briefings, and broadcast directly to cohort lists.</p>
-          </header>
-          <NewsletterManager />
-        </motion.div>
-      )}
-
-      {/* VIEW: POSTER STUDIO */}
-      {currentView === 'posters' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><Palette className="w-8 h-8 text-pink-500" /> Promo Poster Studio</h2>
-            <p className="text-gray-400 mt-2">Generate high-impact social media banners, Twitter cards, and YouTube title posters.</p>
-          </header>
-          <PosterStudio />
-        </motion.div>
-      )}
-
-      {/* VIEW: GOD-MODE HUB */}
-      {currentView === 'godmode' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <GodModeHub />
-        </motion.div>
-      )}
-
-      {/* VIEW: OMNI-BRAND SOCIAL MATRIX */}
-      {currentView === 'omnisocial' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <OmniSocialDashboard />
-        </motion.div>
-      )}
-
-      {/* VIEW: DIGITAL PRODUCT FUNNEL */}
-      {currentView === 'products' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold flex items-center gap-3">
-              <Package className="w-8 h-8 text-emerald-400" />
-              Digital Product Funnel & Intent Matcher
-            </h2>
-            <p className="text-gray-400 mt-2">
-              Attach high-converting digital downloads, checklists, and templates to matching articles with 100% net profit margin.
-            </p>
-          </header>
-          <DigitalProductManager />
-        </motion.div>
-      )}
-
-      {/* VIEW: VIRAL HOOK STUDIO */}
-      {currentView === 'hooks' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold flex items-center gap-3">
-              <Flame className="w-8 h-8 text-amber-500" />
-              Viral Hook Synthesis & Copy Studio
-            </h2>
-            <p className="text-gray-400 mt-2">
-              Generate scroll-stopping psychological hooks across all 7 viral archetypes with 1-click clipboard copy.
-            </p>
-          </header>
-          <ViralHookStudio />
-        </motion.div>
-      )}
-
-      {/* Main End */}
     </div>
   );
 }
@@ -1237,19 +764,20 @@ function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNo
 
 function StatCard({ title, value, icon, onClick }: { title: string, value: string, icon: React.ReactNode, onClick?: () => void }) {
   return (
-    <div onClick={onClick} className={`bg-gray-900/50 border border-gray-800 p-5 rounded-xl flex items-center justify-between hover:bg-gray-900/80 transition-colors ${onClick ? 'cursor-pointer hover:border-gray-600' : ''}`}>
-      <div><h4 className="text-gray-400 text-sm font-medium mb-1">{title}</h4><span className="text-2xl font-bold text-white">{value}</span></div>
-      <div className="p-3 bg-black rounded-lg border border-gray-800 shadow-inner">{icon}</div>
+    <div onClick={onClick} className={`bg-[#080d16] border border-gray-800/80 p-5 rounded-2xl flex items-center justify-between hover:bg-gray-900/60 hover:border-gray-700 transition-all ${onClick ? 'cursor-pointer' : ''}`}>
+      <div>
+        <h4 className="text-gray-400 text-xs font-medium mb-1">{title}</h4>
+        <span className="text-xl font-black text-white">{value}</span>
+      </div>
+      <div className="p-3 bg-black/60 rounded-xl border border-gray-800 shadow-inner">{icon}</div>
     </div>
   );
 }
 
 function TabButton({ icon, label, active, onClick }: { icon: React.ReactNode, label: string, active: boolean, onClick: () => void }) {
   return (
-    <button onClick={onClick} className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-sm transition-all w-full text-left ${active ? "bg-gray-800 text-white shadow-md border border-gray-700" : "text-gray-400 hover:bg-gray-800/50 hover:text-gray-200"}`}>
+    <button onClick={onClick} className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl font-medium text-xs transition-all w-full text-left ${active ? "bg-gray-800 text-white shadow-md border border-gray-700 font-bold" : "text-gray-400 hover:bg-gray-800/50 hover:text-gray-200"}`}>
       {React.cloneElement(icon as React.ReactElement, { className: "w-4 h-4" })} {label}
     </button>
   );
 }
-
-

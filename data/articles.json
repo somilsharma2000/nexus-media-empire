@@ -38,7 +38,8 @@
       "rejectionReason": ""
     },
     "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1200&auto=format&fit=crop",
-    "inlineImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop"
+    "inlineImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop",
+    "featured": true
   },
   {
     "id": "art-vault-2",
@@ -179,8 +180,8 @@
       "5/ Empirical data shows systematic implementation reduces friction by up to 45% while protecting accuracy.",
       "6/ Read the full deep-dive and operational playbook here: https://thetrendmatrix.com/news/best-ai-tools-for-solo-founders-2026"
     ],
-    "status": "scheduled",
-    "publishedAt": null,
+    "status": "published",
+    "publishedAt": "2026-10-05T19:58:12.387Z",
     "publishAt": "2026-10-05T08:02:23.686Z",
     "createdAt": "2026-10-03T08:02:23.686Z",
     "updatedAt": "2026-10-03T08:02:23.686Z",
@@ -202,7 +203,8 @@
       "rejectionReason": ""
     },
     "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
-    "inlineImage": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop"
+    "inlineImage": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop",
+    "featured": false
   },
   {
     "id": "art-vault-6",
