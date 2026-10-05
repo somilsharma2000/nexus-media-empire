@@ -30,6 +30,7 @@ import GodModeHub from "../components/GodModeHub";
 import OmniSocialDashboard from "../components/OmniSocialDashboard";
 import DigitalProductManager from "../components/DigitalProductManager";
 import ViralHookStudio from "../components/ViralHookStudio";
+import BehavioralAnalyticsPanel from "../components/BehavioralAnalyticsPanel";
 
 const TRENDS = [
   { id: 1, topic: "OpenAI Strawberry Model Architecture Analysis", score: 98, niche: "AI & Tech" },
@@ -246,6 +247,7 @@ export default function NexusDashboard() {
             {/* MONETIZATION */}
             <div className="space-y-1">
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Monetization</p>
+              <NavItem icon={<BrainCircuit className="text-cyan-400" />} label="Behavioral Targeting" active={currentView === 'behavioral'} onClick={() => setCurrentView('behavioral')} />
               <NavItem icon={<Layers className="text-amber-400" />} label="Ad Slot Manager" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
               <NavItem icon={<Link2 className="text-emerald-400" />} label="Affiliate Bounties" active={currentView === 'affiliates'} onClick={() => setCurrentView('affiliates')} />
               <NavItem icon={<Package className="text-emerald-400" />} label="Digital Product Funnel" active={currentView === 'products'} onClick={() => setCurrentView('products')} />
@@ -469,6 +471,19 @@ export default function NexusDashboard() {
                 <p className="text-gray-400 text-sm mt-1">Tune the AI self-reviewer thresholds, budget cap, and auto-publish behavior without touching code.</p>
               </header>
               <QAConfigPanel />
+            </motion.div>
+          )}
+
+          {/* VIEW: BEHAVIORAL TARGETING */}
+          {currentView === 'behavioral' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <header>
+                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                  <BrainCircuit className="w-8 h-8 text-cyan-400" /> Behavioral Targeting & Audience Intent
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">Real-time dwell time, scroll velocity, and dynamic offer morphing telemetry.</p>
+              </header>
+              <BehavioralAnalyticsPanel />
             </motion.div>
           )}
 

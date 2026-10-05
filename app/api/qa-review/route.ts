@@ -97,6 +97,7 @@ async function updateTokenUsage(inputTokens: number, outputTokens: number) {
 }
 
 // ─── POST /api/qa-review ──────────────────────────────────────────────────────
+export async function POST(request: Request) {
   // 1. API key guard (Supports NVIDIA NIM and OpenAI)
   const apiKey = process.env.NVIDIA_API_KEY || process.env.OPENAI_API_KEY;
   if (!apiKey) {

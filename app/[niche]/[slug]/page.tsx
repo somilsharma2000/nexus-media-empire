@@ -16,6 +16,8 @@ import ReaderToolbar from "../../../components/ReaderToolbar";
 import LlmAnswerBox from "../../../components/LlmAnswerBox";
 import DynamicAffiliateBox from "../../../components/DynamicAffiliateBox";
 import ExitIntentModal from "../../../components/ExitIntentModal";
+import SmartBehavioralAdUnit from "../../../components/SmartBehavioralAdUnit";
+import SmartBehavioralPill from "../../../components/SmartBehavioralPill";
 
 interface Article {
   id: string;
@@ -252,10 +254,16 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
         {/* Dynamic Contextual Affiliate Callout */}
         <DynamicAffiliateBox niche={article.niche} />
 
+        {/* Real-Time Behavioral Intent Smart Ad Unit */}
+        <SmartBehavioralAdUnit niche={article.niche} />
+
         {/* Interactive Growth Simulator for Finance / Crypto */}
         {(article.niche === "finance" || article.niche === "crypto") && (
           <InteractiveCalculator type={article.niche === "crypto" ? "dca" : "compound"} />
         )}
+
+        {/* Floating High-Intent Behavioral Trigger Pill */}
+        <SmartBehavioralPill niche={article.niche} />
 
         {/* E-E-A-T Verified Author & Reviewer Box */}
         <AuthorBio niche={article.niche} />

@@ -6,7 +6,13 @@
     "price": 29,
     "format": "PDF + Live Google Sheet",
     "description": "Step-by-step guide to safe 12%+ staking yields, cold storage setups, and legally saving thousands on crypto taxes in 2026.",
-    "targetKeywords": ["staking", "crypto tax", "hardware wallet", "defi yield", "ledger"],
+    "targetKeywords": [
+      "staking",
+      "crypto tax",
+      "hardware wallet",
+      "defi yield",
+      "ledger"
+    ],
     "salesCount": 142,
     "revenue": 4118,
     "downloadUrl": "/downloads/crypto-tax-blueprint-2026.pdf",
@@ -20,7 +26,13 @@
     "price": 39,
     "format": "Notion Dashboard + Excel Model",
     "description": "The exact multi-asset dividend compounding model used by high-net-worth investors to reach financial independence.",
-    "targetKeywords": ["compound interest", "dividend", "index fund", "passive income", "fire"],
+    "targetKeywords": [
+      "compound interest",
+      "dividend",
+      "index fund",
+      "passive income",
+      "fire"
+    ],
     "salesCount": 189,
     "revenue": 7371,
     "downloadUrl": "/downloads/dividend-compounding-os.zip",
@@ -34,7 +46,13 @@
     "price": 49,
     "format": "JSON Prompts + Architecture Specs",
     "description": "Over 250+ battle-tested system prompts, agent workflows, and autonomous scripts ready for production.",
-    "targetKeywords": ["openai", "ai agents", "llm", "prompt engineering", "deepseek"],
+    "targetKeywords": [
+      "openai",
+      "ai agents",
+      "llm",
+      "prompt engineering",
+      "deepseek"
+    ],
     "salesCount": 215,
     "revenue": 10535,
     "downloadUrl": "/downloads/ai-prompt-vault-2026.zip",
@@ -48,7 +66,13 @@
     "price": 59,
     "format": "Figma Templates + Stripe Webhook Scripts",
     "description": "How to cut SaaS churn by 40% using automated failed-payment recovery flows and in-app retention widgets.",
-    "targetKeywords": ["saas", "churn", "mrr", "b2b marketing", "stripe"],
+    "targetKeywords": [
+      "saas",
+      "churn",
+      "mrr",
+      "b2b marketing",
+      "stripe"
+    ],
     "salesCount": 84,
     "revenue": 4956,
     "downloadUrl": "/downloads/saas-churn-playbook.pdf",
@@ -62,7 +86,12 @@
     "price": 27,
     "format": "PDF + Staff SOP Checklists",
     "description": "Complete operational manual for boutique gyms and fitness clubs to increase lifetime member value and automate staff tasks.",
-    "targetKeywords": ["gym management", "fitness business", "membership retention", "gym pos"],
+    "targetKeywords": [
+      "gym management",
+      "fitness business",
+      "membership retention",
+      "gym pos"
+    ],
     "salesCount": 63,
     "revenue": 1701,
     "downloadUrl": "/downloads/gym-os-playbook.pdf",
