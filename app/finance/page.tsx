@@ -235,12 +235,12 @@ export default function FinanceSite() {
       <footer className="border-t border-gray-200 bg-gray-50 py-10 px-6 mt-16 text-gray-600 text-xs font-sans">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 font-bold">
           <div>WALL ST INSIDER &copy; 2026 • Quantitative Financial Intelligence</div>
-          <div className="flex gap-6">
-            <a href="/finance/about" className="hover:text-amber-700">About</a>
+          <div className="flex flex-wrap gap-6 font-mono text-[11px]">
             <a href="/advertise" className="text-amber-700 hover:text-amber-800 font-bold">Advertise</a>
-            <a href="/finance/privacy-policy" className="hover:text-amber-700">Privacy</a>
-            <a href="/finance/terms" className="hover:text-amber-700">Terms</a>
-            <a href="/finance/contact" className="hover:text-amber-700">Contact</a>
+            <a href="/privacy" className="hover:text-amber-700">Privacy Policy</a>
+            <a href="/terms" className="hover:text-amber-700">Terms of Service</a>
+            <a href="/disclosures" className="hover:text-amber-700">FTC Disclosures</a>
+            <a href="/advertise/terms" className="hover:text-amber-700">Ad Agreement</a>
           </div>
 
         </div>

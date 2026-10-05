@@ -32,6 +32,8 @@ import DigitalProductManager from "../components/DigitalProductManager";
 import ViralHookStudio from "../components/ViralHookStudio";
 import BehavioralAnalyticsPanel from "../components/BehavioralAnalyticsPanel";
 import SponsorManager from "../components/SponsorManager";
+import AdminSecurityGate from "../components/AdminSecurityGate";
+import MonetizationBlueprint from "../components/MonetizationBlueprint";
 
 
 const TRENDS = [
@@ -203,7 +205,8 @@ export default function NexusDashboard() {
   };
 
   return (
-    <div className="flex h-screen w-screen bg-[#030508] text-gray-100 font-sans overflow-hidden selection:bg-blue-500/30">
+    <AdminSecurityGate>
+      <div className="flex h-screen w-screen bg-[#030508] text-gray-100 font-sans overflow-hidden selection:bg-blue-500/30">
       
       {/* Toast Notification */}
       {toast && (
@@ -249,6 +252,7 @@ export default function NexusDashboard() {
             {/* MONETIZATION */}
             <div className="space-y-1">
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Monetization</p>
+              <NavItem icon={<Sliders className="text-yellow-400" />} label="Ad Density Blueprint" active={currentView === 'blueprint'} onClick={() => setCurrentView('blueprint')} />
               <NavItem icon={<Building className="text-blue-400" />} label="Brand Sponsors & RFPs" active={currentView === 'sponsors'} onClick={() => setCurrentView('sponsors')} />
               <NavItem icon={<BrainCircuit className="text-cyan-400" />} label="Behavioral Targeting" active={currentView === 'behavioral'} onClick={() => setCurrentView('behavioral')} />
               <NavItem icon={<Layers className="text-amber-400" />} label="Ad Slot Manager" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
@@ -482,6 +486,13 @@ export default function NexusDashboard() {
           {currentView === 'sponsors' && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
               <SponsorManager />
+            </motion.div>
+          )}
+
+          {/* VIEW: AD DENSITY BLUEPRINT */}
+          {currentView === 'blueprint' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <MonetizationBlueprint />
             </motion.div>
           )}
 
@@ -768,7 +779,8 @@ export default function NexusDashboard() {
         )}
       </AnimatePresence>
 
-    </div>
+      </div>
+    </AdminSecurityGate>
   );
 }
 

@@ -245,12 +245,12 @@ export default function CryptoSite() {
       <footer className="border-t border-green-900/30 bg-[#020804] py-10 px-6 mt-16">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
           <div>CRYPTO DAILY &copy; 2026 • Decentralized Market Intelligence</div>
-          <div className="flex gap-6">
-            <a href="/crypto/about" className="hover:text-green-400">About</a>
-            <a href="/advertise" className="text-green-400 hover:underline font-bold">Advertise</a>
-            <a href="/crypto/privacy-policy" className="hover:text-green-400">Privacy</a>
-            <a href="/crypto/terms" className="hover:text-green-400">Terms</a>
-            <a href="/crypto/contact" className="hover:text-green-400">Contact</a>
+          <div className="flex flex-wrap gap-6 font-mono text-[11px]">
+            <a href="/advertise" className="text-green-400 hover:text-green-300 font-bold">Advertise</a>
+            <a href="/privacy" className="hover:text-green-400">Privacy Policy</a>
+            <a href="/terms" className="hover:text-green-400">Terms of Service</a>
+            <a href="/disclosures" className="hover:text-green-400">FTC Disclosures</a>
+            <a href="/advertise/terms" className="hover:text-green-400">Ad Agreement</a>
           </div>
 
         </div>

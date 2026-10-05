@@ -343,12 +343,12 @@ export default function PublicNewsSite() {
             </div>
             <span className="text-white">THE TREND MATRIX</span> &copy; 2026
           </div>
-          <div className="flex gap-6">
-            <a href="/news/about" className="hover:text-white transition-colors">About</a>
-            <a href="/advertise" className="text-blue-400 hover:text-blue-300 transition-colors">Advertise</a>
-            <a href="/news/privacy-policy" className="hover:text-white transition-colors">Privacy</a>
-            <a href="/news/terms" className="hover:text-white transition-colors">Terms</a>
-            <a href="/news/contact" className="hover:text-white transition-colors">Contact</a>
+          <div className="flex flex-wrap gap-6 text-xs font-mono">
+            <a href="/advertise" className="text-blue-400 hover:text-blue-300 transition-colors">Advertise &amp; Media Kit</a>
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
+            <a href="/disclosures" className="hover:text-white transition-colors">FTC Disclosures</a>
+            <a href="/advertise/terms" className="hover:text-white transition-colors">Ad Agreement</a>
           </div>
 
         </div>
