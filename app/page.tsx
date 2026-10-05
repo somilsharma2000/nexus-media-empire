@@ -189,44 +189,81 @@ export default function NexusDashboard() {
     <div className="flex h-screen bg-black text-gray-100 font-sans overflow-hidden selection:bg-blue-500/30">
       
       {/* Sidebar */}
-      <aside className="w-64 border-r border-gray-800 bg-black/50 p-6 flex flex-col gap-8">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-600 rounded-lg shadow-[0_0_15px_rgba(37,99,235,0.5)]">
-            <BrainCircuit className="w-6 h-6 text-white" />
+      <aside className="w-72 border-r border-gray-850 bg-[#07090e] p-5 flex flex-col justify-between shrink-0 select-none">
+        <div className="flex flex-col gap-6 overflow-hidden">
+          <div className="flex items-center gap-3 px-2 pt-1">
+            <div className="p-2 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl shadow-lg shadow-blue-900/40">
+              <BrainCircuit className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-base font-black tracking-wider text-white">
+                NEXUS<span className="text-blue-500">MEDIA</span>
+              </h1>
+              <p className="text-[10px] text-gray-500 font-mono tracking-widest uppercase">Autonomous Network</p>
+            </div>
           </div>
-          <h1 className="text-xl font-bold tracking-wider">NEXUS<span className="text-blue-500">AI</span></h1>
-        </div>
-        
-        <nav className="flex flex-col gap-1.5 overflow-y-auto pr-1">
-          <NavItem icon={<Zap className="text-yellow-400" />} label="⚡ GOD-MODE Hub" active={currentView === 'godmode'} onClick={() => setCurrentView('godmode')} />
-          <NavItem icon={<LayoutDashboard />} label="Command Center" active={currentView === 'dashboard'} onClick={() => setCurrentView('dashboard')} />
-          <NavItem icon={<Sparkles />} label="📚 Article Vault" active={currentView === 'articles'} onClick={() => setCurrentView('articles')} />
-          <NavItem icon={<Tag />} label="🎯 Topic Ingestion" active={currentView === 'topics'} onClick={() => setCurrentView('topics')} />
-          <NavItem icon={<RefreshCw />} label="⚡ Auto-Pilot Pipeline" active={currentView === 'autopilot'} onClick={() => setCurrentView('autopilot')} />
-          <NavItem icon={<Layers />} label="💰 Ad Slots & Links" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
-          <NavItem icon={<Package className="text-emerald-400" />} label="📦 Digital Products" active={currentView === 'products'} onClick={() => setCurrentView('products')} />
-          <NavItem icon={<Flame className="text-amber-400" />} label="🔥 Viral Hook Studio" active={currentView === 'hooks'} onClick={() => setCurrentView('hooks')} />
-          <NavItem icon={<Share2 className="text-cyan-400" />} label="🚀 Omni-Brand Socials" active={currentView === 'omnisocial'} onClick={() => setCurrentView('omnisocial')} />
-          <NavItem icon={<Share2 />} label="📲 Social Syndication" active={currentView === 'social'} onClick={() => setCurrentView('social')} />
-          <NavItem icon={<Palette />} label="🎨 Promo Poster Studio" active={currentView === 'posters'} onClick={() => setCurrentView('posters')} />
-          <NavItem icon={<Link2 />} label="🔗 Backlink Authority" active={currentView === 'backlinks'} onClick={() => setCurrentView('backlinks')} />
-          <NavItem icon={<Mail />} label="📧 Newsletter Hub" active={currentView === 'newsletter'} onClick={() => setCurrentView('newsletter')} />
-          <NavItem icon={<Clock />} label="⏱️ Chrono Automations" active={currentView === 'automation'} onClick={() => setCurrentView('automation')} />
-          <NavItem icon={<Globe />} label="🔌 Account Connections" active={currentView === 'connections'} onClick={() => setCurrentView('connections')} />
-          <NavItem icon={<BarChart />} label="📈 SEO Opportunities" active={currentView === 'seo'} onClick={() => setCurrentView('seo')} />
-          <NavItem icon={<ShieldCheck />} label="🛡️ System Health" active={currentView === 'health'} onClick={() => setCurrentView('health')} />
-          <NavItem icon={<Brain />} label="🧠 QA Gate Config" active={currentView === 'qaconfig'} onClick={() => setCurrentView('qaconfig')} />
-          <NavItem icon={<Key />} label="⚙️ Settings & Keys" active={currentView === 'settings'} onClick={() => setCurrentView('settings')} />
-        </nav>
+          
+          <nav className="flex flex-col gap-5 overflow-y-auto pr-1 text-xs">
+            {/* CORE */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1.5 font-mono">Executive Command</p>
+              <NavItem icon={<Zap className="text-amber-400" />} label="God-Mode Hub" active={currentView === 'godmode'} onClick={() => setCurrentView('godmode')} />
+              <NavItem icon={<LayoutDashboard className="text-blue-400" />} label="Command Center" active={currentView === 'dashboard'} onClick={() => setCurrentView('dashboard')} />
+              <NavItem icon={<ShieldCheck className="text-emerald-400" />} label="System Health" active={currentView === 'health'} onClick={() => setCurrentView('health')} />
+            </div>
 
-        <div className="mt-auto bg-gray-900/50 p-4 rounded-xl border border-gray-800">
-          <p className="text-xs text-gray-400 mb-2">SYSTEM LOAD</p>
-          <div className="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
-            <div className="bg-green-500 w-[12%] h-full animate-pulse"></div>
+            {/* CONTENT */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1.5 font-mono">Content Engine</p>
+              <NavItem icon={<Sparkles className="text-purple-400" />} label="Article Vault" active={currentView === 'articles'} onClick={() => setCurrentView('articles')} />
+              <NavItem icon={<Tag className="text-cyan-400" />} label="Topic Ingestion" active={currentView === 'topics'} onClick={() => setCurrentView('topics')} />
+              <NavItem icon={<RefreshCw className="text-blue-400" />} label="Auto-Pilot Pipeline" active={currentView === 'autopilot'} onClick={() => setCurrentView('autopilot')} />
+              <NavItem icon={<Brain className="text-pink-400" />} label="QA Gate Config" active={currentView === 'qaconfig'} onClick={() => setCurrentView('qaconfig')} />
+            </div>
+
+            {/* MONETIZATION */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1.5 font-mono">Monetization</p>
+              <NavItem icon={<Layers className="text-amber-400" />} label="Ad Slot Manager" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
+              <NavItem icon={<Link2 className="text-emerald-400" />} label="Affiliate Bounties" active={currentView === 'affiliates'} onClick={() => setCurrentView('affiliates')} />
+              <NavItem icon={<Package className="text-emerald-400" />} label="Digital Product Funnel" active={currentView === 'products'} onClick={() => setCurrentView('products')} />
+              <NavItem icon={<TrendingUp className="text-green-400" />} label="Revenue & Analytics" active={currentView === 'analytics'} onClick={() => setCurrentView('analytics')} />
+            </div>
+
+            {/* GROWTH & SOCIAL */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1.5 font-mono">Growth & Social</p>
+              <NavItem icon={<Share2 className="text-cyan-400" />} label="Omni-Brand Socials" active={currentView === 'omnisocial'} onClick={() => setCurrentView('omnisocial')} />
+              <NavItem icon={<Flame className="text-amber-400" />} label="Viral Hook Studio" active={currentView === 'hooks'} onClick={() => setCurrentView('hooks')} />
+              <NavItem icon={<Palette className="text-pink-400" />} label="Promo Poster Studio" active={currentView === 'posters'} onClick={() => setCurrentView('posters')} />
+              <NavItem icon={<BarChart className="text-purple-400" />} label="SEO Opportunities" active={currentView === 'seo'} onClick={() => setCurrentView('seo')} />
+              <NavItem icon={<Mail className="text-indigo-400" />} label="Newsletter Hub" active={currentView === 'newsletter'} onClick={() => setCurrentView('newsletter')} />
+              <NavItem icon={<Link2 className="text-blue-400" />} label="Backlink Authority" active={currentView === 'backlinks'} onClick={() => setCurrentView('backlinks')} />
+            </div>
+
+            {/* CONTROLS */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1.5 font-mono">Infrastructure</p>
+              <NavItem icon={<Clock className="text-teal-400" />} label="Chrono Automations" active={currentView === 'automation'} onClick={() => setCurrentView('automation')} />
+              <NavItem icon={<Globe className="text-blue-400" />} label="Account Connections" active={currentView === 'connections'} onClick={() => setCurrentView('connections')} />
+              <NavItem icon={<Key className="text-amber-400" />} label="Settings & API Keys" active={currentView === 'settings'} onClick={() => setCurrentView('settings')} />
+            </div>
+          </nav>
+        </div>
+
+        <div className="bg-gray-950/80 p-3.5 rounded-2xl border border-gray-850 mt-4">
+          <div className="flex justify-between items-center mb-1.5">
+            <span className="text-[10px] font-bold text-gray-500 font-mono uppercase">System Load</span>
+            <span className="text-[10px] text-emerald-400 font-mono font-bold flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Optimal
+            </span>
           </div>
-          <p className="text-xs text-gray-500 mt-2 flex justify-between">
-            <span>CPU: 12%</span>
-            <span>API: 14ms</span>
+          <div className="w-full bg-gray-900 h-1.5 rounded-full overflow-hidden">
+            <div className="bg-emerald-500 w-[14%] h-full"></div>
+          </div>
+          <p className="text-[10px] text-gray-500 mt-2 flex justify-between font-mono">
+            <span>CPU: 14%</span>
+            <span>API: 12ms</span>
           </p>
         </div>
       </aside>
@@ -984,18 +1021,17 @@ export default function NexusDashboard() {
         </motion.div>
       )}
 
-      {/* NEW VIEW: AD SLOT MANAGER */}
+      {/* VIEW: AD SLOT MANAGER */}
       {currentView === 'adslots' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <header className="mb-10">
-            <h2 className="text-3xl font-bold flex items-center gap-3"><Layers className="w-8 h-8 text-yellow-500" /> Ad Slot Manager</h2>
-            <p className="text-gray-400 mt-2">Control every ad unit across the entire network. Live toggles, kill switch, targeting, and rotation.</p>
-          </header>
           <AdSlotManager />
-          <div className="mt-10">
-            <h3 className="text-xl font-bold mb-6 flex items-center gap-2"><Share2 className="w-5 h-5 text-green-400" /> Affiliate Link Manager</h3>
-            <AffiliateManager />
-          </div>
+        </motion.div>
+      )}
+
+      {/* VIEW: AFFILIATE MANAGER */}
+      {currentView === 'affiliates' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <AffiliateManager />
         </motion.div>
       )}
 
@@ -1177,17 +1213,24 @@ export default function NexusDashboard() {
         </motion.div>
       )}
 
-      <CookieConsent />
-
+      {/* Main End */}
     </div>
   );
 }
 
 function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNode, label: string, active?: boolean, onClick?: () => void }) {
   return (
-    <div onClick={onClick} className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-colors ${active ? "bg-blue-900/20 text-blue-400 border border-blue-900/50 shadow-inner" : "text-gray-400 hover:bg-gray-900 hover:text-gray-200"}`}>
-      {React.cloneElement(icon as React.ReactElement, { className: "w-5 h-5" })}
-      <span className="font-medium text-sm">{label}</span>
+    <div 
+      onClick={onClick} 
+      className={`flex items-center gap-2.5 px-3 py-2 rounded-xl cursor-pointer transition-all ${
+        active 
+          ? "bg-blue-600/15 text-white border border-blue-500/30 shadow-md shadow-blue-950/40 font-bold" 
+          : "text-gray-400 hover:bg-gray-900/60 hover:text-gray-200"
+      }`}
+    >
+      {React.cloneElement(icon as React.ReactElement, { className: "w-4 h-4 shrink-0" })}
+      <span className="font-medium text-xs truncate">{label}</span>
+      {active && <span className="w-1.5 h-1.5 rounded-full bg-blue-400 ml-auto shrink-0 shadow-[0_0_8px_rgba(96,165,250,0.8)]"></span>}
     </div>
   );
 }
