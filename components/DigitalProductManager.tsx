@@ -19,6 +19,8 @@ import {
   ShieldCheck,
   Zap
 } from "lucide-react";
+import InstantProductCheckoutModal from "./InstantProductCheckoutModal";
+
 
 interface DigitalProduct {
   id: string;
@@ -43,6 +45,8 @@ export default function DigitalProductManager() {
   const [previewProduct, setPreviewProduct] = useState<DigitalProduct | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [checkoutProduct, setCheckoutProduct] = useState<any | null>(null);
+
 
   // Form State
   const [formData, setFormData] = useState<Partial<DigitalProduct>>({
@@ -377,11 +381,22 @@ export default function DigitalProductManager() {
                   <span className="text-2xl font-black text-white font-mono">${previewProduct.price}</span>
                 </div>
                 <button 
-                  onClick={() => showToast(`Simulated Checkout: ${previewProduct.name}`)}
+                  onClick={() => setCheckoutProduct({ 
+                    id: previewProduct.id, 
+                    name: previewProduct.name, 
+                    slug: previewProduct.id, 
+                    niche: previewProduct.niche, 
+                    priceUsd: previewProduct.price, 
+                    format: previewProduct.format, 
+                    description: previewProduct.description, 
+                    features: ["Instant High-Res PDF Access", "Spreadsheet Model / Notion Template", "Lifetime Commercial License"], 
+                    salesCount: previewProduct.salesCount 
+                  })}
                   className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-black rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/20 transition-all uppercase tracking-wide"
                 >
                   <Download className="w-4 h-4" /> {previewProduct.ctaText}
                 </button>
+
               </div>
 
               <div className="text-[10px] text-gray-500 text-center font-mono pt-1">
@@ -544,6 +559,14 @@ export default function DigitalProductManager() {
           </div>
         </div>
       )}
+
+      {/* Instant Impulse Checkout Modal */}
+      <InstantProductCheckoutModal 
+        product={checkoutProduct} 
+        onClose={() => setCheckoutProduct(null)} 
+      />
+
     </div>
   );
 }
+
