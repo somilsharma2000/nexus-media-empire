@@ -1,0 +1,50 @@
+[
+  {
+    "id": "sp-1",
+    "brandName": "NordLayer Enterprise Security",
+    "logoUrl": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=100&auto=format&fit=crop&q=60",
+    "headline": "Zero-Trust Cloud Network Security for Remote Teams",
+    "ctaText": "Deploy in 10 Mins →",
+    "ctaUrl": "https://nordlayer.com",
+    "placement": "header_takeover",
+    "niche": "all",
+    "cpm": 45.00,
+    "impressionsDelivered": 142800,
+    "active": true,
+    "tier": "enterprise_partner",
+    "startDate": "2026-10-01",
+    "endDate": "2026-10-31"
+  },
+  {
+    "id": "sp-2",
+    "brandName": "Kraken Institutional",
+    "logoUrl": "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=100&auto=format&fit=crop&q=60",
+    "headline": "Deep Liquidity & OTC Trading for High-Volume Funds",
+    "ctaText": "Access Institutional Desk →",
+    "ctaUrl": "https://kraken.com/institutional",
+    "placement": "crypto_spotlight",
+    "niche": "crypto",
+    "cpm": 65.00,
+    "impressionsDelivered": 89400,
+    "active": true,
+    "tier": "niche_exclusive",
+    "startDate": "2026-10-01",
+    "endDate": "2026-10-31"
+  },
+  {
+    "id": "sp-3",
+    "brandName": "Carta Equity & Cap Table Management",
+    "logoUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=100&auto=format&fit=crop&q=60",
+    "headline": "Automate Valuations, 409A, and Investor Reporting",
+    "ctaText": "Schedule Founder Demo →",
+    "ctaUrl": "https://carta.com",
+    "placement": "finance_spotlight",
+    "niche": "finance",
+    "cpm": 55.00,
+    "impressionsDelivered": 67200,
+    "active": true,
+    "tier": "niche_exclusive",
+    "startDate": "2026-10-01",
+    "endDate": "2026-10-31"
+  }
+]

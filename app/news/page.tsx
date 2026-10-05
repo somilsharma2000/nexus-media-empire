@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import CookieConsent from "../../components/CookieConsent";
 import ArticleSearch from "../../components/ArticleSearch";
 import NewsletterForm from "../../components/NewsletterForm";
+import BrandTakeoverBanner from "../../components/BrandTakeoverBanner";
+
 
 interface Article { id: number | string; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; slug?: string; niche?: string; }
 
@@ -160,6 +162,9 @@ export default function PublicNewsSite() {
       />
 
       
+      {/* Brand Sponsor Takeover Banner */}
+      <BrandTakeoverBanner niche="news" />
+
       {/* Breaking News Ticker */}
       <div className="bg-blue-600 text-white text-xs font-bold uppercase tracking-widest py-1.5 px-4 flex items-center overflow-hidden whitespace-nowrap">
         <span className="bg-black text-blue-400 px-2 py-0.5 rounded mr-4 z-10 flex items-center gap-1"><Zap className="w-3 h-3"/> BREAKING</span>
@@ -190,16 +195,21 @@ export default function PublicNewsSite() {
               <span className="hover:text-blue-400 cursor-pointer transition-colors">AI &amp; Future</span>
               <span className="hover:text-blue-400 cursor-pointer transition-colors">Markets</span>
               <span className="hover:text-blue-400 cursor-pointer transition-colors">Startups</span>
+              <a href="/advertise" className="text-blue-400 hover:text-blue-300 transition-colors font-mono text-xs">Advertise</a>
             </div>
           </div>
           <div className="flex items-center gap-5">
             <Search className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer" />
             <Bookmark className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer" />
+            <a href="/advertise" className="hidden sm:block text-xs font-mono text-gray-400 hover:text-white border border-gray-800 px-3 py-1.5 rounded-full">
+              Media Kit
+            </a>
             <button className="hidden md:block bg-white text-black px-5 py-2 rounded-full font-bold text-sm hover:bg-gray-200 transition-colors">Subscribe</button>
             <Menu className="w-6 h-6 text-white md:hidden cursor-pointer" />
           </div>
         </div>
       </nav>
+
 
       <main className="max-w-7xl mx-auto px-6 py-8">
         
@@ -342,10 +352,12 @@ export default function PublicNewsSite() {
           </div>
           <div className="flex gap-6">
             <a href="/news/about" className="hover:text-white transition-colors">About</a>
+            <a href="/advertise" className="text-blue-400 hover:text-blue-300 transition-colors">Advertise</a>
             <a href="/news/privacy-policy" className="hover:text-white transition-colors">Privacy</a>
             <a href="/news/terms" className="hover:text-white transition-colors">Terms</a>
             <a href="/news/contact" className="hover:text-white transition-colors">Contact</a>
           </div>
+
         </div>
       </footer>
 

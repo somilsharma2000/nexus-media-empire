@@ -6,7 +6,7 @@ import {
   LayoutDashboard, BrainCircuit, Image as ImageIcon, X, Copy, ChevronRight, 
   TrendingUp, Briefcase, LineChart, Lock,
   Database, RefreshCw, Power, Sliders, Brain, Code2, Key, PieChart, BarChart, Layers,
-  Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock, Palette, Package, Flame
+  Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock, Palette, Package, Flame, Building
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import RevenueDashboard from "../components/RevenueDashboard";
@@ -31,6 +31,8 @@ import OmniSocialDashboard from "../components/OmniSocialDashboard";
 import DigitalProductManager from "../components/DigitalProductManager";
 import ViralHookStudio from "../components/ViralHookStudio";
 import BehavioralAnalyticsPanel from "../components/BehavioralAnalyticsPanel";
+import SponsorManager from "../components/SponsorManager";
+
 
 const TRENDS = [
   { id: 1, topic: "OpenAI Strawberry Model Architecture Analysis", score: 98, niche: "AI & Tech" },
@@ -247,12 +249,14 @@ export default function NexusDashboard() {
             {/* MONETIZATION */}
             <div className="space-y-1">
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Monetization</p>
+              <NavItem icon={<Building className="text-blue-400" />} label="Brand Sponsors & RFPs" active={currentView === 'sponsors'} onClick={() => setCurrentView('sponsors')} />
               <NavItem icon={<BrainCircuit className="text-cyan-400" />} label="Behavioral Targeting" active={currentView === 'behavioral'} onClick={() => setCurrentView('behavioral')} />
               <NavItem icon={<Layers className="text-amber-400" />} label="Ad Slot Manager" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
               <NavItem icon={<Link2 className="text-emerald-400" />} label="Affiliate Bounties" active={currentView === 'affiliates'} onClick={() => setCurrentView('affiliates')} />
               <NavItem icon={<Package className="text-emerald-400" />} label="Digital Product Funnel" active={currentView === 'products'} onClick={() => setCurrentView('products')} />
               <NavItem icon={<TrendingUp className="text-green-400" />} label="Revenue & Analytics" active={currentView === 'analytics'} onClick={() => setCurrentView('analytics')} />
             </div>
+
 
             {/* GROWTH & SOCIAL */}
             <div className="space-y-1">
@@ -474,8 +478,16 @@ export default function NexusDashboard() {
             </motion.div>
           )}
 
+          {/* VIEW: BRAND SPONSORS & RFPs */}
+          {currentView === 'sponsors' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <SponsorManager />
+            </motion.div>
+          )}
+
           {/* VIEW: BEHAVIORAL TARGETING */}
           {currentView === 'behavioral' && (
+
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
               <header>
                 <h2 className="text-3xl font-black text-white flex items-center gap-3">

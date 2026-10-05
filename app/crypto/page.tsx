@@ -5,6 +5,8 @@ import { TrendingUp, Clock, Share2, Menu, Search, Bookmark, ChevronRight, Zap } 
 import CookieConsent from "../../components/CookieConsent";
 import ArticleSearch from "../../components/ArticleSearch";
 import NewsletterForm from "../../components/NewsletterForm";
+import BrandTakeoverBanner from "../../components/BrandTakeoverBanner";
+
 
 interface Article { id: number | string; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; slug?: string; niche?: string; }
 
@@ -146,6 +148,9 @@ export default function CryptoSite() {
         </div>
       </div>
 
+      {/* Brand Sponsor Takeover Banner */}
+      <BrandTakeoverBanner niche="crypto" />
+
       <div className="bg-green-600 text-black text-xs font-bold uppercase tracking-widest py-1.5 px-4 flex items-center overflow-hidden whitespace-nowrap">
         <span className="bg-black text-green-400 px-2 py-0.5 rounded mr-4 z-10 flex items-center gap-1"><Zap className="w-3 h-3"/> LIVE TICKER</span>
         <div className="animate-marquee inline-block font-mono">
@@ -168,12 +173,20 @@ export default function CryptoSite() {
                 <span className="text-green-500 font-bold text-[10px] tracking-widest uppercase">Decentralized Intelligence</span>
               </div>
             </div>
+            <div className="hidden md:flex items-center gap-6 text-xs font-mono text-gray-400">
+              <a href="/advertise" className="text-green-400 hover:text-green-300 font-bold">Advertise</a>
+              <a href="/advertise/portal" className="hover:text-white">Proof Portal</a>
+            </div>
           </div>
-          <div className="flex items-center gap-5">
-            <button className="bg-green-500 text-black px-6 py-2 rounded font-black text-sm hover:bg-green-400 transition-colors uppercase tracking-wider">Connect Wallet</button>
+          <div className="flex items-center gap-4">
+            <a href="/advertise" className="hidden sm:block text-xs font-mono text-gray-400 hover:text-white border border-gray-800 px-3 py-1.5 rounded-full">
+              Media Kit
+            </a>
+            <button className="bg-green-500 text-black px-5 py-2 rounded-full font-black text-xs hover:bg-green-400 transition-colors uppercase tracking-wider">Connect Wallet</button>
           </div>
         </div>
       </nav>
+
 
       <main className="max-w-7xl mx-auto px-6 py-12">
         {loading ? (
@@ -234,10 +247,12 @@ export default function CryptoSite() {
           <div>CRYPTO DAILY &copy; 2026 • Decentralized Market Intelligence</div>
           <div className="flex gap-6">
             <a href="/crypto/about" className="hover:text-green-400">About</a>
+            <a href="/advertise" className="text-green-400 hover:underline font-bold">Advertise</a>
             <a href="/crypto/privacy-policy" className="hover:text-green-400">Privacy</a>
             <a href="/crypto/terms" className="hover:text-green-400">Terms</a>
             <a href="/crypto/contact" className="hover:text-green-400">Contact</a>
           </div>
+
         </div>
       </footer>
 

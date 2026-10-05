@@ -18,6 +18,8 @@ import DynamicAffiliateBox from "../../../components/DynamicAffiliateBox";
 import ExitIntentModal from "../../../components/ExitIntentModal";
 import SmartBehavioralAdUnit from "../../../components/SmartBehavioralAdUnit";
 import SmartBehavioralPill from "../../../components/SmartBehavioralPill";
+import BrandTakeoverBanner from "../../../components/BrandTakeoverBanner";
+
 
 interface Article {
   id: string;
@@ -162,6 +164,9 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
       {/* Exit Intent Lead Capture Modal */}
       <ExitIntentModal niche={article.niche} />
 
+      {/* Brand Sponsor Takeover Banner */}
+      <BrandTakeoverBanner niche={article.niche} />
+
       {/* Top Breadcrumb Nav */}
       <nav className="border-b border-gray-900 bg-black/80 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-6 h-16 flex justify-between items-center text-xs">
@@ -172,11 +177,17 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
             <ArrowLeft className="w-4 h-4" /> {publicationName}
           </Link>
 
-          <span className="text-[11px] text-gray-500 font-mono hidden sm:inline">
-            E-E-A-T Verified • 2026 Editorial Standards
-          </span>
+          <div className="flex items-center gap-4">
+            <Link href="/advertise" className="text-blue-400 hover:text-blue-300 font-mono text-[11px] font-bold">
+              Advertise
+            </Link>
+            <span className="text-[11px] text-gray-500 font-mono hidden sm:inline">
+              E-E-A-T Verified • 2026 Editorial Standards
+            </span>
+          </div>
         </div>
       </nav>
+
 
       {/* Article Header & Main Content */}
       <article className="max-w-4xl mx-auto px-6 py-10">
@@ -313,10 +324,12 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
           <div>{publicationName} &copy; 2026 • Nexus Autonomous Media Network</div>
           <div className="flex gap-6">
             <Link href={`/${params.niche}/about`} className="hover:text-white">About</Link>
+            <Link href="/advertise" className="text-blue-400 hover:text-blue-300 font-bold">Advertise</Link>
             <Link href={`/${params.niche}/privacy-policy`} className="hover:text-white">Privacy</Link>
             <Link href={`/${params.niche}/terms`} className="hover:text-white">Terms</Link>
             <Link href={`/${params.niche}/contact`} className="hover:text-white">Contact</Link>
           </div>
+
         </div>
       </footer>
 
