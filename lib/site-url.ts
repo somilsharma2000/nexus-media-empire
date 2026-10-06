@@ -7,5 +7,16 @@ export function getCanonicalSiteUrl(): string {
   if (env && !env.includes('localhost') && !env.includes('127.0.0.1') && env.startsWith('http')) {
     return env.replace(/\/$/, '');
   }
-  return 'https://media-empire-beta.vercel.app';
+  
+  const vercelProd = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (vercelProd && !vercelProd.includes('localhost')) {
+    return `https://${vercelProd.replace(/\/$/, '')}`;
+  }
+
+  const vercelUrl = process.env.VERCEL_URL;
+  if (vercelUrl && !vercelUrl.includes('localhost')) {
+    return `https://${vercelUrl.replace(/\/$/, '')}`;
+  }
+
+  return 'https://nexus-media-empire.vercel.app';
 }
