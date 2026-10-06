@@ -7,24 +7,7 @@
     "subject": "Your Access Key & Download: {{ITEM_NAME}} | Nexus Media",
     "preheader": "Thank you for your purchase. Here is your instant license key and download link.",
     "variables": ["CUSTOMER_NAME", "ITEM_NAME", "ACCESS_KEY", "AMOUNT", "CURRENCY", "DOWNLOAD_URL"],
-    "htmlTemplate": `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #080d16; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden;">
-  <div style="background: linear-gradient(135deg, #1d4ed8, #4f46e5); padding: 32px 24px; text-align: center;">
-    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px;">NEXUS MEDIA NETWORK</h1>
-    <p style="color: #93c5fd; margin: 8px 0 0; font-size: 13px; font-mono: true;">ORDER CONFIRMATION & LICENSE GRANT</p>
-  </div>
-  <div style="padding: 32px 24px;">
-    <p style="font-size: 15px; color: #cbd5e1; margin-top: 0;">Hi <strong>{{CUSTOMER_NAME}}</strong>,</p>
-    <p style="font-size: 14px; color: #94a3b8; line-height: 1.6;">Thank you for securing <strong>{{ITEM_NAME}}</strong>. Your payment of <strong>{{CURRENCY}} {{AMOUNT}}</strong> has been verified and cleared via Razorpay.</p>
-    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin: 24px 0; text-align: center;">
-      <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px;">YOUR PERPETUAL ACCESS KEY</div>
-      <div style="font-family: monospace; font-size: 18px; font-weight: 700; color: #60a5fa; letter-spacing: 2px;">{{ACCESS_KEY}}</div>
-    </div>
-    <div style="text-align: center; margin: 32px 0;">
-      <a href="{{DOWNLOAD_URL}}" style="background: #2563eb; color: #ffffff; padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);">Download Deliverables & Documentation →</a>
-    </div>
-    <p style="font-size: 12px; color: #64748b; line-height: 1.5; border-top: 1px solid #1e293b; padding-top: 16px;">Need technical assistance or repository access? Reply directly to this email and our executive engineering desk will assist you within 2 hours.</p>
-  </div>
-</div>`
+    "htmlTemplate": "<div style=\"font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #080d16; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden;\">\n  <div style=\"background: linear-gradient(135deg, #1d4ed8, #4f46e5); padding: 32px 24px; text-align: center;\">\n    <h1 style=\"color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px;\">NEXUS MEDIA NETWORK</h1>\n    <p style=\"color: #93c5fd; margin: 8px 0 0; font-size: 13px; font-mono: true;\">ORDER CONFIRMATION & LICENSE GRANT</p>\n  </div>\n  <div style=\"padding: 32px 24px;\">\n    <p style=\"font-size: 15px; color: #cbd5e1; margin-top: 0;\">Hi <strong>{{CUSTOMER_NAME}}</strong>,</p>\n    <p style=\"font-size: 14px; color: #94a3b8; line-height: 1.6;\">Thank you for securing <strong>{{ITEM_NAME}}</strong>. Your payment of <strong>{{CURRENCY}} {{AMOUNT}}</strong> has been verified and cleared via Razorpay.</p>\n    <div style=\"background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin: 24px 0; text-align: center;\">\n      <div style=\"font-size: 11px; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px;\">YOUR PERPETUAL ACCESS KEY</div>\n      <div style=\"font-family: monospace; font-size: 18px; font-weight: 700; color: #60a5fa; letter-spacing: 2px;\">{{ACCESS_KEY}}</div>\n    </div>\n    <div style=\"text-align: center; margin: 32px 0;\">\n      <a href=\"{{DOWNLOAD_URL}}\" style=\"background: #2563eb; color: #ffffff; padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);\">Download Deliverables & Documentation →</a>\n    </div>\n    <p style=\"font-size: 12px; color: #64748b; line-height: 1.5; border-top: 1px solid #1e293b; padding-top: 16px;\">Need technical assistance or repository access? Reply directly to this email and our executive engineering desk will assist you within 2 hours.</p>\n  </div>\n</div>"
   },
   {
     "id": "tpl_sponsor_invoice",
@@ -34,32 +17,7 @@
     "subject": "Tax Invoice {{INVOICE_ID}} for {{COMPANY_NAME}} | Nexus Media Network",
     "preheader": "Please find attached your proforma tax invoice for Q4 category sponsorship.",
     "variables": ["CLIENT_NAME", "COMPANY_NAME", "INVOICE_ID", "DUE_DATE", "TOTAL_AMOUNT", "CURRENCY", "PAYMENT_LINK", "LINE_ITEMS"],
-    "htmlTemplate": `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #080d16; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden;">
-  <div style="background: #0f172a; padding: 24px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center;">
-    <div>
-      <h2 style="color: #ffffff; margin: 0; font-size: 18px; font-weight: 800;">NEXUS MEDIA NETWORK</h2>
-      <p style="color: #64748b; margin: 4px 0 0; font-size: 11px;">Autonomous Digital Media Inc.</p>
-    </div>
-    <div style="text-align: right;">
-      <span style="background: #1e3a8a; color: #93c5fd; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; font-family: monospace;">{{INVOICE_ID}}</span>
-    </div>
-  </div>
-  <div style="padding: 24px;">
-    <p style="font-size: 14px; color: #cbd5e1; margin-top: 0;">Dear <strong>{{CLIENT_NAME}}</strong> ({{COMPANY_NAME}}),</p>
-    <p style="font-size: 13px; color: #94a3b8; line-height: 1.6;">Thank you for partnering with Nexus Media Network. Please find your official sponsorship invoice details below:</p>
-    <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; margin: 16px 0;">
-      <div style="font-size: 13px; font-weight: 600; color: #f8fafc; margin-bottom: 8px;">Deliverable: {{LINE_ITEMS}}</div>
-      <div style="display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; border-top: 1px solid #1e293b; padding-top: 8px; margin-top: 8px;">
-        <span>Due Date: <strong>{{DUE_DATE}}</strong></span>
-        <span style="font-size: 15px; font-weight: 800; color: #34d399;">Total: {{CURRENCY}} {{TOTAL_AMOUNT}}</span>
-      </div>
-    </div>
-    <div style="text-align: center; margin: 24px 0;">
-      <a href="{{PAYMENT_LINK}}" style="background: #059669; color: #ffffff; padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block;">Pay Invoice via Razorpay (UPI / Cards / NetBanking) →</a>
-    </div>
-    <p style="font-size: 11px; color: #64748b; text-align: center;">Includes automated GST/Tax compliance certificate upon capture.</p>
-  </div>
-</div>`
+    "htmlTemplate": "<div style=\"font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #080d16; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden;\">\n  <div style=\"background: #0f172a; padding: 24px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center;\">\n    <div>\n      <h2 style=\"color: #ffffff; margin: 0; font-size: 18px; font-weight: 800;\">NEXUS MEDIA NETWORK</h2>\n      <p style=\"color: #64748b; margin: 4px 0 0; font-size: 11px;\">Autonomous Digital Media Inc.</p>\n    </div>\n    <div style=\"text-align: right;\">\n      <span style=\"background: #1e3a8a; color: #93c5fd; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; font-family: monospace;\">{{INVOICE_ID}}</span>\n    </div>\n  </div>\n  <div style=\"padding: 24px;\">\n    <p style=\"font-size: 14px; color: #cbd5e1; margin-top: 0;\">Dear <strong>{{CLIENT_NAME}}</strong> ({{COMPANY_NAME}}),</p>\n    <p style=\"font-size: 13px; color: #94a3b8; line-height: 1.6;\">Thank you for partnering with Nexus Media Network. Please find your official sponsorship invoice details below:</p>\n    <div style=\"background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; margin: 16px 0;\">\n      <div style=\"font-size: 13px; font-weight: 600; color: #f8fafc; margin-bottom: 8px;\">Deliverable: {{LINE_ITEMS}}</div>\n      <div style=\"display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; border-top: 1px solid #1e293b; padding-top: 8px; margin-top: 8px;\">\n        <span>Due Date: <strong>{{DUE_DATE}}</strong></span>\n        <span style=\"font-size: 15px; font-weight: 800; color: #34d399;\">Total: {{CURRENCY}} {{TOTAL_AMOUNT}}</span>\n      </div>\n    </div>\n    <div style=\"text-align: center; margin: 24px 0;\">\n      <a href=\"{{PAYMENT_LINK}}\" style=\"background: #059669; color: #ffffff; padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block;\">Pay Invoice via Razorpay (UPI / Cards / NetBanking) →</a>\n    </div>\n    <p style=\"font-size: 11px; color: #64748b; text-align: center;\">Includes automated GST/Tax compliance certificate upon capture.</p>\n  </div>\n</div>"
   },
   {
     "id": "tpl_sponsor_renewal",
@@ -69,29 +27,7 @@
     "subject": "Your Campaign Analytics & Exclusive Q+1 Renewal Rate for {{COMPANY_NAME}}",
     "preheader": "Your campaign delivered 64,800+ impressions. Lock in renewal at a 20% retainer discount.",
     "variables": ["CLIENT_NAME", "COMPANY_NAME", "IMPRESSIONS", "CLICKS", "CTR", "RENEWAL_RATE", "RENEWAL_LINK"],
-    "htmlTemplate": `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #080d16; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 16px; padding: 28px;">
-  <h2 style="color: #60a5fa; font-size: 20px; font-weight: 800; margin-top: 0;">Campaign Performance Summary: {{COMPANY_NAME}}</h2>
-  <p style="font-size: 14px; color: #cbd5e1;">Hi {{CLIENT_NAME}},</p>
-  <p style="font-size: 13px; color: #94a3b8; line-height: 1.6;">Your 30-day header sponsorship takeover across our network has concluded with exceptional audience engagement:</p>
-  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; text-align: center;">
-    <div style="background: #0f172a; padding: 12px; border-radius: 10px; border: 1px solid #1e293b;">
-      <div style="font-size: 10px; color: #64748b; text-transform: uppercase;">Impressions</div>
-      <div style="font-size: 18px; font-weight: 800; color: #ffffff;">{{IMPRESSIONS}}</div>
-    </div>
-    <div style="background: #0f172a; padding: 12px; border-radius: 10px; border: 1px solid #1e293b;">
-      <div style="font-size: 10px; color: #64748b; text-transform: uppercase;">Direct Clicks</div>
-      <div style="font-size: 18px; font-weight: 800; color: #38bdf8;">{{CLICKS}}</div>
-    </div>
-    <div style="background: #0f172a; padding: 12px; border-radius: 10px; border: 1px solid #1e293b;">
-      <div style="font-size: 10px; color: #64748b; text-transform: uppercase;">Avg CTR</div>
-      <div style="font-size: 18px; font-weight: 800; color: #34d399;">{{CTR}}%</div>
-    </div>
-  </div>
-  <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">As an existing flagship partner, you are eligible to renew for the upcoming quarter with an exclusive <strong>20% retainer loyalty credit</strong> at <strong>{{RENEWAL_RATE}}</strong>.</p>
-  <div style="text-align: center; margin: 24px 0;">
-    <a href="{{RENEWAL_LINK}}" style="background: #3b82f6; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-block;">Lock In Q+1 Retainer Rate →</a>
-  </div>
-</div>`
+    "htmlTemplate": "<div style=\"font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #080d16; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 16px; padding: 28px;\">\n  <h2 style=\"color: #60a5fa; font-size: 20px; font-weight: 800; margin-top: 0;\">Campaign Performance Summary: {{COMPANY_NAME}}</h2>\n  <p style=\"font-size: 14px; color: #cbd5e1;\">Hi {{CLIENT_NAME}},</p>\n  <p style=\"font-size: 13px; color: #94a3b8; line-height: 1.6;\">Your 30-day header sponsorship takeover across our network has concluded with exceptional audience engagement:</p>\n  <div style=\"display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; text-align: center;\">\n    <div style=\"background: #0f172a; padding: 12px; border-radius: 10px; border: 1px solid #1e293b;\">\n      <div style=\"font-size: 10px; color: #64748b; text-transform: uppercase;\">Impressions</div>\n      <div style=\"font-size: 18px; font-weight: 800; color: #ffffff;\">{{IMPRESSIONS}}</div>\n    </div>\n    <div style=\"background: #0f172a; padding: 12px; border-radius: 10px; border: 1px solid #1e293b;\">\n      <div style=\"font-size: 10px; color: #64748b; text-transform: uppercase;\">Direct Clicks</div>\n      <div style=\"font-size: 18px; font-weight: 800; color: #38bdf8;\">{{CLICKS}}</div>\n    </div>\n    <div style=\"background: #0f172a; padding: 12px; border-radius: 10px; border: 1px solid #1e293b;\">\n      <div style=\"font-size: 10px; color: #64748b; text-transform: uppercase;\">Avg CTR</div>\n      <div style=\"font-size: 18px; font-weight: 800; color: #34d399;\">{{CTR}}%</div>\n    </div>\n  </div>\n  <p style=\"font-size: 13px; color: #cbd5e1; line-height: 1.6;\">As an existing flagship partner, you are eligible to renew for the upcoming quarter with an exclusive <strong>20% retainer loyalty credit</strong> at <strong>{{RENEWAL_RATE}}</strong>.</p>\n  <div style=\"text-align: center; margin: 24px 0;\">\n    <a href=\"{{RENEWAL_LINK}}\" style=\"background: #3b82f6; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-block;\">Lock In Q+1 Retainer Rate →</a>\n  </div>\n</div>"
   },
   {
     "id": "tpl_newsletter_welcome",
@@ -101,19 +37,7 @@
     "subject": "Welcome to Nexus Media: Your Free Alpha Guide Inside",
     "preheader": "Here is your download link for the 2026 AI & Market Intelligence Blueprint.",
     "variables": ["SUBSCRIBER_EMAIL", "NICHE_NAME", "LEAD_MAGNET_URL", "UNSUB_URL"],
-    "htmlTemplate": `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #080d16; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 16px; padding: 32px 24px;">
-  <div style="text-align: center; margin-bottom: 24px;">
-    <h1 style="color: #ffffff; font-size: 22px; font-weight: 800; margin: 0;">NEXUS INSIDER INTELLIGENCE</h1>
-    <p style="color: #94a3b8; font-size: 12px; margin-top: 4px;">Delivered to {{SUBSCRIBER_EMAIL}} for {{NICHE_NAME}}</p>
-  </div>
-  <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6;">Welcome to our global editorial network. Every week, our multi-agent research desks analyze over 10,000 data signals to deliver high-signal, zero-noise market breakdowns.</p>
-  <div style="background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin: 24px 0; text-align: center;">
-    <h3 style="color: #f8fafc; margin: 0 0 8px; font-size: 16px;">🎁 Your Exclusive Subscriber Welcome Gift</h3>
-    <p style="color: #94a3b8; font-size: 12px; margin: 0 0 16px;">The 2026 Executive Guide to Autonomous Systems & Macro Trends (PDF, 42 pages)</p>
-    <a href="{{LEAD_MAGNET_URL}}" style="background: #2563eb; color: #ffffff; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-block;">Download Free Guide (Instant Access) →</a>
-  </div>
-  <p style="font-size: 12px; color: #64748b; line-height: 1.5;">To ensure our updates never hit your spam folder, please drag this email to your Primary tab.</p>
-</div>`
+    "htmlTemplate": "<div style=\"font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #080d16; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 16px; padding: 32px 24px;\">\n  <div style=\"text-align: center; margin-bottom: 24px;\">\n    <h1 style=\"color: #ffffff; font-size: 22px; font-weight: 800; margin: 0;\">NEXUS INSIDER INTELLIGENCE</h1>\n    <p style=\"color: #94a3b8; font-size: 12px; margin-top: 4px;\">Delivered to {{SUBSCRIBER_EMAIL}} for {{NICHE_NAME}}</p>\n  </div>\n  <p style=\"font-size: 14px; color: #cbd5e1; line-height: 1.6;\">Welcome to our global editorial network. Every week, our multi-agent research desks analyze over 10,000 data signals to deliver high-signal, zero-noise market breakdowns.</p>\n  <div style=\"background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin: 24px 0; text-align: center;\">\n    <h3 style=\"color: #f8fafc; margin: 0 0 8px; font-size: 16px;\">🎁 Your Exclusive Subscriber Welcome Gift</h3>\n    <p style=\"color: #94a3b8; font-size: 12px; margin: 0 0 16px;\">The 2026 Executive Guide to Autonomous Systems & Macro Trends (PDF, 42 pages)</p>\n    <a href=\"{{LEAD_MAGNET_URL}}\" style=\"background: #2563eb; color: #ffffff; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-block;\">Download Free Guide (Instant Access) →</a>\n  </div>\n  <p style=\"font-size: 12px; color: #64748b; line-height: 1.5;\">To ensure our updates never hit your spam folder, please drag this email to your Primary tab.</p>\n</div>"
   },
   {
     "id": "tpl_vip_alpha_brief",
@@ -123,22 +47,7 @@
     "subject": "🔒 [VIP ALPHA #{{ISSUE_NUM}}] {{BRIEF_TOPIC}} | Confidential",
     "preheader": "Exclusive institutional signal analysis and quantitative model adjustments.",
     "variables": ["MEMBER_NAME", "ISSUE_NUM", "BRIEF_TOPIC", "KEY_TAKEAWAYS", "DISCORD_LINK"],
-    "htmlTemplate": `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #030508; color: #e2e8f0; border: 1px solid #3b82f6; border-radius: 16px; padding: 32px 24px;">
-  <div style="border-bottom: 1px solid #1e293b; padding-bottom: 16px; margin-bottom: 20px; display: flex; justify-content: space-between;">
-    <span style="color: #f59e0b; font-weight: 800; font-size: 12px; letter-spacing: 1.5px; font-family: monospace;">★ VIP ALPHA INTELLIGENCE</span>
-    <span style="color: #64748b; font-size: 12px; font-family: monospace;">ISSUE #{{ISSUE_NUM}}</span>
-  </div>
-  <h2 style="color: #ffffff; font-size: 22px; font-weight: 800; margin-top: 0;">{{BRIEF_TOPIC}}</h2>
-  <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6;">Dear {{MEMBER_NAME}},</p>
-  <div style="background: #0a0f1d; border-left: 3px solid #f59e0b; padding: 16px; border-radius: 0 8px 8px 0; margin: 20px 0;">
-    <div style="font-size: 11px; font-weight: 700; color: #f59e0b; text-transform: uppercase; margin-bottom: 6px;">Executive Key Takeaways:</div>
-    <div style="font-size: 13px; color: #e2e8f0; line-height: 1.6;">{{KEY_TAKEAWAYS}}</div>
-  </div>
-  <p style="font-size: 13px; color: #94a3b8; line-height: 1.6;">Live discussion and quantitative code updates are active in the private VIP channel:</p>
-  <div style="text-align: center; margin: 24px 0;">
-    <a href="{{DISCORD_LINK}}" style="background: #4f46e5; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-block;">Access Private Discord Alpha Desk →</a>
-  </div>
-</div>`
+    "htmlTemplate": "<div style=\"font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #030508; color: #e2e8f0; border: 1px solid #3b82f6; border-radius: 16px; padding: 32px 24px;\">\n  <div style=\"border-bottom: 1px solid #1e293b; padding-bottom: 16px; margin-bottom: 20px; display: flex; justify-content: space-between;\">\n    <span style=\"color: #f59e0b; font-weight: 800; font-size: 12px; letter-spacing: 1.5px; font-family: monospace;\">★ VIP ALPHA INTELLIGENCE</span>\n    <span style=\"color: #64748b; font-size: 12px; font-family: monospace;\">ISSUE #{{ISSUE_NUM}}</span>\n  </div>\n  <h2 style=\"color: #ffffff; font-size: 22px; font-weight: 800; margin-top: 0;\">{{BRIEF_TOPIC}}</h2>\n  <p style=\"font-size: 14px; color: #cbd5e1; line-height: 1.6;\">Dear {{MEMBER_NAME}},</p>\n  <div style=\"background: #0a0f1d; border-left: 3px solid #f59e0b; padding: 16px; border-radius: 0 8px 8px 0; margin: 20px 0;\">\n    <div style=\"font-size: 11px; font-weight: 700; color: #f59e0b; text-transform: uppercase; margin-bottom: 6px;\">Executive Key Takeaways:</div>\n    <div style=\"font-size: 13px; color: #e2e8f0; line-height: 1.6;\">{{KEY_TAKEAWAYS}}</div>\n  </div>\n  <p style=\"font-size: 13px; color: #94a3b8; line-height: 1.6;\">Live discussion and quantitative code updates are active in the private VIP channel:</p>\n  <div style=\"text-align: center; margin: 24px 0;\">\n    <a href=\"{{DISCORD_LINK}}\" style=\"background: #4f46e5; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-block;\">Access Private Discord Alpha Desk →</a>\n  </div>\n</div>"
   },
   {
     "id": "tpl_affiliate_welcome",
@@ -148,18 +57,6 @@
     "subject": "Partner Approved: Your Nexus Affiliate Links & 40% Commission Tier",
     "preheader": "Your affiliate account is active with instant tracking links and promotional banners.",
     "variables": ["PARTNER_NAME", "AFFILIATE_LINK", "COMMISSION_RATE", "MEDIA_KIT_URL"],
-    "htmlTemplate": `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #080d16; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 16px; padding: 28px;">
-  <h2 style="color: #34d399; font-size: 20px; font-weight: 800; margin-top: 0;">Welcome to Nexus Affiliate Partners</h2>
-  <p style="font-size: 14px; color: #cbd5e1;">Hi {{PARTNER_NAME}},</p>
-  <p style="font-size: 13px; color: #94a3b8; line-height: 1.6;">Your affiliate partner application has been approved at our top <strong>{{COMMISSION_RATE}}% revenue share</strong> tier for all digital products and software tools.</p>
-  <div style="background: #0f172a; border: 1px solid #059669; border-radius: 12px; padding: 16px; margin: 20px 0;">
-    <div style="font-size: 11px; color: #34d399; font-weight: 700; text-transform: uppercase;">Your Unique Tracking Link</div>
-    <div style="font-family: monospace; font-size: 14px; color: #f8fafc; word-break: break-all; margin-top: 6px;">{{AFFILIATE_LINK}}</div>
-  </div>
-  <p style="font-size: 13px; color: #94a3b8; line-height: 1.6;">Download high-CTR banners, social swipe copy, and product mockups:</p>
-  <div style="text-align: center; margin: 20px 0;">
-    <a href="{{MEDIA_KIT_URL}}" style="background: #059669; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-block;">Download Affiliate Swipe Kit →</a>
-  </div>
-</div>`
+    "htmlTemplate": "<div style=\"font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #080d16; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 16px; padding: 28px;\">\n  <h2 style=\"color: #34d399; font-size: 20px; font-weight: 800; margin-top: 0;\">Welcome to Nexus Affiliate Partners</h2>\n  <p style=\"font-size: 14px; color: #cbd5e1;\">Hi {{PARTNER_NAME}},</p>\n  <p style=\"font-size: 13px; color: #94a3b8; line-height: 1.6;\">Your affiliate partner application has been approved at our top <strong>{{COMMISSION_RATE}}% revenue share</strong> tier for all digital products and software tools.</p>\n  <div style=\"background: #0f172a; border: 1px solid #059669; border-radius: 12px; padding: 16px; margin: 20px 0;\">\n    <div style=\"font-size: 11px; color: #34d399; font-weight: 700; text-transform: uppercase;\">Your Unique Tracking Link</div>\n    <div style=\"font-family: monospace; font-size: 14px; color: #f8fafc; word-break: break-all; margin-top: 6px;\">{{AFFILIATE_LINK}}</div>\n  </div>\n  <p style=\"font-size: 13px; color: #94a3b8; line-height: 1.6;\">Download high-CTR banners, social swipe copy, and product mockups:</p>\n  <div style=\"text-align: center; margin: 20px 0;\">\n    <a href=\"{{MEDIA_KIT_URL}}\" style=\"background: #059669; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-block;\">Download Affiliate Swipe Kit →</a>\n  </div>\n</div>"
   }
 ]
