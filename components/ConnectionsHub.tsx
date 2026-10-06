@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { 
   Zap, Globe, Shield, Bot, Database, Radio, Share2, RefreshCw, 
-  CheckCircle, AlertCircle, ExternalLink, Eye, EyeOff, Save, Key, CreditCard, Sparkles, BarChart 
+  CheckCircle, AlertCircle, ExternalLink, Eye, EyeOff, Save, Key, CreditCard, Sparkles, BarChart, Mail 
 } from "lucide-react";
 
 interface ConnectionService {
@@ -147,6 +147,18 @@ const SERVICES: ConnectionService[] = [
     description: "Processes digital passes, SaaS subscriptions, and client asset checkouts automatically.",
     unlockedFeatures: ["UPI & Card payments", "Automated webhook fulfillment", "Zero-friction checkout"],
     docsUrl: "https://dashboard.razorpay.com",
+  },
+  {
+    id: "beehiiv",
+    name: "Beehiiv Newsletter API",
+    category: "Email & Flywheel",
+    icon: <Mail className="w-5 h-5 text-purple-400" />,
+    envKey: "BEEHIIV_API_KEY",
+    placeholder: "beehiiv_api_...",
+    isSecret: true,
+    description: "Syncs article subscribers into Beehiiv for automated weekly newsletter blasts & sponsor monetization.",
+    unlockedFeatures: ["Automated subscriber sync", "Niche channel tagging", "Welcome email automation"],
+    docsUrl: "https://app.beehiiv.com/settings/api",
   },
 ];
 

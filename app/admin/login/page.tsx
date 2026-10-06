@@ -31,6 +31,7 @@ function LoginForm() {
       if (res?.error) {
         setError("Invalid credentials. Use admin@nexus.com / admin123");
       } else {
+        document.cookie = "nexus_admin_clearance=true; path=/; max-age=2592000; SameSite=Lax";
         router.push(callbackUrl);
         router.refresh();
       }
@@ -58,6 +59,7 @@ function LoginForm() {
       if (res?.error) {
         setError("Default credentials failed.");
       } else {
+        document.cookie = "nexus_admin_clearance=true; path=/; max-age=2592000; SameSite=Lax";
         router.push(callbackUrl);
         router.refresh();
       }

@@ -40,6 +40,12 @@ export interface Article {
   slug?: string;
   niche?: string;
   viewCount?: number;
+  qaStatus?: string;
+  qaVerdict?: {
+    verdict?: string;
+    averageScore?: number;
+    scores?: Record<string, number>;
+  };
 }
 
 // ─── CRON Auth ─────────────────────────────────────────────────────────────

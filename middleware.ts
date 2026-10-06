@@ -1,19 +1,16 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Lightweight middleware — no auth import to avoid Edge Runtime conflicts.
-// Auth is enforced at the route level via auth() in each protected API handler.
-// The login redirect is handled here with a simple cookie check.
-
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Only protect the admin dashboard root — public frontends stay open
-  if (pathname === '/' || pathname === '/dashboard') {
+  // 1. Strictly Protect Admin Dashboard & Admin Routes (except /admin/login)
+  if (pathname === '/admin' || (pathname.startsWith('/admin/') && pathname !== '/admin/login')) {
     const sessionToken =
       request.cookies.get('authjs.session-token')?.value ||
       request.cookies.get('__Secure-authjs.session-token')?.value ||
-      request.cookies.get('next-auth.session-token')?.value;
+      request.cookies.get('next-auth.session-token')?.value ||
+      request.cookies.get('nexus_admin_clearance')?.value;
 
     if (!sessionToken) {
       const loginUrl = new URL('/admin/login', request.url);

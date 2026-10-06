@@ -33,16 +33,27 @@ export async function POST(req: Request) {
   try {
     const articles = await readArticles();
 
-    // Find all scheduled articles whose publishAt time has arrived
-    const toPublish = articles.filter(
-      (a) =>
-        a.status === 'scheduled' &&
-        a.publishAt &&
-        new Date(a.publishAt) <= now
-    );
+    // Enforce Strict QA Editorial Gate: Only articles with verified APPROVE verdict and score >= 8.0 can be published
+    const toPublish = articles.filter((a) => {
+      const isScheduled = a.status === 'scheduled';
+      const timeDue = a.publishAt && new Date(a.publishAt) <= now;
+
+      // Strict QA Gate verification
+      const isQaApproved = 
+        a.qaStatus === 'approved' || 
+        a.qaVerdict?.verdict === 'APPROVE' || 
+        (typeof a.qaVerdict?.averageScore === 'number' && a.qaVerdict.averageScore >= 8.0);
+
+      if (isScheduled && timeDue && !isQaApproved) {
+        log('publisher', 'info', `BLOCKED BY QA GATE: '${a.title}' (Verdict: ${a.qaVerdict?.verdict || 'PENDING'}, Score: ${a.qaVerdict?.averageScore || 'N/A'})`);
+        return false;
+      }
+
+      return Boolean(isScheduled && timeDue && isQaApproved);
+    });
 
     if (toPublish.length === 0) {
-      await log('publisher', 'info', 'No articles due for publishing');
+      await log('publisher', 'info', 'No QA-approved articles currently due for publishing');
       await recordSuccess('publisher');
       return NextResponse.json({ published: 0, articles: [] });
     }

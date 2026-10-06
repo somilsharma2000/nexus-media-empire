@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 
 const SUBSCRIBERS_PATH = path.join(process.cwd(), 'data', 'subscribers.json');
+const SETTINGS_PATH = path.join(process.cwd(), 'data', 'settings.json');
 
 export async function POST(req: Request) {
   try {
@@ -11,21 +12,83 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Valid email required' }, { status: 400 });
     }
 
-    const raw = await fs.readFile(SUBSCRIBERS_PATH, 'utf-8').catch(() => '[]');
-    const subscribers = JSON.parse(raw);
+    const cleanEmail = email.trim().toLowerCase();
+    const targetNiche = niche || 'general';
 
-    const exists = subscribers.some((s: any) => s.email.toLowerCase() === email.toLowerCase());
+    // 1. Dual-Layer Storage: Always save to local JSON vault
+    const rawSubs = await fs.readFile(SUBSCRIBERS_PATH, 'utf-8').catch(() => '[]');
+    const subscribers = JSON.parse(rawSubs);
+
+    const exists = subscribers.some((s: any) => s.email.toLowerCase() === cleanEmail);
     if (!exists) {
       subscribers.unshift({
-        email: email.trim().toLowerCase(),
-        niche: niche || 'general',
+        email: cleanEmail,
+        niche: targetNiche,
         subscribedAt: new Date().toISOString(),
       });
       await fs.writeFile(SUBSCRIBERS_PATH, JSON.stringify(subscribers, null, 2));
     }
 
-    return NextResponse.json({ success: true, message: 'Subscribed successfully!' });
+    // 2. Read Beehiiv credentials from env or settings.json
+    let beehiivApiKey = process.env.BEEHIIV_API_KEY;
+    let beehiivPubId = process.env.BEEHIIV_PUBLICATION_ID;
+
+    try {
+      const rawSettings = await fs.readFile(SETTINGS_PATH, 'utf-8');
+      const settings = JSON.parse(rawSettings);
+      if (settings.BEEHIIV_API_KEY) beehiivApiKey = settings.BEEHIIV_API_KEY;
+      if (settings.BEEHIIV_PUBLICATION_ID) beehiivPubId = settings.BEEHIIV_PUBLICATION_ID;
+    } catch {
+      // Ignore if settings.json not found
+    }
+
+    // 3. If Beehiiv API is configured, push subscription to Beehiiv v2 API
+    let beehiivSynced = false;
+    if (beehiivApiKey && beehiivPubId) {
+      try {
+        const beehiivRes = await fetch(
+          `https://api.beehiiv.com/v2/publications/${beehiivPubId}/subscriptions`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${beehiivApiKey}`,
+            },
+            body: JSON.stringify({
+              email: cleanEmail,
+              reactivate_existing: true,
+              send_welcome_email: true,
+              utm_source: 'nexus-media-empire',
+              utm_medium: 'organic-article-capture',
+              custom_fields: [
+                {
+                  name: 'Niche Channel',
+                  value: targetNiche,
+                },
+              ],
+            }),
+          }
+        );
+
+        if (beehiivRes.ok) {
+          beehiivSynced = true;
+          console.log(`[Beehiiv] Successfully synced subscriber: ${cleanEmail}`);
+        } else {
+          const errText = await beehiivRes.text();
+          console.warn(`[Beehiiv API Warning] Status: ${beehiivRes.status} - ${errText}`);
+        }
+      } catch (err) {
+        console.error('[Beehiiv API Network Error]', err);
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Subscribed successfully!',
+      beehiivSynced,
+    });
   } catch (error) {
+    console.error('[Subscribe Error]', error);
     return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 });
   }
 }
