@@ -3,33 +3,75 @@
 import { useState, useEffect } from "react";
 import { 
   Zap, Globe, Shield, Bot, Database, Radio, Share2, RefreshCw, 
-  CheckCircle, AlertCircle, ExternalLink, Eye, EyeOff, Save, Key, CreditCard, Sparkles, BarChart, Mail 
+  CheckCircle, AlertCircle, ExternalLink, Eye, EyeOff, Save, Key, CreditCard, Sparkles, BarChart, Mail,
+  Server, Play, Lock, Check, Cpu, CheckCheck, HelpCircle, Layers
 } from "lucide-react";
+
+interface FieldDef {
+  key: string;
+  label: string;
+  placeholder: string;
+  isSecret?: boolean;
+  help?: string;
+}
 
 interface ConnectionService {
   id: string;
   name: string;
-  category: string;
+  category: "Database" | "AI Engine" | "Monetization & Payments" | "SEO & Analytics" | "Email & Audience" | "Social & Alerts";
   icon: React.ReactNode;
-  envKey: string;
+  primaryKey: string;
+  fields: FieldDef[];
   description: string;
-  placeholder: string;
   unlockedFeatures: string[];
   docsUrl: string;
-  isSecret?: boolean;
+  canBootstrapDb?: boolean;
 }
 
 const SERVICES: ConnectionService[] = [
   {
+    id: "supabase",
+    name: "Supabase / PostgreSQL Database",
+    category: "Database",
+    icon: <Database className="w-5 h-5 text-indigo-400" />,
+    primaryKey: "DATABASE_URL",
+    fields: [
+      {
+        key: "DATABASE_URL",
+        label: "PostgreSQL Connection String (Pooler or Direct)",
+        placeholder: "postgresql://postgres.[REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true",
+        isSecret: true,
+        help: "Supabase -> Project Settings -> Database -> Connection string (URI)"
+      }
+    ],
+    description: "Cloud relational database for persistent articles, live view counters, subscriber lists, and automated cron states.",
+    unlockedFeatures: ["Persistent article storage", "Zero ephemeral resets on redeploy", "Real-time view count tracking", "Atomic customer checkouts"],
+    docsUrl: "https://supabase.com/dashboard",
+    canBootstrapDb: true,
+  },
+  {
     id: "openai",
-    name: "OpenAI GPT-4o-mini",
+    name: "OpenAI GPT-4o-mini & GPT-4o",
     category: "AI Engine",
     icon: <Zap className="w-5 h-5 text-yellow-400" />,
-    envKey: "OPENAI_API_KEY",
-    placeholder: "sk-proj-...",
-    isSecret: true,
-    description: "Powers autonomous multi-pass article generation, SEO metadata, and AI quality reviewer gate.",
-    unlockedFeatures: ["Autonomous 1500-word generation", "AI self-reviewer scoring", "GEO-optimized formatting"],
+    primaryKey: "OPENAI_API_KEY",
+    fields: [
+      {
+        key: "OPENAI_API_KEY",
+        label: "OpenAI API Secret Key",
+        placeholder: "sk-proj-...",
+        isSecret: true,
+        help: "platform.openai.com/api-keys"
+      },
+      {
+        key: "MAX_MONTHLY_AI_BUDGET",
+        label: "Monthly AI Budget Cap (USD)",
+        placeholder: "30",
+        help: "Hard safety spending cap in USD per month"
+      }
+    ],
+    description: "Powers the autonomous content generator, 5-dimension QA reviewer gate, and AI Content Doctor.",
+    unlockedFeatures: ["Autonomous 1,500-word SEO articles", "5-Dimension editorial grading", "Automated FAQ schema generation", "Content refresher doctor"],
     docsUrl: "https://platform.openai.com/api-keys",
   },
   {
@@ -37,139 +79,320 @@ const SERVICES: ConnectionService[] = [
     name: "Anthropic Claude (Sonnet / Haiku)",
     category: "AI Engine",
     icon: <Sparkles className="w-5 h-5 text-amber-400" />,
-    envKey: "ANTHROPIC_API_KEY",
-    placeholder: "sk-ant-api03-...",
-    isSecret: true,
-    description: "High-reasoning alternative model for deep technical analysis and editorial polishing.",
-    unlockedFeatures: ["Nuanced humanized prose", "Zero AI robotic clichés", "Deep fact-checking"],
+    primaryKey: "ANTHROPIC_API_KEY",
+    fields: [
+      {
+        key: "ANTHROPIC_API_KEY",
+        label: "Anthropic API Key",
+        placeholder: "sk-ant-api03-...",
+        isSecret: true,
+        help: "console.anthropic.com/settings/keys"
+      }
+    ],
+    description: "High-reasoning alternative model for deep financial analysis, investigative journalism, and humanized tone polishing.",
+    unlockedFeatures: ["Nuanced financial analysis", "Zero robotic AI clichés", "Advanced multi-turn fact verification"],
     docsUrl: "https://console.anthropic.com/settings/keys",
   },
   {
+    id: "nvidia",
+    name: "NVIDIA NIM AI Platform",
+    category: "AI Engine",
+    icon: <Cpu className="w-5 h-5 text-emerald-400" />,
+    primaryKey: "NVIDIA_API_KEY",
+    fields: [
+      {
+        key: "NVIDIA_API_KEY",
+        label: "NVIDIA NIM API Key",
+        placeholder: "nvapi-...",
+        isSecret: true,
+        help: "build.nvidia.com"
+      },
+      {
+        key: "NVIDIA_MODEL",
+        label: "Model Name",
+        placeholder: "meta/llama-3.3-70b-instruct",
+        help: "Default: meta/llama-3.3-70b-instruct"
+      }
+    ],
+    description: "Ultra high-speed open-weights inference (Llama-3.3 70B) for instant batch article generation with zero rate limit throttling.",
+    unlockedFeatures: ["Zero rate limits", "Sub-second generation latency", "Enterprise-grade uptime"],
+    docsUrl: "https://build.nvidia.com",
+  },
+  {
+    id: "razorpay",
+    name: "Razorpay Gateway",
+    category: "Monetization & Payments",
+    icon: <CreditCard className="w-5 h-5 text-blue-400" />,
+    primaryKey: "RAZORPAY_KEY_ID",
+    fields: [
+      {
+        key: "RAZORPAY_KEY_ID",
+        label: "Key ID",
+        placeholder: "rzp_live_... or rzp_test_...",
+        isSecret: false,
+        help: "Razorpay Dashboard -> Settings -> API Keys"
+      },
+      {
+        key: "RAZORPAY_KEY_SECRET",
+        label: "Key Secret",
+        placeholder: "Razorpay Secret Key",
+        isSecret: true,
+        help: "Secret generated alongside Key ID"
+      },
+      {
+        key: "RAZORPAY_WEBHOOK_SECRET",
+        label: "Webhook Secret (Optional)",
+        placeholder: "webhook_secret_...",
+        isSecret: true,
+        help: "Webhook signing secret for instant order fulfillment"
+      }
+    ],
+    description: "Instant UPI, Credit Card, and Netbanking payments for digital products, cheatsheets, and sponsorship packages.",
+    unlockedFeatures: ["Instant 1-click UPI & Card checkout", "Automated digital asset delivery", "Real-time webhook order verification"],
+    docsUrl: "https://dashboard.razorpay.com/app/keys",
+  },
+  {
     id: "adsense",
-    name: "Google AdSense",
-    category: "Monetization",
+    name: "Google AdSense & Ad Exchanges",
+    category: "Monetization & Payments",
     icon: <Globe className="w-5 h-5 text-green-400" />,
-    envKey: "NEXT_PUBLIC_ADSENSE_CLIENT",
-    placeholder: "pub-0000000000000000",
-    description: "Serves programmatic responsive ads across The Trend Matrix, Crypto Daily, and Wall St Insider.",
-    unlockedFeatures: ["Automated ad unit injection", "RPM tracking & sync", "Global kill-switch protection"],
+    primaryKey: "NEXT_PUBLIC_ADSENSE_CLIENT",
+    fields: [
+      {
+        key: "NEXT_PUBLIC_ADSENSE_CLIENT",
+        label: "AdSense Publisher ID",
+        placeholder: "pub-0000000000000000",
+        help: "adsense.google.com -> Account Information"
+      },
+      {
+        key: "GOOGLE_ADSENSE_CLIENT_ID",
+        label: "AdSense API Client ID (Optional)",
+        placeholder: "For real-time RPM telemetry sync",
+        help: "Google Cloud Console OAuth Client"
+      },
+      {
+        key: "GOOGLE_ADSENSE_CLIENT_SECRET",
+        label: "AdSense API Client Secret (Optional)",
+        placeholder: "AdSense OAuth Secret",
+        isSecret: true
+      }
+    ],
+    description: "Serves programmatic responsive ads across all network niches with automated ad-block detection and global kill-switch.",
+    unlockedFeatures: ["Automated header & mid-feed ads", "Dynamic ads.txt sync", "Real-time RPM calculation"],
     docsUrl: "https://adsense.google.com",
   },
   {
-    id: "telegram",
-    name: "Telegram Bot Token",
-    category: "Mobile Control",
-    icon: <Bot className="w-5 h-5 text-cyan-400" />,
-    envKey: "TELEGRAM_BOT_TOKEN",
-    placeholder: "1234567890:AAF...",
-    isSecret: true,
-    description: "Receive real-time alerts, review QA rejections, and pause/resume pipelines directly from your phone.",
-    unlockedFeatures: ["/status, /pause, /resume commands", "Inline 1-tap article approvals", "Instant downtime alerts"],
-    docsUrl: "https://t.me/BotFather",
-  },
-  {
-    id: "supabase",
-    name: "Supabase PostgreSQL",
-    category: "Database",
-    icon: <Database className="w-5 h-5 text-indigo-400" />,
-    envKey: "DATABASE_URL",
-    placeholder: "postgresql://postgres:password@db.xxx.supabase.co:5432/postgres",
-    isSecret: true,
-    description: "Cloud relational database for persistent multi-tenant articles, logs, and revenue analytics.",
-    unlockedFeatures: ["Multi-region replication", "Persistent article database", "Direct SQL analytics"],
-    docsUrl: "https://supabase.com",
-  },
-  {
     id: "gsc",
-    name: "Google Search Console",
-    category: "Search & SEO",
-    icon: <Globe className="w-5 h-5 text-blue-400" />,
-    envKey: "GOOGLE_SITE_VERIFICATION",
-    placeholder: "google-site-verification token or verification string",
-    description: "Verifies domain ownership with Google to unlock keyword impressions, rankings, and crawl error telemetry.",
-    unlockedFeatures: ["Keyword rank tracking", "Direct sitemap.xml indexing", "Googlebot crawl health"],
+    name: "Google Search Console & IndexNow",
+    category: "SEO & Analytics",
+    icon: <Globe className="w-5 h-5 text-purple-400" />,
+    primaryKey: "GOOGLE_INDEXING_API_KEY",
+    fields: [
+      {
+        key: "GOOGLE_INDEXING_API_KEY",
+        label: "Google Indexing API Key / JSON Key",
+        placeholder: "Service account private key or IndexNow token",
+        isSecret: true,
+        help: "Google Cloud Console -> Service Account for Indexing API"
+      },
+      {
+        key: "INDEXNOW_KEY",
+        label: "IndexNow API Key (Bing / Yandex)",
+        placeholder: "32-character IndexNow key",
+        isSecret: true,
+        help: "indexnow.org"
+      },
+      {
+        key: "NEXT_PUBLIC_SITE_URL",
+        label: "Production Canonical Site URL",
+        placeholder: "https://nexus-media-empire.vercel.app",
+        help: "Used for sitemap.xml, robots.txt, and JSON-LD schema tags"
+      }
+    ],
+    description: "Submits newly published articles to Google, Bing, and DuckDuckGo search engines within seconds of release.",
+    unlockedFeatures: ["Sub-minute search crawling", "Automated sitemap queueing", "SERP ranking telemetry"],
     docsUrl: "https://search.google.com/search-console",
   },
   {
     id: "ga4",
     name: "Google Analytics 4 (GA4)",
-    category: "Search & SEO",
+    category: "SEO & Analytics",
     icon: <BarChart className="w-5 h-5 text-amber-400" />,
-    envKey: "NEXT_PUBLIC_GA_MEASUREMENT_ID",
-    placeholder: "G-XXXXXXXXXX",
-    description: "Official Google analytics stream to prove Tier 1 audience demographics for Mediavine/Raptive approval.",
-    unlockedFeatures: ["Audience geographic breakdown", "Real-time active visitors", "Tier 1 proof reports"],
+    primaryKey: "NEXT_PUBLIC_GA_MEASUREMENT_ID",
+    fields: [
+      {
+        key: "NEXT_PUBLIC_GA_MEASUREMENT_ID",
+        label: "GA4 Measurement ID",
+        placeholder: "G-XXXXXXXXXX",
+        help: "analytics.google.com -> Admin -> Data Streams"
+      }
+    ],
+    description: "Collects verified Tier 1 reader metrics, scroll depth, and bounce rate data for high-paying ad network applications.",
+    unlockedFeatures: ["Real-time active visitors", "Tier-1 geography breakdown", "Mediavine & Raptive compliance proof"],
     docsUrl: "https://analytics.google.com",
   },
   {
-    id: "indexnow",
-    name: "Google & IndexNow Protocol",
-    category: "Search & SEO",
-    icon: <Globe className="w-5 h-5 text-purple-400" />,
-    envKey: "INDEXNOW_KEY",
-    placeholder: "indexnow-key-or-google-api-key",
-    isSecret: true,
-    description: "Pings search crawlers (Bing, DuckDuckGo, Yandex, Google) within 5 seconds of publishing.",
-    unlockedFeatures: ["Instant crawler submission", "Search rank telemetry", "Sitemap priority boosting"],
-    docsUrl: "https://www.indexnow.org/",
+    id: "beehiiv",
+    name: "Beehiiv Newsletter & Email Flywheel",
+    category: "Email & Audience",
+    icon: <Mail className="w-5 h-5 text-indigo-400" />,
+    primaryKey: "BEEHIIV_API_KEY",
+    fields: [
+      {
+        key: "BEEHIIV_API_KEY",
+        label: "Beehiiv API Key",
+        placeholder: "beehiiv_api_...",
+        isSecret: true,
+        help: "app.beehiiv.com/settings/api"
+      },
+      {
+        key: "BEEHIIV_PUBLICATION_ID",
+        label: "Publication ID",
+        placeholder: "pub_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        help: "Found in your Beehiiv publication settings"
+      },
+      {
+        key: "RESEND_API_KEY",
+        label: "Resend API Key (Direct Transactional)",
+        placeholder: "re_xxxxxxxx_...",
+        isSecret: true,
+        help: "resend.com/api-keys for instant invoice delivery"
+      }
+    ],
+    description: "Captures lead magnet and newsletter subscribers and automatically syncs them into your Beehiiv email lists.",
+    unlockedFeatures: ["Automated subscriber capture", "1-Click weekly broadcast digests", "Direct transactional email delivery"],
+    docsUrl: "https://app.beehiiv.com/settings/api",
+  },
+  {
+    id: "telegram",
+    name: "Telegram Bot Command & Alerts",
+    category: "Social & Alerts",
+    icon: <Bot className="w-5 h-5 text-cyan-400" />,
+    primaryKey: "TELEGRAM_BOT_TOKEN",
+    fields: [
+      {
+        key: "TELEGRAM_BOT_TOKEN",
+        label: "Telegram Bot Token",
+        placeholder: "1234567890:AAF...",
+        isSecret: true,
+        help: "Obtain from @BotFather on Telegram"
+      },
+      {
+        key: "TELEGRAM_ADMIN_USER_ID",
+        label: "Your Telegram User ID",
+        placeholder: "123456789",
+        help: "Get from @userinfobot on Telegram"
+      },
+      {
+        key: "ALERT_WEBHOOK_URL",
+        label: "Discord / Slack Webhook URL (Optional)",
+        placeholder: "https://discord.com/api/webhooks/...",
+        help: "Optional backup channel for critical downtime alarms"
+      }
+    ],
+    description: "Control the entire media empire from your smartphone: check revenues, pause pipelines, and approve articles via Telegram.",
+    unlockedFeatures: ["/status, /pause, /resume commands", "1-Tap article approval buttons", "Instant uptime & failure alerts"],
+    docsUrl: "https://t.me/BotFather",
   },
   {
     id: "twitter",
-    name: "Twitter / X API",
-    category: "Social Distribution",
+    name: "Twitter / X Auto-Publishing",
+    category: "Social & Alerts",
     icon: <Share2 className="w-5 h-5 text-blue-400" />,
-    envKey: "TWITTER_API_KEY",
-    placeholder: "API Key / Bearer Token",
-    isSecret: true,
-    description: "Automatically schedules and publishes high-engagement 6-tweet threads when articles go live.",
-    unlockedFeatures: ["Zero-touch thread publishing", "Viral audience funneling", "Social referral tracking"],
+    primaryKey: "TWITTER_API_KEY",
+    fields: [
+      {
+        key: "TWITTER_API_KEY",
+        label: "API Key (Consumer Key)",
+        placeholder: "Twitter API Key",
+        isSecret: true,
+        help: "developer.twitter.com/en/portal/dashboard"
+      },
+      {
+        key: "TWITTER_API_SECRET",
+        label: "API Key Secret",
+        placeholder: "Twitter API Secret",
+        isSecret: true
+      },
+      {
+        key: "TWITTER_ACCESS_TOKEN",
+        label: "Access Token",
+        placeholder: "OAuth 1.0a User Access Token",
+        isSecret: true
+      },
+      {
+        key: "TWITTER_ACCESS_SECRET",
+        label: "Access Token Secret",
+        placeholder: "OAuth 1.0a Access Token Secret",
+        isSecret: true
+      }
+    ],
+    description: "Automatically threads published articles into high-engagement viral tweets on X with rich formatting and CTA hooks.",
+    unlockedFeatures: ["Zero-touch thread publishing", "Viral hook distribution", "Social referral tracking"],
     docsUrl: "https://developer.twitter.com",
   },
   {
     id: "reddit",
-    name: "Reddit Distribution API",
-    category: "Social Distribution",
+    name: "Reddit & Medium Syndication",
+    category: "Social & Alerts",
     icon: <Radio className="w-5 h-5 text-orange-400" />,
-    envKey: "REDDIT_CLIENT_ID",
-    placeholder: "Reddit App Client ID",
-    description: "Dispatches authoritative summaries into niche subreddits (r/technology, r/CryptoCurrency).",
-    unlockedFeatures: ["Targeted community distribution", "High organic backlink weight", "Referral spikes"],
+    primaryKey: "REDDIT_CLIENT_ID",
+    fields: [
+      {
+        key: "REDDIT_CLIENT_ID",
+        label: "Reddit App Client ID",
+        placeholder: "Reddit Script App Client ID",
+        help: "reddit.com/prefs/apps"
+      },
+      {
+        key: "REDDIT_CLIENT_SECRET",
+        label: "Reddit Client Secret",
+        placeholder: "Reddit App Secret",
+        isSecret: true
+      },
+      {
+        key: "REDDIT_USERNAME",
+        label: "Reddit Username",
+        placeholder: "Your Reddit Bot Account"
+      },
+      {
+        key: "REDDIT_PASSWORD",
+        label: "Reddit Password",
+        placeholder: "Reddit Account Password",
+        isSecret: true
+      },
+      {
+        key: "MEDIUM_TOKEN",
+        label: "Medium Integration Token",
+        placeholder: "Integration Token from medium.com/me/settings",
+        isSecret: true
+      }
+    ],
+    description: "Cross-publishes article summaries and canonical-tagged backlinks to high-authority Reddit communities and Medium publications.",
+    unlockedFeatures: ["High DA backlink generation", "Organic niche traffic spikes", "Automated Medium syndication"],
     docsUrl: "https://www.reddit.com/prefs/apps",
-  },
-  {
-    id: "payments",
-    name: "Razorpay / Stripe Gateways",
-    category: "Payment Processing",
-    icon: <CreditCard className="w-5 h-5 text-emerald-400" />,
-    envKey: "RAZORPAY_KEY_ID",
-    placeholder: "rzp_live_... or sk_live_...",
-    isSecret: true,
-    description: "Processes digital passes, SaaS subscriptions, and client asset checkouts automatically.",
-    unlockedFeatures: ["UPI & Card payments", "Automated webhook fulfillment", "Zero-friction checkout"],
-    docsUrl: "https://dashboard.razorpay.com",
-  },
-  {
-    id: "beehiiv",
-    name: "Beehiiv Newsletter API",
-    category: "Email & Flywheel",
-    icon: <Mail className="w-5 h-5 text-purple-400" />,
-    envKey: "BEEHIIV_API_KEY",
-    placeholder: "beehiiv_api_...",
-    isSecret: true,
-    description: "Syncs article subscribers into Beehiiv for automated weekly newsletter blasts & sponsor monetization.",
-    unlockedFeatures: ["Automated subscriber sync", "Niche channel tagging", "Welcome email automation"],
-    docsUrl: "https://app.beehiiv.com/settings/api",
-  },
+  }
 ];
 
+const CATEGORIES = [
+  "All Connections",
+  "Database",
+  "AI Engine",
+  "Monetization & Payments",
+  "SEO & Analytics",
+  "Email & Audience",
+  "Social & Alerts"
+] as const;
+
 export default function ConnectionsHub() {
+  const [selectedCategory, setSelectedCategory] = useState<string>("All Connections");
   const [inputValues, setInputValues] = useState<Record<string, string>>({});
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
-  const [savedStatus, setSavedStatus] = useState<Record<string, boolean>>({});
+  const [savingService, setSavingService] = useState<string | null>(null);
   const [testingService, setTestingService] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<{ id: string; msg: string; success: boolean } | null>(null);
-  const [isBulkSaving, setIsBulkSaving] = useState(false);
-  const [bannerMsg, setBannerMsg] = useState<string | null>(null);
+  const [testResults, setTestResults] = useState<Record<string, { success: boolean; message: string; latencyMs?: number }>>({});
+  const [isBootstrapping, setIsBootstrapping] = useState(false);
+  const [globalBanner, setGlobalBanner] = useState<{ type: "success" | "error" | "info"; message: string } | null>(null);
 
   // Load existing credentials on mount
   useEffect(() => {
@@ -191,227 +414,390 @@ export default function ConnectionsHub() {
     setInputValues((prev) => ({ ...prev, [key]: val }));
   };
 
-  const handleSaveSingle = async (service: ConnectionService) => {
-    const val = inputValues[service.envKey] || "";
+  const handleToggleReveal = (key: string) => {
+    setRevealed((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const showBanner = (message: string, type: "success" | "error" | "info" = "success") => {
+    setGlobalBanner({ message, type });
+    setTimeout(() => setGlobalBanner(null), 6000);
+  };
+
+  // 1. Save single service fields
+  const handleSaveService = async (service: ConnectionService) => {
+    setSavingService(service.id);
+    const payload: Record<string, string> = {};
+    for (const f of service.fields) {
+      payload[f.key] = inputValues[f.key] || "";
+    }
+
     try {
       const res = await fetch("/api/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [service.envKey]: val }),
+        body: JSON.stringify(payload),
       });
+
       if (res.ok) {
-        setSavedStatus((prev) => ({ ...prev, [service.id]: true }));
-        setFeedback({ id: service.id, msg: `Saved and synchronized to .env!`, success: true });
-        setTimeout(() => setSavedStatus((prev) => ({ ...prev, [service.id]: false })), 3000);
+        showBanner(`✅ ${service.name} configuration saved & activated in runtime memory!`, "success");
       } else {
-        setFeedback({ id: service.id, msg: `Failed to save ${service.name}`, success: false });
+        showBanner(`❌ Failed to save ${service.name} settings`, "error");
       }
-    } catch {
-      setFeedback({ id: service.id, msg: "Network error saving key", success: false });
+    } catch (err: any) {
+      showBanner(`Error: ${err.message || "Network failure"}`, "error");
+    } finally {
+      setSavingService(null);
     }
   };
 
+  // 2. Test single service connection
+  const handleTestService = async (service: ConnectionService) => {
+    setTestingService(service.id);
+    const primaryVal = inputValues[service.primaryKey] || "";
+    const extraVal = service.fields[1] ? inputValues[service.fields[1].key] : undefined;
+
+    try {
+      const res = await fetch("/api/settings/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service: service.id,
+          value: primaryVal,
+          extra: extraVal
+        }),
+      });
+
+      const data = await res.json();
+      setTestResults((prev) => ({
+        ...prev,
+        [service.id]: {
+          success: Boolean(data.success),
+          message: data.message || (data.success ? "Test Passed!" : "Test Failed"),
+          latencyMs: data.latencyMs
+        }
+      }));
+
+      if (data.success) {
+        showBanner(`✨ ${service.name} Test Passed! ${data.message}`, "success");
+      } else {
+        showBanner(`⚠️ ${service.name} Test Failed: ${data.message}`, "error");
+      }
+    } catch (err: any) {
+      setTestResults((prev) => ({
+        ...prev,
+        [service.id]: {
+          success: false,
+          message: err.message || "Network test failed"
+        }
+      }));
+      showBanner(`Test error for ${service.name}`, "error");
+    } finally {
+      setTestingService(null);
+    }
+  };
+
+  // 3. Save All Credentials at once
   const handleSaveAll = async () => {
-    setIsBulkSaving(true);
+    setSavingService("ALL");
     try {
       const res = await fetch("/api/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(inputValues),
       });
+
       if (res.ok) {
-        setBannerMsg("All API keys and credentials successfully saved to runtime and .env!");
-        setTimeout(() => setBannerMsg(null), 4000);
+        showBanner("🚀 All API connections & environment variables saved & activated!", "success");
+      } else {
+        showBanner("Failed to save global configurations", "error");
       }
-    } catch {
-      setBannerMsg("Error saving credentials to server.");
+    } catch (err: any) {
+      showBanner(`Error: ${err.message}`, "error");
     } finally {
-      setIsBulkSaving(false);
+      setSavingService(null);
     }
   };
 
-  const handleTestConnection = async (s: ConnectionService) => {
-    setTestingService(s.id);
-    setFeedback(null);
-    const value = inputValues[s.envKey];
-
+  // 4. Trigger Database Auto-Seed / Bootstrap
+  const handleBootstrapDb = async () => {
+    setIsBootstrapping(true);
     try {
-      const res = await fetch("/api/settings/test", {
+      const res = await fetch("/api/admin/bootstrap", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ service: s.id, value }),
+        headers: { "Content-Type": "application/json" }
       });
       const data = await res.json();
-      setFeedback({ id: s.id, msg: data.message, success: data.success });
-    } catch (e: any) {
-      setFeedback({ id: s.id, msg: e.message || "Failed to reach test server", success: false });
+      if (data.success) {
+        showBanner(`🎉 Database Seed Complete! Synced: ${data.summary?.articles || 90} Articles, ${data.summary?.topics || 5} Topics, ${data.summary?.products || 3} Digital Products, ${data.summary?.adslots || 3} Ad Slots`, "success");
+      } else {
+        showBanner(`Database sync failed: ${data.error || "Ensure DATABASE_URL is saved first"}`, "error");
+      }
+    } catch (err: any) {
+      showBanner(`Bootstrap error: ${err.message}`, "error");
     } finally {
-      setTestingService(null);
+      setIsBootstrapping(false);
     }
   };
 
-  return (
-    <div className="space-y-8 max-w-6xl animate-fadeIn">
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-blue-950/60 via-purple-950/40 to-black border border-blue-900/40 p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/40 text-blue-300 text-xs font-mono font-bold">
-            <Key className="w-3.5 h-3.5 text-blue-400" />
-            <span>EXECUTIVE CREDENTIALS & API VAULT</span>
-          </div>
-          <h2 className="text-2xl font-black text-white tracking-tight">
-            Account Connections & Live Integrations
-          </h2>
-          <p className="text-xs sm:text-sm text-gray-300 max-w-2xl leading-relaxed">
-            Enter your API credentials here. When saved, keys are automatically synchronized directly into <code className="text-blue-400 font-mono">.env</code> and runtime memory so your autonomous engines start working immediately without server restarts.
-          </p>
-        </div>
+  const filteredServices = selectedCategory === "All Connections"
+    ? SERVICES
+    : SERVICES.filter((s) => s.category === selectedCategory);
 
-        <button
-          onClick={handleSaveAll}
-          disabled={isBulkSaving}
-          className="px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-blue-900/40 hover:scale-105 active:scale-95 transition-all shrink-0"
-        >
-          {isBulkSaving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-          <span>Save All Credentials</span>
-        </button>
+  const totalConnected = SERVICES.filter((s) => Boolean(inputValues[s.primaryKey]?.trim())).length;
+
+  return (
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+      
+      {/* Top Header Card */}
+      <div className="p-6 rounded-3xl bg-gradient-to-br from-[#0b101d] via-[#080d18] to-[#04060c] border border-blue-900/40 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                Nexus Unified API Hub
+              </span>
+              <span className="text-xs text-gray-500 font-mono">
+                {totalConnected} of {SERVICES.length} Integrations Connected
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">
+              <Key className="w-7 h-7 text-blue-400" /> API &amp; Connection Command Center
+            </h2>
+            <p className="text-sm text-gray-400 max-w-2xl leading-relaxed">
+              Configure, test, and save every API key, PostgreSQL connection string, payment gateway, and social bot token directly from this panel without redeploying.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={handleSaveAll}
+              disabled={savingService === "ALL"}
+              className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold font-mono rounded-xl shadow-lg shadow-blue-600/30 flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+            >
+              {savingService === "ALL" ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              <span>Save All Keys</span>
+            </button>
+
+            <button
+              onClick={handleBootstrapDb}
+              disabled={isBootstrapping || !inputValues["DATABASE_URL"]}
+              title={!inputValues["DATABASE_URL"] ? "Save DATABASE_URL first to enable" : "Sync all 90 articles and configurations to PostgreSQL"}
+              className="px-4 py-2.5 bg-gray-900/90 hover:bg-gray-800 text-emerald-400 hover:text-emerald-300 text-xs font-mono font-bold rounded-xl border border-emerald-500/30 flex items-center gap-2 transition-all active:scale-95 disabled:opacity-40"
+            >
+              {isBootstrapping ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+              <span>Seed / Bootstrap DB</span>
+            </button>
+          </div>
+        </div>
       </div>
 
-      {bannerMsg && (
-        <div className="p-4 bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 rounded-2xl text-xs font-mono flex items-center gap-2 shadow-lg">
-          <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span>{bannerMsg}</span>
+      {/* Global Alert Banner */}
+      {globalBanner && (
+        <div className={`p-4 rounded-2xl border text-xs font-mono flex items-center justify-between shadow-xl transition-all ${
+          globalBanner.type === "success" 
+            ? "bg-emerald-950/70 border-emerald-500/40 text-emerald-300"
+            : globalBanner.type === "error"
+            ? "bg-red-950/70 border-red-500/40 text-red-300"
+            : "bg-blue-950/70 border-blue-500/40 text-blue-300"
+        }`}>
+          <div className="flex items-center gap-3">
+            {globalBanner.type === "success" ? <CheckCircle className="w-4 h-4 text-emerald-400" /> : <AlertCircle className="w-4 h-4" />}
+            <span>{globalBanner.message}</span>
+          </div>
+          <button onClick={() => setGlobalBanner(null)} className="text-gray-400 hover:text-white font-bold ml-4">✕</button>
         </div>
       )}
 
-      {/* Grid of Service Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {SERVICES.map((s) => {
-          const rawVal = inputValues[s.envKey] || "";
-          const isConfigured = Boolean(rawVal.trim());
-          const isShowingSecret = revealed[s.id];
-
+      {/* Category Pills */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+        {CATEGORIES.map((cat) => {
+          const active = selectedCategory === cat;
           return (
-            <div
-              key={s.id}
-              className={`p-6 rounded-2xl border transition-all flex flex-col justify-between ${
-                isConfigured
-                  ? "bg-[#080d17] border-blue-900/50 hover:border-blue-700/60 shadow-lg shadow-blue-950/20"
-                  : "bg-gray-950/60 border-gray-800/80 hover:border-gray-700"
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-2 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all ${
+                active 
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 border border-blue-400/40"
+                  : "bg-[#090d16] text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 border border-gray-800"
               }`}
             >
-              <div>
-                {/* Card Header */}
-                <div className="flex items-start justify-between">
+              {cat}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Services Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        {filteredServices.map((service) => {
+          const isConfigured = Boolean(inputValues[service.primaryKey]?.trim());
+          const isTesting = testingService === service.id;
+          const isSaving = savingService === service.id;
+          const testResult = testResults[service.id];
+
+          return (
+            <div 
+              key={service.id}
+              className={`p-6 rounded-3xl bg-[#080c16] border transition-all duration-200 flex flex-col justify-between shadow-lg ${
+                isConfigured 
+                  ? "border-gray-800/80 hover:border-blue-500/40" 
+                  : "border-gray-800/50 hover:border-gray-700"
+              }`}
+            >
+              {/* Card Header */}
+              <div className="space-y-4">
+                <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-gray-900 rounded-xl border border-gray-800">{s.icon}</div>
+                    <div className="p-2.5 rounded-2xl bg-gray-900/90 border border-gray-800 shadow-inner">
+                      {service.icon}
+                    </div>
                     <div>
-                      <h4 className="font-bold text-white text-sm">{s.name}</h4>
-                      <span className="text-[10px] text-gray-500 font-mono uppercase tracking-wider">{s.category}</span>
+                      <h3 className="text-base font-bold text-white flex items-center gap-2">
+                        {service.name}
+                      </h3>
+                      <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">
+                        {service.category}
+                      </span>
                     </div>
                   </div>
 
-                  <div>
+                  {/* Status Badge */}
+                  <div className="flex items-center gap-1.5">
                     {isConfigured ? (
-                      <span className="px-2.5 py-1 bg-emerald-950/50 text-emerald-400 text-[11px] font-mono font-semibold rounded-full border border-emerald-800/60 flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3" /> Configured
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-800/60 flex items-center gap-1">
+                        <Check className="w-3 h-3" /> Ready
                       </span>
                     ) : (
-                      <span className="px-2.5 py-1 bg-amber-950/40 text-amber-400 text-[11px] font-mono font-semibold rounded-full border border-amber-800/40 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" /> Needs Key
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-gray-900 text-gray-400 border border-gray-800 flex items-center gap-1">
+                        <Lock className="w-3 h-3" /> Unset
                       </span>
                     )}
                   </div>
                 </div>
 
-                <p className="text-xs text-gray-400 mt-3 leading-relaxed">{s.description}</p>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  {service.description}
+                </p>
 
-                {/* Direct Key Input Section */}
-                <div className="mt-4 pt-3 border-t border-gray-850">
-                  <label className="text-[10px] font-mono uppercase font-bold text-gray-400 block mb-1">
-                    Environment Key: <code className="text-blue-400">{s.envKey}</code>
-                  </label>
-                  <div className="relative flex items-center">
-                    <input
-                      type={s.isSecret && !isShowingSecret ? "password" : "text"}
-                      value={rawVal}
-                      onChange={(e) => handleInputChange(s.envKey, e.target.value)}
-                      placeholder={s.placeholder}
-                      className="w-full px-3 py-2 text-xs bg-black/60 border border-gray-800 focus:border-blue-500 rounded-xl text-white font-mono placeholder-gray-600 focus:outline-none transition-colors pr-10"
-                    />
-                    {s.isSecret && (
-                      <button
-                        type="button"
-                        onClick={() => setRevealed((prev) => ({ ...prev, [s.id]: !prev[s.id] }))}
-                        className="absolute right-3 text-gray-500 hover:text-gray-300 text-xs"
-                      >
-                        {isShowingSecret ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                      </button>
-                    )}
-                  </div>
+                {/* Input Fields */}
+                <div className="space-y-3 pt-2">
+                  {service.fields.map((field) => {
+                    const isSecret = field.isSecret;
+                    const isRevealed = revealed[field.key];
+                    const val = inputValues[field.key] || "";
+
+                    return (
+                      <div key={field.key} className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-mono font-semibold text-gray-300 flex items-center gap-1.5">
+                            <code>{field.key}</code>
+                          </label>
+                          {field.help && (
+                            <span className="text-[10px] text-gray-500 font-mono">
+                              {field.help}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="relative flex items-center">
+                          <input
+                            type={isSecret && !isRevealed ? "password" : "text"}
+                            value={val}
+                            onChange={(e) => handleInputChange(field.key, e.target.value)}
+                            placeholder={field.placeholder}
+                            className="w-full bg-[#04070e] border border-gray-800 focus:border-blue-500/80 rounded-xl px-3.5 py-2 text-xs font-mono text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500/50 pr-10"
+                          />
+                          {isSecret && (
+                            <button
+                              type="button"
+                              onClick={() => handleToggleReveal(field.key)}
+                              className="absolute right-3 text-gray-500 hover:text-gray-300"
+                              title={isRevealed ? "Hide secret" : "Show secret"}
+                            >
+                              {isRevealed ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
-                {/* Capabilities list */}
-                <div className="mt-3">
-                  <ul className="space-y-1">
-                    {s.unlockedFeatures.map((feat, idx) => (
-                      <li key={idx} className="text-[11px] text-gray-400 flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Live Feedback */}
-                {feedback && feedback.id === s.id && (
-                  <div
-                    className={`mt-3 p-2.5 rounded-xl text-xs font-mono flex items-center gap-2 ${
-                      feedback.success
-                        ? "bg-emerald-950/60 text-emerald-300 border border-emerald-800/60"
-                        : "bg-red-950/60 text-red-300 border border-red-800/60"
-                    }`}
-                  >
-                    {feedback.success ? <CheckCircle className="w-3.5 h-3.5 shrink-0" /> : <AlertCircle className="w-3.5 h-3.5 shrink-0" />}
-                    <span>{feedback.msg}</span>
+                {/* Test Feedback Message if present */}
+                {testResult && (
+                  <div className={`p-3 rounded-xl border text-[11px] font-mono flex items-start gap-2 ${
+                    testResult.success 
+                      ? "bg-emerald-950/50 border-emerald-500/30 text-emerald-300" 
+                      : "bg-red-950/50 border-red-500/30 text-red-300"
+                  }`}>
+                    {testResult.success ? <CheckCircle className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" /> : <AlertCircle className="w-3.5 h-3.5 text-red-400 mt-0.5 shrink-0" />}
+                    <div className="flex-1">
+                      <span>{testResult.message}</span>
+                      {testResult.latencyMs && (
+                        <span className="block text-[9px] text-gray-400 mt-0.5">Roundtrip: {testResult.latencyMs}ms</span>
+                      )}
+                    </div>
                   </div>
                 )}
+
+                {/* Unlocked Features List */}
+                <div className="pt-2 border-t border-gray-800/60">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 block mb-1.5 font-bold">
+                    Capabilities Unlocked:
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                    {service.unlockedFeatures.map((feat, idx) => (
+                      <div key={idx} className="flex items-center gap-1.5 text-[11px] text-gray-400">
+                        <CheckCheck className={`w-3.5 h-3.5 ${isConfigured ? "text-emerald-400" : "text-gray-600"}`} />
+                        <span className={isConfigured ? "text-gray-300" : "text-gray-500"}>{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="mt-5 pt-3 border-t border-gray-900 flex items-center justify-between gap-3">
+              {/* Card Actions Footer */}
+              <div className="pt-5 mt-4 border-t border-gray-800/80 flex items-center justify-between gap-3">
                 <a
-                  href={s.docsUrl}
+                  href={service.docsUrl}
                   target="_blank"
-                  rel="noreferrer"
-                  className="text-[11px] text-gray-400 hover:text-white flex items-center gap-1 transition-colors"
+                  rel="noopener noreferrer"
+                  className="text-[11px] font-mono text-blue-400 hover:text-blue-300 flex items-center gap-1 group"
                 >
-                  <ExternalLink className="w-3 h-3" /> Get API Keys
+                  <span>Docs</span>
+                  <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                 </a>
 
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => handleSaveSingle(s)}
-                    className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1 border border-gray-700 transition-colors"
+                    type="button"
+                    onClick={() => handleTestService(service)}
+                    disabled={isTesting}
+                    className="px-3.5 py-1.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-700 text-xs font-mono font-bold flex items-center gap-1.5 transition-all active:scale-95 disabled:opacity-50"
                   >
-                    <Save className="w-3 h-3 text-emerald-400" />
-                    <span>{savedStatus[s.id] ? "Saved!" : "Save"}</span>
+                    {isTesting ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-400" /> : <Play className="w-3.5 h-3.5 text-blue-400" />}
+                    <span>Test</span>
                   </button>
 
                   <button
-                    onClick={() => handleTestConnection(s)}
-                    disabled={testingService === s.id}
-                    className="px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-blue-500/30 transition-colors"
+                    type="button"
+                    onClick={() => handleSaveService(service)}
+                    disabled={isSaving}
+                    className="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-md shadow-blue-600/20 active:scale-95 disabled:opacity-50"
                   >
-                    <RefreshCw className={`w-3 h-3 ${testingService === s.id ? "animate-spin" : ""}`} />
-                    <span>Test Sync</span>
+                    {isSaving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                    <span>Save</span>
                   </button>
                 </div>
               </div>
+
             </div>
           );
         })}
       </div>
+
     </div>
   );
 }
