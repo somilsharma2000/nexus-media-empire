@@ -3,10 +3,11 @@ import { Bot, webhookCallback } from 'grammy';
 import fs from 'fs/promises';
 import path from 'path';
 
+import { getArticles, saveArticle, saveArticles } from '@/lib/data-layer';
+
 export const dynamic = 'force-dynamic';
 
-const ARTICLES_PATH = path.join(process.cwd(), 'data', 'articles.json');
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3002';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://media-empire-beta.vercel.app';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -20,17 +21,11 @@ interface Article {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 async function readArticles(): Promise<Article[]> {
-  try {
-    await fs.mkdir(path.dirname(ARTICLES_PATH), { recursive: true });
-    const raw = await fs.readFile(ARTICLES_PATH, 'utf-8');
-    return JSON.parse(raw) as Article[];
-  } catch {
-    return [];
-  }
+  return (await getArticles()) as Article[];
 }
 
 async function writeArticles(articles: Article[]): Promise<void> {
-  await fs.writeFile(ARTICLES_PATH, JSON.stringify(articles, null, 2));
+  await saveArticles(articles);
 }
 
 async function apiFetch(endpoint: string): Promise<unknown> {
