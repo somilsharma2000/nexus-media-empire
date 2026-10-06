@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import fs from 'fs/promises';
-import path from 'path';
 import { sendTelegramAlert } from '@/lib/telegram';
-import { saveArticle, saveQALog } from '@/lib/data-layer';
+import {
+  getArticleById,
+  saveArticle,
+  saveQALog,
+  getQAConfig,
+  updateTokenUsage,
+} from '@/lib/data-layer';
 
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
@@ -12,12 +16,11 @@ export const dynamic = 'force-dynamic';
 const INPUT_COST_PER_M  = 0.150;
 const OUTPUT_COST_PER_M = 0.600;
 
-// ─── Paths ────────────────────────────────────────────────────────────────────
-const ARTICLES_PATH    = path.join(process.cwd(), 'data', 'articles.json');
-const TOKEN_USAGE_PATH = path.join(process.cwd(), 'data', 'token_usage.json');
-const QA_CONFIG_PATH   = path.join(process.cwd(), 'data', 'qa_config.json');
+function calcCost(inputTokens: number, outputTokens: number): number {
+  return (inputTokens / 1_000_000) * INPUT_COST_PER_M +
+         (outputTokens / 1_000_000) * OUTPUT_COST_PER_M;
+}
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 interface QAScores {
   factualSoundness: number;
   originality: number;
@@ -32,69 +35,6 @@ interface QAVerdict {
   verdict: 'APPROVE' | 'REVISE' | 'REJECT';
   revisionInstructions?: string;
   rejectionReason?: string;
-}
-
-interface Article {
-  id: number | string;
-  title: string;
-  category: string;
-  status?: string;
-  qaStatus?: string;
-  qaVerdict?: QAVerdict;
-  revisionInstructions?: string;
-  [key: string]: unknown;
-}
-
-interface TokenUsage {
-  month: string;
-  tokensUsed: number;
-  estimatedCost: number;
-}
-
-interface QAConfig {
-  approveThreshold: number;
-  reviseThreshold: number;
-  maxRevisionAttempts: number;
-  autoPublishApproved: boolean;
-  requireQAForPublish: boolean;
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-function currentMonth(): string {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-}
-
-function calcCost(inputTokens: number, outputTokens: number): number {
-  return (inputTokens / 1_000_000) * INPUT_COST_PER_M +
-         (outputTokens / 1_000_000) * OUTPUT_COST_PER_M;
-}
-
-async function readJSON<T>(filePath: string, fallback: T): Promise<T> {
-  try {
-    const raw = await fs.readFile(filePath, 'utf-8');
-    return JSON.parse(raw) as T;
-  } catch {
-    return fallback;
-  }
-}
-
-async function writeJSON(filePath: string, data: unknown) {
-  await fs.mkdir(path.dirname(filePath), { recursive: true });
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-}
-
-async function updateTokenUsage(inputTokens: number, outputTokens: number) {
-  const usage = await readJSON<TokenUsage>(TOKEN_USAGE_PATH, { month: '', tokensUsed: 0, estimatedCost: 0 });
-  const month = currentMonth();
-  if (usage.month !== month) {
-    usage.month = month;
-    usage.tokensUsed = 0;
-    usage.estimatedCost = 0;
-  }
-  usage.tokensUsed   += inputTokens + outputTokens;
-  usage.estimatedCost = parseFloat((usage.estimatedCost + calcCost(inputTokens, outputTokens)).toFixed(6));
-  await writeJSON(TOKEN_USAGE_PATH, usage);
 }
 
 // ─── POST /api/qa-review ──────────────────────────────────────────────────────
@@ -124,16 +64,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'content is required' }, { status: 400 });
   }
 
-  // 3. Load QA config
-  const config = await readJSON<QAConfig>(QA_CONFIG_PATH, {
-    approveThreshold: 8,
-    reviseThreshold: 5,
-    maxRevisionAttempts: 1,
-    autoPublishApproved: true,
-    requireQAForPublish: true,
-  });
+  // 3. Load QA config from database
+  const config = await getQAConfig();
 
-  // 4. Call OpenAI / NVIDIA
+  // 4. Call AI Reviewer
   const openai = new OpenAI({ apiKey, baseURL });
 
   const systemPrompt = `You are a strict, adversarial editorial QA reviewer and fact-checker (ex-editor-in-chief).
@@ -161,7 +95,7 @@ GRADING CRITERIA:
 - readability: High burstiness (natural sentence length variation) and engaging cadence.
 - seoStructure: GEO summary block, clean subheadings, micro-tables.
 
-Approve if average >= ${config.approveThreshold}. Revise if ${config.reviseThreshold}-${config.approveThreshold - 1}. Reject if below ${config.reviseThreshold}.`;
+Approve if average >= ${config.approveThreshold || 8}. Revise if ${config.reviseThreshold || 5}-${(config.approveThreshold || 8) - 1}. Reject if below ${config.reviseThreshold || 5}.`;
 
   let completion: OpenAI.Chat.Completions.ChatCompletion;
   try {
@@ -193,21 +127,17 @@ Approve if average >= ${config.approveThreshold}. Revise if ${config.reviseThres
     return NextResponse.json({ error: 'Failed to parse QA response JSON' }, { status: 502 });
   }
 
-  // 6. Track tokens
-  await updateTokenUsage(
-    completion.usage?.prompt_tokens     ?? 0,
-    completion.usage?.completion_tokens ?? 0,
-  );
+  // 6. Track tokens in database
+  const promptTokens = completion.usage?.prompt_tokens ?? 0;
+  const completionTokens = completion.usage?.completion_tokens ?? 0;
+  const cost = calcCost(promptTokens, completionTokens);
+  await updateTokenUsage(promptTokens + completionTokens, cost);
 
-  // 7. Update article in DB / local storage and save QA Log
+  // 7. Update article in DB and save QA Log
   if (articleId) {
-    const articles = await readJSON<Article[]>(ARTICLES_PATH, []);
-    const idx = articles.findIndex(
-      (a) => String(a.id) === String(articleId),
-    );
+    const article = await getArticleById(articleId);
 
-    if (idx !== -1) {
-      const article = articles[idx];
+    if (article) {
       article.qaVerdict = verdict;
 
       if (verdict.verdict === 'APPROVE') {
@@ -232,12 +162,10 @@ Approve if average >= ${config.approveThreshold}. Revise if ${config.reviseThres
         );
       }
 
-      articles[idx] = article;
-      await writeJSON(ARTICLES_PATH, articles);
       await saveArticle(article);
     }
 
-    // Persist QA Log row
+    // Persist QA Log row to PostgreSQL
     await saveQALog({
       articleId: String(articleId),
       verdict: verdict.verdict,

@@ -1,21 +1,8 @@
 import { MetadataRoute } from 'next';
-import fs from 'fs/promises';
-import path from 'path';
-import { getArticles } from '@/lib/data-layer';
+import { getArticles, getSitemapQueueUrls } from '@/lib/data-layer';
 import { getCanonicalSiteUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
-
-const queueFilePath = path.join(process.cwd(), 'data', 'sitemap_queue.json');
-
-async function readQueue(): Promise<string[]> {
-  try {
-    const raw = await fs.readFile(queueFilePath, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getCanonicalSiteUrl();
@@ -72,7 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Include queued article URLs from /api/seo/ping (sanitized to baseUrl)
-  const queuedUrls = await readQueue();
+  const queuedUrls = await getSitemapQueueUrls();
   const dynamicQueuedRoutes: MetadataRoute.Sitemap = queuedUrls
     .map((rawUrl) => {
       let cleanPath = rawUrl;

@@ -1,10 +1,11 @@
-import fs from 'fs/promises';
-import path from 'path';
-
-// ─── File Paths ────────────────────────────────────────────────────────────
-export const PIPELINE_LOG_PATH   = path.join(process.cwd(), 'data', 'pipeline_log.json');
-export const PIPELINE_STATE_PATH = path.join(process.cwd(), 'data', 'pipeline_state.json');
-export const ARTICLES_PATH       = path.join(process.cwd(), 'data', 'articles.json');
+import {
+  getArticles,
+  saveArticles,
+  getPipelineState,
+  updatePipelineState,
+  appendPipelineLog,
+  getPipelineLogs,
+} from './data-layer';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 export interface LogEntry {
@@ -62,14 +63,6 @@ export function isAuthorised(req: Request): boolean {
   return auth === `Bearer ${cronSecret}`;
 }
 
-import {
-  getArticles,
-  saveArticles,
-  getPipelineState,
-  updatePipelineState,
-  appendPipelineLog,
-  getPipelineLogs,
-} from './data-layer';
 
 // ─── Pipeline Log ──────────────────────────────────────────────────────────
 export async function readLog(): Promise<LogEntry[]> {

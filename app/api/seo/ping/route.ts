@@ -1,25 +1,8 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
 import { getCanonicalSiteUrl } from '@/lib/site-url';
+import { addSitemapQueueUrl } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic';
-
-const queueFilePath = path.join(process.cwd(), 'data', 'sitemap_queue.json');
-
-async function readQueue(): Promise<string[]> {
-  try {
-    await fs.mkdir(path.dirname(queueFilePath), { recursive: true });
-    const raw = await fs.readFile(queueFilePath, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-async function writeQueue(queue: string[]): Promise<void> {
-  await fs.writeFile(queueFilePath, JSON.stringify(queue, null, 2));
-}
 
 export async function POST(request: Request) {
   const { url } = await request.json();
@@ -87,12 +70,8 @@ export async function POST(request: Request) {
     console.error('[SEO Ping] IndexNow ping failed:', err);
   }
 
-  // 5. Store relative path only into queue
-  const queue = await readQueue();
-  if (!queue.includes(relativePath)) {
-    queue.push(relativePath);
-    await writeQueue(queue);
-  }
+  // 5. Store relative path into database sitemap queue
+  await addSitemapQueueUrl(relativePath);
 
   return NextResponse.json({
     success: true,

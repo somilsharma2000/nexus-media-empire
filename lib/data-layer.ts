@@ -1022,6 +1022,83 @@ export async function resolveAlert(id: string): Promise<boolean> {
   return false;
 }
 
+export async function getContentDoctorLogs(limit = 100): Promise<any[]> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      return await db.contentDoctorLog.findMany({
+        orderBy: { timestamp: 'desc' },
+        take: limit,
+      });
+    } catch (err) {
+      console.error('[DataLayer] DB getContentDoctorLogs error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+  return await safeReadJson<any[]>('content_doctor_log.json', []);
+}
+
+export async function addContentDoctorLog(entry: { articleId?: string | number; action: string; summary?: string; qaScore?: number }): Promise<void> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.contentDoctorLog.create({
+        data: {
+          articleId: entry.articleId ? String(entry.articleId) : null,
+          action: entry.action,
+          summary: entry.summary || null,
+          qaScore: typeof entry.qaScore === 'number' ? entry.qaScore : null,
+        },
+      });
+      return;
+    } catch (err) {
+      console.error('[DataLayer] DB addContentDoctorLog error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  const logs = await safeReadJson<any[]>('content_doctor_log.json', []);
+  logs.unshift({ ...entry, id: `doc-${Date.now()}`, timestamp: new Date().toISOString() });
+  await safeWriteJson('content_doctor_log.json', logs.slice(0, 200));
+}
+
+export async function getSitemapQueueUrls(): Promise<string[]> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      const rows = await db.sitemapQueue.findMany({ select: { url: true } });
+      return rows.map((r: any) => r.url);
+    } catch (err) {
+      console.error('[DataLayer] DB getSitemapQueueUrls error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+  return await safeReadJson<string[]>('sitemap_queue.json', []);
+}
+
+export async function addSitemapQueueUrl(url: string): Promise<void> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.sitemapQueue.upsert({
+        where: { url },
+        update: { status: 'pending' },
+        create: { url, status: 'pending' },
+      });
+      return;
+    } catch (err) {
+      console.error('[DataLayer] DB addSitemapQueueUrl error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  const queue = await safeReadJson<string[]>('sitemap_queue.json', []);
+  if (!queue.includes(url)) {
+    queue.push(url);
+    await safeWriteJson('sitemap_queue.json', queue);
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // 10. DIGITAL PRODUCTS & SPONSORS & CRM & BACKLINKS
 // ─────────────────────────────────────────────────────────────────────────────

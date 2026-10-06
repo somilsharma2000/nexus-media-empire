@@ -1,19 +1,10 @@
 import { NextResponse } from 'next/server';
-import path from 'path';
 import { generateContentWithFailover } from '@/lib/ai-failover';
-import { resilientReadJson, atomicWriteJson } from '@/lib/atomic-storage';
-
 import { checkRateLimit, rateLimitExceededResponse } from '@/lib/rate-limit';
+import { getTokenUsage, updateTokenUsage } from '@/lib/data-layer';
 
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
-
-const TOKEN_USAGE_PATH = path.join(process.cwd(), 'data', 'token_usage.json');
-
-function currentMonth(): string {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-}
 
 export async function POST(req: Request) {
   const rateLimit = checkRateLimit(req, 5, 60000);
@@ -34,12 +25,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Topic is required' }, { status: 400 });
     }
 
-    // Read current token usage
-    const usage = await resilientReadJson(TOKEN_USAGE_PATH, { month: currentMonth(), tokensUsed: 0, estimatedCost: 0 });
+    // Read current token usage from database
+    const usage = await getTokenUsage();
     const maxBudget = parseFloat(process.env.MAX_MONTHLY_AI_BUDGET || '50');
 
     // If over budget and OpenAI only, warn
-    if (usage.month === currentMonth() && usage.estimatedCost >= maxBudget && !process.env.NVIDIA_API_KEY) {
+    if (usage.estimatedCost >= maxBudget && !process.env.NVIDIA_API_KEY) {
       return NextResponse.json(
         {
           error: 'Monthly OpenAI budget cap reached. Upgrade budget or connect NVIDIA API Key.',
@@ -58,13 +49,8 @@ export async function POST(req: Request) {
       format,
     });
 
-    // Update usage tracking safely
-    const updatedUsage = {
-      month: currentMonth(),
-      tokensUsed: (usage.month === currentMonth() ? usage.tokensUsed : 0) + result.tokensUsed,
-      estimatedCost: (usage.month === currentMonth() ? usage.estimatedCost : 0) + result.estimatedCost,
-    };
-    await atomicWriteJson(TOKEN_USAGE_PATH, updatedUsage);
+    // Update usage tracking in database
+    await updateTokenUsage(result.tokensUsed || 0, result.estimatedCost || 0);
 
     return NextResponse.json({
       success: true,

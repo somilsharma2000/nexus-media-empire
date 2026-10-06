@@ -1,27 +1,31 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { getTokenUsage } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic';
 
-const TOKEN_USAGE_PATH = path.join(process.cwd(), 'data', 'token_usage.json');
-
 export async function GET() {
   try {
-    const raw = await fs.readFile(TOKEN_USAGE_PATH, 'utf-8');
-    const usage = JSON.parse(raw) as { month: string; tokensUsed: number; estimatedCost: number };
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    const usage = await getTokenUsage(currentMonth);
 
     const budgetUsd = parseFloat(process.env.MAX_MONTHLY_AI_BUDGET ?? '20');
-    const remaining = Math.max(0, budgetUsd - usage.estimatedCost);
+    const estimatedCost = usage.estimatedCost || 0;
+    const remaining = Math.max(0, budgetUsd - estimatedCost);
 
     return NextResponse.json({
-      ...usage,
+      month: usage.month || currentMonth,
+      tokensUsed: usage.tokensUsed || 0,
+      estimatedCost: parseFloat(estimatedCost.toFixed(6)),
       budgetUsd,
       remainingUsd: parseFloat(remaining.toFixed(6)),
     });
   } catch {
-    return NextResponse.json(
-      { month: '', tokensUsed: 0, estimatedCost: 0, budgetUsd: 20, remainingUsd: 20 },
-    );
+    return NextResponse.json({
+      month: new Date().toISOString().slice(0, 7),
+      tokensUsed: 0,
+      estimatedCost: 0,
+      budgetUsd: 20,
+      remainingUsd: 20,
+    });
   }
 }

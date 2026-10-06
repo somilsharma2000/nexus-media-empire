@@ -1,49 +1,9 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
-import { isAuthorised, readArticles, readLog } from '@/lib/pipeline-helpers';
+import { isAuthorised } from '@/lib/pipeline-helpers';
+import { getArticles, getPipelineLogs, getAlerts, getContentDoctorLogs } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
-
-const ALERTS_PATH       = path.join(process.cwd(), 'data', 'alerts.json');
-const DOCTOR_LOG_PATH   = path.join(process.cwd(), 'data', 'content_doctor_log.json');
-
-interface Alert {
-  id: string;
-  type: string;
-  message: string;
-  severity: string;
-  resolved: boolean;
-  createdAt: string;
-}
-
-interface DoctorLogEntry {
-  timestamp: string;
-  mode: string;
-  articleId: number;
-  title: string;
-  status: string;
-  detail: string;
-}
-
-async function readAlerts(): Promise<Alert[]> {
-  try {
-    const raw = await fs.readFile(ALERTS_PATH, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-async function readDoctorLog(): Promise<DoctorLogEntry[]> {
-  try {
-    const raw = await fs.readFile(DOCTOR_LOG_PATH, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
 
 export async function POST(req: Request) {
   if (!isAuthorised(req)) {
@@ -55,10 +15,10 @@ export async function POST(req: Request) {
   const weekStart = sevenDaysAgo.toISOString();
 
   const [articles, pipelineLog, allAlerts, doctorLog] = await Promise.all([
-    readArticles(),
-    readLog(),
-    readAlerts(),
-    readDoctorLog(),
+    getArticles(),
+    getPipelineLogs(100),
+    getAlerts(100),
+    getContentDoctorLogs(100),
   ]);
 
   // ── Articles published this week ───────────────────────────────────────
@@ -71,7 +31,7 @@ export async function POST(req: Request) {
 
   // ── Articles updated by Content Doctor this week ───────────────────────
   const updatedThisWeek = doctorLog.filter(
-    (e) => e.status === 'refreshed' && new Date(e.timestamp) >= sevenDaysAgo
+    (e) => (e.action === 'refreshed' || e.status === 'refreshed') && new Date(e.timestamp) >= sevenDaysAgo
   );
 
   // ── Alerts from last 7 days ────────────────────────────────────────────
@@ -81,7 +41,7 @@ export async function POST(req: Request) {
 
   // ── Pipeline failures this week ────────────────────────────────────────
   const pipelineFailures = pipelineLog.filter(
-    (e) => e.status === 'failure' && new Date(e.timestamp) >= sevenDaysAgo
+    (e) => (e.status === 'failure' || e.status === 'failed') && new Date(e.timestamp) >= sevenDaysAgo
   );
 
   const report = {
@@ -94,7 +54,7 @@ export async function POST(req: Request) {
     },
     contentDoctorUpdates: {
       count: updatedThisWeek.length,
-      articles: updatedThisWeek.map((e) => ({ title: e.title, changesSummary: e.detail })),
+      articles: updatedThisWeek.map((e) => ({ title: e.title || `Article #${e.articleId}`, changesSummary: e.summary || e.detail })),
     },
     alerts: {
       count: recentAlerts.length,
@@ -110,7 +70,7 @@ export async function POST(req: Request) {
       count: pipelineFailures.length,
       items: pipelineFailures.map((e) => ({
         step: e.step,
-        detail: e.detail,
+        detail: e.detail || e.error,
         timestamp: e.timestamp,
       })),
     },

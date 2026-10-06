@@ -1,6 +1,4 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
 import OpenAI from 'openai';
 import {
   isAuthorised,
@@ -10,35 +8,10 @@ import {
   qaReview,
   Article,
 } from '@/lib/pipeline-helpers';
+import { getContentDoctorLogs, addContentDoctorLog } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 120;
-
-const DOCTOR_LOG_PATH = path.join(process.cwd(), 'data', 'content_doctor_log.json');
-
-interface DoctorLogEntry {
-  timestamp: string;
-  mode: string;
-  articleId: number;
-  title: string;
-  status: string;
-  detail: string;
-}
-
-async function readDoctorLog(): Promise<DoctorLogEntry[]> {
-  try {
-    const raw = await fs.readFile(DOCTOR_LOG_PATH, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-async function appendDoctorLog(entry: DoctorLogEntry): Promise<void> {
-  const existing = await readDoctorLog();
-  existing.push(entry);
-  await fs.writeFile(DOCTOR_LOG_PATH, JSON.stringify(existing.slice(-200), null, 2));
-}
 
 export async function POST(req: Request) {
   if (!isAuthorised(req)) {
@@ -60,9 +33,18 @@ export async function POST(req: Request) {
 
   // ── MODE: REFRESH ──────────────────────────────────────────────────────────
   if (mode === 'refresh') {
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json({ error: 'OPENAI_API_KEY not configured' }, { status: 503 });
+    const apiKey = process.env.NVIDIA_API_KEY || process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json({ error: 'AI API key not configured' }, { status: 503 });
     }
+
+    const isNvidia = !!process.env.NVIDIA_API_KEY;
+    const baseURL = isNvidia 
+      ? (process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1')
+      : (process.env.OPENAI_BASE_URL || undefined);
+    const selectedModel = isNvidia
+      ? (process.env.NVIDIA_MODEL || 'meta/llama-3.3-70b-instruct')
+      : (process.env.OPENAI_MODEL || 'gpt-4o-mini');
 
     const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
 
@@ -80,13 +62,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ mode, refreshed: 0, message: 'No articles eligible for refresh' });
     }
 
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const openai = new OpenAI({ apiKey, baseURL });
     const results: { title: string; status: string; changesSummary?: string }[] = [];
 
     for (const article of toRefresh) {
       try {
         const completion = await openai.chat.completions.create({
-          model: 'gpt-4o-mini',
+          model: selectedModel,
           temperature: 0.7,
           max_tokens: 3000,
           messages: [
@@ -111,19 +93,16 @@ export async function POST(req: Request) {
         const qa = qaReview(updatedContent);
 
         if (!qa.approved) {
-          await appendDoctorLog({
-            timestamp: now.toISOString(),
-            mode: 'refresh',
+          await addContentDoctorLog({
             articleId: article.id,
-            title: article.title,
-            status: 'qa_rejected',
-            detail: qa.reason,
+            action: 'qa_rejected',
+            summary: qa.reason,
           });
           results.push({ title: article.title, status: 'qa_rejected' });
           continue;
         }
 
-        // Apply update to article in articles array
+        // Apply update to article in database
         const idx = articles.findIndex((a) => a.id === article.id);
         if (idx !== -1) {
           const todayStr = now.toISOString().split('T')[0];
@@ -132,25 +111,19 @@ export async function POST(req: Request) {
         }
 
         await log('content_doctor', 'success', `Refreshed article: "${article.title}"`);
-        await appendDoctorLog({
-          timestamp: now.toISOString(),
-          mode: 'refresh',
+        await addContentDoctorLog({
           articleId: article.id,
-          title: article.title,
-          status: 'refreshed',
-          detail: changesSummary,
+          action: 'refreshed',
+          summary: changesSummary,
         });
         results.push({ title: article.title, status: 'refreshed', changesSummary });
       } catch (err: any) {
         const msg = `Refresh failed for "${article.title}": ${err.message}`;
         await log('content_doctor', 'failure', msg);
-        await appendDoctorLog({
-          timestamp: now.toISOString(),
-          mode: 'refresh',
+        await addContentDoctorLog({
           articleId: article.id,
-          title: article.title,
-          status: 'error',
-          detail: err.message,
+          action: 'error',
+          summary: err.message,
         });
         results.push({ title: article.title, status: 'error' });
       }
@@ -164,24 +137,11 @@ export async function POST(req: Request) {
   if (mode === 'prune') {
     const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
 
-    const toPrune = articles.filter(
-      (a) =>
-        a.status === 'published' &&
-        a.publishedAt &&
-        new Date(a.publishedAt) < ninetyDaysAgo &&
-        (a.viewCount === 0 || a.viewCount === undefined) === false
-          ? a.viewCount === 0
-          : a.viewCount === undefined
-          ? false // skip articles without viewCount field
-          : a.viewCount === 0
-    );
-
-    // Simplified prune filter
     const pruneEligible = articles.filter((a) => {
       if (a.status !== 'published') return false;
       if (!a.publishedAt) return false;
       if (new Date(a.publishedAt) >= ninetyDaysAgo) return false;
-      if (!('viewCount' in a)) return false; // skip if field missing
+      if (!('viewCount' in a)) return false;
       if (a.viewCount !== 0) return false;
       return true;
     });
@@ -198,13 +158,10 @@ export async function POST(req: Request) {
     await writeArticles(articles);
 
     for (const a of flagged) {
-      await appendDoctorLog({
-        timestamp: now.toISOString(),
-        mode: 'prune',
+      await addContentDoctorLog({
         articleId: a.id,
-        title: a.title,
-        status: 'flagged_for_pruning',
-        detail: 'Published > 90 days ago with 0 views',
+        action: 'flagged_for_pruning',
+        summary: 'Published > 90 days ago with 0 views',
       });
     }
 

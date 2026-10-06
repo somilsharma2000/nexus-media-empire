@@ -1,78 +1,17 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
 import { sendTelegramAlert } from '@/lib/telegram';
 import { getCanonicalSiteUrl } from '@/lib/site-url';
+import { addAlert } from '@/lib/data-layer';
+import { getPrisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
-const alertsFilePath = path.join(process.cwd(), 'data', 'alerts.json');
-
-interface Alert {
-  id: string;
-  type: string;
-  message: string;
-  severity: string;
-  resolved: boolean;
-  createdAt: string;
-}
-
-async function readAlerts(): Promise<Alert[]> {
-  try {
-    await fs.mkdir(path.dirname(alertsFilePath), { recursive: true });
-    const data = await fs.readFile(alertsFilePath, 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
-}
-
-async function writeAlerts(alerts: Alert[]): Promise<void> {
-  await fs.writeFile(alertsFilePath, JSON.stringify(alerts, null, 2));
-}
-
-async function createAlert(alert: Omit<Alert, 'id' | 'resolved' | 'createdAt'>): Promise<Alert> {
-  const newAlert: Alert = {
-    id: `alert-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    resolved: false,
-    createdAt: new Date().toISOString(),
-    ...alert,
-  };
-
-  const webhookUrl = process.env.ALERT_WEBHOOK_URL;
-  if (webhookUrl) {
-    try {
-      await fetch(webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newAlert),
-      });
-    } catch (err) {
-      console.error('[Monitor] Failed to send webhook:', err);
-    }
-  } else {
-    console.log('[Monitor Alert]', newAlert);
-  }
-
-  // Send Telegram alert for critical severity issues
-  if (newAlert.severity === 'critical') {
-    await sendTelegramAlert(
-      `🚨 <b>CRITICAL ALERT</b>\n` +
-      `${newAlert.message}\n` +
-      `Type: ${newAlert.type}\n` +
-      `Time: ${new Date(newAlert.createdAt).toUTCString()}`
-    );
-  }
-
-  return newAlert;
-}
-
-
 export async function POST(request: Request) {
   const authHeader = request.headers.get('authorization');
+  const isVercelCron = Boolean(request.headers.get('x-vercel-cron'));
   const expectedToken = `Bearer ${process.env.CRON_SECRET || 'dev-secret'}`;
 
-  if (authHeader !== expectedToken) {
+  if (!isVercelCron && authHeader !== expectedToken) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -85,7 +24,28 @@ export async function POST(request: Request) {
     { url: `${base}/ads.txt`,      label: 'ads.txt not accessible',   type: 'ads_txt_fail', severity: 'warning'  },
   ];
 
-  const newAlerts: Alert[] = [];
+  const newAlerts: any[] = [];
+
+  // Database connectivity check
+  const db = getPrisma();
+  if (db) {
+    try {
+      await db.$queryRaw`SELECT 1`;
+    } catch (dbErr: any) {
+      const dbAlert = await addAlert({
+        type: 'db_fail',
+        message: `Database health check failed: ${dbErr.message}`,
+        severity: 'critical',
+      });
+      newAlerts.push(dbAlert);
+      await sendTelegramAlert(
+        `🚨 <b>CRITICAL DATABASE FAILURE</b>\n` +
+        `Unable to reach PostgreSQL database.\n` +
+        `Error: ${dbErr.message}\n` +
+        `Time: ${new Date().toUTCString()}`
+      );
+    }
+  }
 
   for (const check of checks) {
     try {
@@ -95,34 +55,35 @@ export async function POST(request: Request) {
       clearTimeout(timeout);
 
       if (check.type === 'article_zero') {
-        // Special check — parse body
         if (res.ok) {
           const json = await res.json();
           if (Array.isArray(json) && json.length === 0) {
-            newAlerts.push(await createAlert({ type: check.type, message: check.label, severity: check.severity }));
+            const created = await addAlert({ type: check.type, message: check.label, severity: check.severity });
+            newAlerts.push(created);
           }
         } else {
-          newAlerts.push(await createAlert({ type: 'site_down', message: 'Articles API is down', severity: 'critical' }));
+          const created = await addAlert({ type: 'site_down', message: 'Articles API is down', severity: 'critical' });
+          newAlerts.push(created);
         }
       } else {
         if (res.status !== 200) {
-          newAlerts.push(await createAlert({ type: check.type, message: check.label, severity: check.severity }));
+          const created = await addAlert({ type: check.type, message: check.label, severity: check.severity });
+          newAlerts.push(created);
         }
       }
     } catch {
-      newAlerts.push(await createAlert({ type: check.type, message: `${check.label} (connection refused)`, severity: check.severity }));
+      const created = await addAlert({ type: check.type, message: `${check.label} (connection refused)`, severity: check.severity });
+      newAlerts.push(created);
     }
   }
 
-  // Persist new alerts
-  if (newAlerts.length > 0) {
-    const existing = await readAlerts();
-    await writeAlerts([...newAlerts, ...existing]);
-  }
-
   return NextResponse.json({
-    checked: checks.length,
+    checked: checks.length + 1,
     alerts: newAlerts.length,
     timestamp: new Date().toISOString(),
   });
+}
+
+export async function GET(request: Request) {
+  return POST(request);
 }
