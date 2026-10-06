@@ -1,0 +1,47 @@
+[
+  {
+    "id": "meta_auto_001",
+    "name": "AI Agent Architecture & Prompts Deck",
+    "niche": "news",
+    "triggerKeyword": "AGENT",
+    "postType": "instagram_carousel",
+    "targetUrl": "http://localhost:3002/news/quantum-computing-reaches-1000-qubit-milestone",
+    "productId": "dp-3",
+    "dmsSent": 184,
+    "conversions": 38,
+    "isActive": true,
+    "requireFollow": true,
+    "dmTemplate": "Hey {username}! ⚡ Here is your VIP access link to the full AI Agent Architecture & Prompt Swipe File: {url}\n\n🎁 Use code VIP20 at checkout for an instant 20% discount.\n\nMake sure to follow @TheTrendMatrix for daily 2026 intelligence drops!",
+    "publicCommentReply": "Just sent the VIP link to your DMs! 🚀 Check your message requests if you don't see it."
+  },
+  {
+    "id": "meta_auto_002",
+    "name": "Crypto Staking & Whale Tax Shield",
+    "niche": "crypto",
+    "triggerKeyword": "ALPHA",
+    "postType": "instagram_reel",
+    "targetUrl": "http://localhost:3002/crypto/bitcoin-halving-cycle-institutional-inflows",
+    "productId": "dp-1",
+    "dmsSent": 249,
+    "conversions": 61,
+    "isActive": true,
+    "requireFollow": true,
+    "dmTemplate": "Whale Alpha unlocked for @{username}! 🐋 Here is the institutional yield and tax shield model: {url}\n\nMake sure you're following @CryptoDailyOfficial so our signals always land in your main inbox!",
+    "publicCommentReply": "Sent to your DMs! 🐋 Make sure you follow to keep your signals open."
+  },
+  {
+    "id": "meta_auto_003",
+    "name": "Wall St Dividend Compounding OS",
+    "niche": "finance",
+    "triggerKeyword": "WEALTH",
+    "postType": "facebook_authority_post",
+    "targetUrl": "http://localhost:3002/finance/fed-interest-rate-pivot-2026",
+    "productId": "dp-2",
+    "dmsSent": 132,
+    "conversions": 29,
+    "isActive": true,
+    "requireFollow": true,
+    "dmTemplate": "Hello {username}, here is your private link to the Wall St Compound Wealth & DCF Valuation Model: {url}\n\nFollow @WallStInsider for weekly macroeconomic tear-downs.",
+    "publicCommentReply": "Check your DMs! Sent the full valuation spreadsheet link 📊"
+  }
+]

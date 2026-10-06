@@ -8,6 +8,16 @@ import {
   Database, RefreshCw, Power, Sliders, Brain, Code2, Key, PieChart, BarChart, Layers,
   Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock, Palette, Package, Flame, Building, CreditCard
 } from "lucide-react";
+
+function InstagramIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+    </svg>
+  );
+}
 import { motion, AnimatePresence } from "framer-motion";
 import RevenueDashboard from "../components/RevenueDashboard";
 import AdSlotManager from "../components/AdSlotManager";
@@ -36,6 +46,7 @@ import AdminSecurityGate from "../components/AdminSecurityGate";
 import MonetizationBlueprint from "../components/MonetizationBlueprint";
 import RazorpayGatewayHub from "../components/RazorpayGatewayHub";
 import CommunicationsStudio from "../components/CommunicationsStudio";
+import MetaAgencyStudio from "../components/MetaAgencyStudio";
 
 
 const TRENDS = [
@@ -242,6 +253,7 @@ export default function NexusDashboard() {
       {/* GROWTH & SOCIAL */}
       <div className="space-y-1">
         <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Growth & Social</p>
+        <NavItem icon={<InstagramIcon className="text-pink-400" />} label="Meta Agency Studio" active={currentView === 'meta'} onClick={() => { setCurrentView('meta'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
         <NavItem icon={<Mail className="text-pink-400" />} label="Templates & Popups" active={currentView === 'templates'} onClick={() => { setCurrentView('templates'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
         <NavItem icon={<Share2 className="text-cyan-400" />} label="Omni-Brand Socials" active={currentView === 'omnisocial'} onClick={() => { setCurrentView('omnisocial'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
         <NavItem icon={<Flame className="text-amber-400" />} label="Viral Hook Studio" active={currentView === 'hooks'} onClick={() => { setCurrentView('hooks'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
@@ -648,6 +660,13 @@ export default function NexusDashboard() {
                 <p className="text-gray-400 text-sm mt-1">Real-time earnings telemetry across AdSense, direct advertisers, and affiliate conversions.</p>
               </header>
               <RevenueDashboard />
+            </motion.div>
+          )}
+
+          {/* VIEW: META AGENCY STUDIO */}
+          {currentView === 'meta' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <MetaAgencyStudio />
             </motion.div>
           )}
 
