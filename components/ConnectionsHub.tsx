@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { 
   Zap, Globe, Shield, Bot, Database, Radio, Share2, RefreshCw, 
-  CheckCircle, AlertCircle, ExternalLink, Eye, EyeOff, Save, Key, CreditCard, Sparkles 
+  CheckCircle, AlertCircle, ExternalLink, Eye, EyeOff, Save, Key, CreditCard, Sparkles, BarChart 
 } from "lucide-react";
 
 interface ConnectionService {
@@ -78,6 +78,28 @@ const SERVICES: ConnectionService[] = [
     description: "Cloud relational database for persistent multi-tenant articles, logs, and revenue analytics.",
     unlockedFeatures: ["Multi-region replication", "Persistent article database", "Direct SQL analytics"],
     docsUrl: "https://supabase.com",
+  },
+  {
+    id: "gsc",
+    name: "Google Search Console",
+    category: "Search & SEO",
+    icon: <Globe className="w-5 h-5 text-blue-400" />,
+    envKey: "GOOGLE_SITE_VERIFICATION",
+    placeholder: "google-site-verification token or verification string",
+    description: "Verifies domain ownership with Google to unlock keyword impressions, rankings, and crawl error telemetry.",
+    unlockedFeatures: ["Keyword rank tracking", "Direct sitemap.xml indexing", "Googlebot crawl health"],
+    docsUrl: "https://search.google.com/search-console",
+  },
+  {
+    id: "ga4",
+    name: "Google Analytics 4 (GA4)",
+    category: "Search & SEO",
+    icon: <BarChart className="w-5 h-5 text-amber-400" />,
+    envKey: "NEXT_PUBLIC_GA_MEASUREMENT_ID",
+    placeholder: "G-XXXXXXXXXX",
+    description: "Official Google analytics stream to prove Tier 1 audience demographics for Mediavine/Raptive approval.",
+    unlockedFeatures: ["Audience geographic breakdown", "Real-time active visitors", "Tier 1 proof reports"],
+    docsUrl: "https://analytics.google.com",
   },
   {
     id: "indexnow",

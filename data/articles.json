@@ -20,7 +20,7 @@
     "publishAt": "2026-09-29T08:02:23.685Z",
     "createdAt": "2026-10-03T08:02:23.686Z",
     "updatedAt": "2026-10-06T10:03:26.438Z",
-    "viewCount": 158,
+    "viewCount": 0,
     "qaStatus": "approved",
     "qaVerdict": {
       "scores": {
@@ -65,7 +65,7 @@
     "publishAt": "2026-09-30T08:02:23.686Z",
     "createdAt": "2026-10-03T08:02:23.686Z",
     "updatedAt": "2026-10-06T10:03:26.447Z",
-    "viewCount": 430,
+    "viewCount": 0,
     "qaStatus": "approved",
     "qaVerdict": {
       "scores": {
@@ -109,7 +109,7 @@
     "publishAt": "2026-10-02T08:02:23.686Z",
     "createdAt": "2026-10-03T08:02:23.686Z",
     "updatedAt": "2026-10-06T10:03:26.447Z",
-    "viewCount": 440,
+    "viewCount": 0,
     "qaStatus": "approved",
     "qaVerdict": {
       "scores": {
@@ -153,7 +153,7 @@
     "publishAt": "2026-10-03T08:02:23.686Z",
     "createdAt": "2026-10-03T08:02:23.686Z",
     "updatedAt": "2026-10-06T10:03:26.447Z",
-    "viewCount": 149,
+    "viewCount": 0,
     "qaStatus": "approved",
     "qaVerdict": {
       "scores": {
@@ -242,7 +242,7 @@
     "publishAt": "2026-10-06T08:02:23.686Z",
     "createdAt": "2026-10-03T08:02:23.686Z",
     "updatedAt": "2026-10-06T10:03:26.447Z",
-    "viewCount": 1,
+    "viewCount": 0,
     "qaStatus": "approved",
     "qaVerdict": {
       "scores": {
@@ -771,7 +771,7 @@
     "publishAt": "2026-10-24T08:02:23.686Z",
     "createdAt": "2026-10-03T08:02:23.686Z",
     "updatedAt": "2026-10-06T10:03:26.448Z",
-    "viewCount": 4,
+    "viewCount": 0,
     "qaStatus": "approved",
     "qaVerdict": {
       "scores": {
@@ -1576,7 +1576,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 84,
+    "viewCount": 0,
     "publishAt": "2026-10-10T07:28:09.537Z",
     "createdAt": "2026-10-04T07:28:09.538Z",
     "publishedAt": null,
@@ -1619,7 +1619,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 40,
+    "viewCount": 0,
     "publishAt": "2026-10-11T07:28:09.538Z",
     "createdAt": "2026-10-04T07:28:09.538Z",
     "publishedAt": null,
@@ -1662,7 +1662,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 28,
+    "viewCount": 0,
     "publishAt": "2026-10-12T07:28:09.538Z",
     "createdAt": "2026-10-04T07:28:09.538Z",
     "publishedAt": null,
@@ -1705,7 +1705,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 16,
+    "viewCount": 0,
     "publishAt": "2026-10-13T07:28:09.538Z",
     "createdAt": "2026-10-04T07:28:09.538Z",
     "publishedAt": null,
@@ -1748,7 +1748,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 91,
+    "viewCount": 0,
     "publishAt": "2026-10-14T07:28:09.538Z",
     "createdAt": "2026-10-04T07:28:09.538Z",
     "publishedAt": null,
@@ -1791,7 +1791,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 32,
+    "viewCount": 0,
     "publishAt": "2026-10-15T07:28:09.538Z",
     "createdAt": "2026-10-04T07:28:09.538Z",
     "publishedAt": null,
@@ -1834,7 +1834,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 67,
+    "viewCount": 0,
     "publishAt": "2026-10-16T07:28:09.538Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -1877,7 +1877,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 18,
+    "viewCount": 0,
     "publishAt": "2026-10-17T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -1920,7 +1920,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 77,
+    "viewCount": 0,
     "publishAt": "2026-10-18T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -1963,7 +1963,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 25,
+    "viewCount": 0,
     "publishAt": "2026-10-19T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2006,7 +2006,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 78,
+    "viewCount": 0,
     "publishAt": "2026-10-20T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2049,7 +2049,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 85,
+    "viewCount": 0,
     "publishAt": "2026-10-21T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2092,7 +2092,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 74,
+    "viewCount": 0,
     "publishAt": "2026-10-22T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2135,7 +2135,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 50,
+    "viewCount": 0,
     "publishAt": "2026-10-23T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2178,7 +2178,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 40,
+    "viewCount": 0,
     "publishAt": "2026-10-24T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2221,7 +2221,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 86,
+    "viewCount": 0,
     "publishAt": "2026-10-25T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2264,7 +2264,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 15,
+    "viewCount": 0,
     "publishAt": "2026-10-26T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2307,7 +2307,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 66,
+    "viewCount": 0,
     "publishAt": "2026-10-27T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2350,7 +2350,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 27,
+    "viewCount": 0,
     "publishAt": "2026-10-28T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2393,7 +2393,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 72,
+    "viewCount": 0,
     "publishAt": "2026-10-29T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2436,7 +2436,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 54,
+    "viewCount": 0,
     "publishAt": "2026-10-30T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2479,7 +2479,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 43,
+    "viewCount": 0,
     "publishAt": "2026-10-31T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2522,7 +2522,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 22,
+    "viewCount": 0,
     "publishAt": "2026-11-01T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2565,7 +2565,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 46,
+    "viewCount": 0,
     "publishAt": "2026-11-02T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2608,7 +2608,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 48,
+    "viewCount": 0,
     "publishAt": "2026-11-03T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2651,7 +2651,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 24,
+    "viewCount": 0,
     "publishAt": "2026-11-04T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2694,7 +2694,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 21,
+    "viewCount": 0,
     "publishAt": "2026-11-05T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2737,7 +2737,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 40,
+    "viewCount": 0,
     "publishAt": "2026-11-06T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2780,7 +2780,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 22,
+    "viewCount": 0,
     "publishAt": "2026-11-07T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2823,7 +2823,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 33,
+    "viewCount": 0,
     "publishAt": "2026-11-08T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2866,7 +2866,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 79,
+    "viewCount": 0,
     "publishAt": "2026-11-09T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2909,7 +2909,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 24,
+    "viewCount": 0,
     "publishAt": "2026-11-10T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2952,7 +2952,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 32,
+    "viewCount": 0,
     "publishAt": "2026-11-11T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -2995,7 +2995,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 52,
+    "viewCount": 0,
     "publishAt": "2026-11-12T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3038,7 +3038,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 14,
+    "viewCount": 0,
     "publishAt": "2026-11-13T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3081,7 +3081,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 24,
+    "viewCount": 0,
     "publishAt": "2026-11-14T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3124,7 +3124,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 73,
+    "viewCount": 0,
     "publishAt": "2026-11-15T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3167,7 +3167,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 57,
+    "viewCount": 0,
     "publishAt": "2026-11-16T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3210,7 +3210,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 19,
+    "viewCount": 0,
     "publishAt": "2026-11-17T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3253,7 +3253,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 12,
+    "viewCount": 0,
     "publishAt": "2026-11-18T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3296,7 +3296,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 17,
+    "viewCount": 0,
     "publishAt": "2026-11-19T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3339,7 +3339,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 16,
+    "viewCount": 0,
     "publishAt": "2026-11-20T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3382,7 +3382,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 77,
+    "viewCount": 0,
     "publishAt": "2026-11-21T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3425,7 +3425,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 66,
+    "viewCount": 0,
     "publishAt": "2026-11-22T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3468,7 +3468,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 43,
+    "viewCount": 0,
     "publishAt": "2026-11-23T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3511,7 +3511,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 24,
+    "viewCount": 0,
     "publishAt": "2026-11-24T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3554,7 +3554,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 15,
+    "viewCount": 0,
     "publishAt": "2026-11-25T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3597,7 +3597,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 44,
+    "viewCount": 0,
     "publishAt": "2026-11-26T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3640,7 +3640,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 89,
+    "viewCount": 0,
     "publishAt": "2026-11-27T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3683,7 +3683,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 89,
+    "viewCount": 0,
     "publishAt": "2026-11-28T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3726,7 +3726,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 33,
+    "viewCount": 0,
     "publishAt": "2026-11-29T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3769,7 +3769,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 48,
+    "viewCount": 0,
     "publishAt": "2026-11-30T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3812,7 +3812,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 76,
+    "viewCount": 0,
     "publishAt": "2026-12-01T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3855,7 +3855,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 80,
+    "viewCount": 0,
     "publishAt": "2026-12-02T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
@@ -3898,7 +3898,7 @@
       "verdict": "APPROVE",
       "revisionInstructions": ""
     },
-    "viewCount": 30,
+    "viewCount": 0,
     "publishAt": "2026-12-03T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
     "publishedAt": null,
