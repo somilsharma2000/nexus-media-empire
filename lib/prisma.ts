@@ -4,13 +4,7 @@ const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefi
 
 export function getPrisma(): PrismaClient | null {
   if (typeof window !== 'undefined') return null;
-
-  if (!process.env.DATABASE_URL) {
-    if (process.env.VERCEL === '1') {
-      throw new Error('[Prisma] Missing DATABASE_URL environment variable in production');
-    }
-    return null;
-  }
+  if (!process.env.DATABASE_URL) return null;
 
   if (!globalForPrisma.prisma) {
     try {
@@ -18,10 +12,7 @@ export function getPrisma(): PrismaClient | null {
         log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
       });
     } catch (err) {
-      console.error('[Prisma] Fatal client initialization error:', err);
-      if (process.env.VERCEL === '1') {
-        throw err;
-      }
+      console.error('[Prisma] Client initialization error:', err);
       return null;
     }
   }

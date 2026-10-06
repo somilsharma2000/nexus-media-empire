@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getArticles, getArticleById, saveArticle, saveArticles } from '@/lib/data-layer';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   const article = await getArticleById(params.id);
   if (!article) return NextResponse.json({ error: 'Article not found' }, { status: 404 });
