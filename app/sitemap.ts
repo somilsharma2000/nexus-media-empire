@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import fs from 'fs/promises';
 import path from 'path';
 import { getArticles } from '@/lib/data-layer';
+import { getCanonicalSiteUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,7 +18,7 @@ async function readQueue(): Promise<string[]> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://media-empire-beta.vercel.app';
+  const baseUrl = getCanonicalSiteUrl();
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -119,7 +120,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   for (const route of allRoutes) {
     // Extra safety guarantee: never allow localhost in production sitemap
-    const finalUrl = route.url.replace(/http:\/\/localhost:\d+/, baseUrl);
+    const cleanPath = route.url.replace(/^https?:\/\/[^/]+/, '');
+    const finalUrl = `${baseUrl}${cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`}`;
     if (!uniqueUrls.has(finalUrl)) {
       uniqueUrls.add(finalUrl);
       deduplicatedRoutes.push({

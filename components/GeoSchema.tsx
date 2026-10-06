@@ -84,13 +84,13 @@ export default function GeoSchema({
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": process.env.NEXT_PUBLIC_SITE_URL || "https://media-empire-beta.vercel.app"
+            "item": getCanonicalSiteUrl()
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": niche.charAt(0).toUpperCase() + niche.slice(1),
-            "item": `${process.env.NEXT_PUBLIC_SITE_URL || "https://media-empire-beta.vercel.app"}/${niche}`
+            "item": `${getCanonicalSiteUrl()}/${niche}`
           },
           {
             "@type": "ListItem",

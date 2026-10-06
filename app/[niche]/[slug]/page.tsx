@@ -23,6 +23,7 @@ import ViewTracker from "@/components/ViewTracker";
 import ArticleInteractiveReader from "@/components/ArticleInteractiveReader";
 import { DigitalProduct } from "@/components/InstantProductCheckoutModal";
 import { getArticles } from "@/lib/data-layer";
+import { getCanonicalSiteUrl } from "@/lib/site-url";
 
 interface SingleArticleProps {
   params: {
@@ -79,7 +80,7 @@ const nicheProducts: Record<string, DigitalProduct> = {
 export async function generateMetadata({ params }: SingleArticleProps): Promise<Metadata> {
   const articles = await getArticles();
   const article = articles.find((a: any) => a.slug === params.slug || String(a.id) === params.slug);
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://media-empire-beta.vercel.app";
+  const baseUrl = getCanonicalSiteUrl();
 
   if (!article) {
     return {
@@ -129,7 +130,7 @@ export default async function SingleArticlePage({ params }: SingleArticleProps) 
     .slice(0, 3);
 
   const publishDate = article.publishedAt || article.publishAt || new Date().toISOString();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://media-empire-beta.vercel.app";
+  const baseUrl = getCanonicalSiteUrl();
   const currentUrl = `${baseUrl}/${params.niche}/${article.slug || article.id}`;
   const currentProduct = nicheProducts[params.niche] || nicheProducts.news;
 
