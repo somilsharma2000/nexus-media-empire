@@ -1,12 +1,8 @@
 import { NextResponse } from 'next/server';
-import { resilientReadJson } from '@/lib/atomic-storage';
+import { getArticles, getArticleById } from '@/lib/data-layer';
 import { getCanonicalSiteUrl } from '@/lib/site-url';
-import path from 'path';
 
 export const dynamic = 'force-dynamic';
-
-const ARTICLES_PATH = path.join(process.cwd(), 'data', 'articles.json');
-const PRODUCTS_PATH = path.join(process.cwd(), 'data', 'digital_products.json');
 
 export type CampaignGoal = 
   | 'article_research'   // Pure Knowledge, Educational Deep-Dive, Thought Leadership
@@ -34,8 +30,7 @@ export async function POST(req: Request) {
     let targetSlug = articleId || 'quantum-computing-reaches-1000-qubit-milestone';
 
     if (articleId) {
-      const articles = await resilientReadJson<any[]>(ARTICLES_PATH, []);
-      const found = articles.find((a) => String(a.id) === String(articleId) || a.slug === articleId);
+      const found = await getArticleById(articleId);
       if (found) {
         title = found.title;
         excerpt = found.excerpt || found.content?.slice(0, 140) || excerpt;

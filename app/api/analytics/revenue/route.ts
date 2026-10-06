@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+import {
+  getArticles,
+  getAffiliateClicksToday,
+  getSponsorshipInquiries,
+  getPaymentTransactions,
+  getNewsletterSubscribers,
+} from "@/lib/data-layer";
+
+export const dynamic = 'force-dynamic';
 
 interface Article {
   id: string | number;
@@ -10,76 +17,17 @@ interface Article {
   createdAt?: string;
 }
 
-interface ClickLogEntry {
-  slug: string;
-  timestamp: string;
-  niche?: string;
-}
-
-interface SponsorInquiry {
-  id: string;
-  tier?: string;
-  budget?: string;
-  status?: string;
-  createdAt?: string;
-}
-
-interface TransactionEntry {
-  id: string;
-  amount: number;
-  currency: string;
-  status: string;
-  createdAt: string;
-}
-
 export async function GET() {
   try {
-    const dataDir = path.join(process.cwd(), "data");
+    const [articles, clickCounts, sponsors, transactions, subscribers] = await Promise.all([
+      getArticles() as Promise<Article[]>,
+      getAffiliateClicksToday(),
+      getSponsorshipInquiries(),
+      getPaymentTransactions(),
+      getNewsletterSubscribers(),
+    ]);
 
-    // 1. Read real articles data
-    let articles: Article[] = [];
-    try {
-      const raw = await fs.readFile(path.join(dataDir, "articles.json"), "utf-8");
-      articles = JSON.parse(raw);
-    } catch {
-      articles = [];
-    }
-
-    // 2. Read real affiliate click logs
-    let clicks: ClickLogEntry[] = [];
-    try {
-      const raw = await fs.readFile(path.join(dataDir, "click_log.json"), "utf-8");
-      clicks = JSON.parse(raw);
-    } catch {
-      clicks = [];
-    }
-
-    // 3. Read real sponsorship inquiries
-    let sponsors: SponsorInquiry[] = [];
-    try {
-      const raw = await fs.readFile(path.join(dataDir, "sponsorship_inquiries.json"), "utf-8");
-      sponsors = JSON.parse(raw);
-    } catch {
-      sponsors = [];
-    }
-
-    // 4. Read real transactions
-    let transactions: TransactionEntry[] = [];
-    try {
-      const raw = await fs.readFile(path.join(dataDir, "transactions.json"), "utf-8");
-      transactions = JSON.parse(raw);
-    } catch {
-      transactions = [];
-    }
-
-    // Read real subscribers
-    let subscribers: any[] = [];
-    try {
-      const raw = await fs.readFile(path.join(dataDir, "subscribers.json"), "utf-8");
-      subscribers = JSON.parse(raw);
-    } catch {
-      subscribers = [];
-    }
+    const totalAffiliateClicks = Object.values(clickCounts).reduce((a: number, b: number) => a + b, 0);
 
     // Aggregate Views per Niche
     let newsViews = 0;
@@ -101,7 +49,6 @@ export async function GET() {
     const estimatedAdRevenue = (totalPageviews / 1000) * baseRpm;
 
     // Real Affiliate Click earnings (Estimated $1.85 EPC per click)
-    const totalAffiliateClicks = clicks.length;
     const affiliateEarnings = totalAffiliateClicks * 1.85;
 
     // Real confirmed sponsor earnings

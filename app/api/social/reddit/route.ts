@@ -1,14 +1,11 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { appendSocialLog } from '@/lib/data-layer';
 
-const LOG_PATH = path.join(process.cwd(), 'data', 'social_log.json');
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
     const { title, url, niche } = await req.json();
-    const rawLog = await fs.readFile(LOG_PATH, 'utf-8').catch(() => '[]');
-    const logs = JSON.parse(rawLog);
 
     const subreddits: Record<string, string> = {
       news: 'r/technology',
@@ -29,11 +26,11 @@ export async function POST(req: Request) {
       url: `https://reddit.com/${targetSub}`,
     };
 
-    logs.push(logEntry);
-    await fs.writeFile(LOG_PATH, JSON.stringify(logs, null, 2));
+    await appendSocialLog(logEntry);
 
     return NextResponse.json({ success: true, mode: configured ? 'live' : 'simulator', redditUrl: logEntry.url });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to distribute to Reddit' }, { status: 500 });
   }
 }
+

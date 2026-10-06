@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 
-const SETTINGS_PATH = path.join(process.cwd(), 'data', 'settings.json');
 const ENV_PATH = path.join(process.cwd(), '.env');
 
 import { verifyAdminAuth, unauthorizedResponse } from '@/lib/auth-guard';

@@ -1,29 +1,11 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { getCrmInvoices, saveCrmInvoice } from "@/lib/data-layer";
 
-const INVOICES_PATH = path.join(process.cwd(), "data", "invoices.json");
-
-function getInvoices() {
-  try {
-    if (!fs.existsSync(INVOICES_PATH)) return [];
-    return JSON.parse(fs.readFileSync(INVOICES_PATH, "utf-8"));
-  } catch {
-    return [];
-  }
-}
-
-function saveInvoices(data: any[]) {
-  try {
-    fs.writeFileSync(INVOICES_PATH, JSON.stringify(data, null, 2));
-  } catch (err) {
-    console.error("[INVOICES SAVE ERROR]", err);
-  }
-}
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const invoices = getInvoices();
+    const invoices = await getCrmInvoices();
     const paidUsd = invoices
       .filter((i: any) => i.currency === "USD" && i.status === "Paid")
       .reduce((acc: number, i: any) => acc + (Number(i.total) || 0), 0);
@@ -85,9 +67,7 @@ export async function POST(req: Request) {
       notes: notes || "Payment due within 14 business days. Direct Razorpay gateway link attached."
     };
 
-    const current = getInvoices();
-    current.unshift(newInvoice);
-    saveInvoices(current);
+    await saveCrmInvoice(newInvoice);
 
     return NextResponse.json({ success: true, invoice: newInvoice });
   } catch (error: any) {
@@ -102,17 +82,21 @@ export async function PATCH(req: Request) {
 
     if (!id) return NextResponse.json({ success: false, error: "Missing invoice ID" }, { status: 400 });
 
-    const current = getInvoices();
-    const idx = current.findIndex((i: any) => i.id === id);
-    if (idx === -1) return NextResponse.json({ success: false, error: "Invoice not found" }, { status: 404 });
+    const current = await getCrmInvoices();
+    const existing = current.find((i: any) => i.id === id);
+    if (!existing) return NextResponse.json({ success: false, error: "Invoice not found" }, { status: 404 });
 
-    current[idx].status = status || current[idx].status;
-    if (paymentRef) current[idx].paymentRef = paymentRef;
-    if (paymentMethod) current[idx].paymentMethod = paymentMethod;
+    const updated = {
+      ...existing,
+      status: status || existing.status,
+      paymentRef: paymentRef !== undefined ? paymentRef : existing.paymentRef,
+      paymentMethod: paymentMethod !== undefined ? paymentMethod : existing.paymentMethod,
+    };
 
-    saveInvoices(current);
-    return NextResponse.json({ success: true, invoice: current[idx] });
+    await saveCrmInvoice(updated);
+    return NextResponse.json({ success: true, invoice: updated });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
+

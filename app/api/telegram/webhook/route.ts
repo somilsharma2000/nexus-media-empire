@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import { Bot, webhookCallback } from 'grammy';
-import fs from 'fs/promises';
-import path from 'path';
 
 import { getArticles, saveArticle, saveArticles } from '@/lib/data-layer';
 import { getCanonicalSiteUrl } from '@/lib/site-url';

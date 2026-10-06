@@ -1337,6 +1337,25 @@ export async function saveSponsor(sponsor: any): Promise<any> {
   return sponsor;
 }
 
+export async function deleteSponsor(id: string): Promise<boolean> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.sponsor.delete({ where: { id: String(id) } });
+      return true;
+    } catch (err) {
+      console.error('[DataLayer] DB deleteSponsor error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  let sponsors = await safeReadJson<any[]>('sponsors.json', []);
+  const initialLen = sponsors.length;
+  sponsors = sponsors.filter((s: any) => String(s.id) !== String(id));
+  await safeWriteJson('sponsors.json', sponsors);
+  return sponsors.length < initialLen;
+}
+
 export async function getSponsorshipInquiries(): Promise<any[]> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
@@ -1392,6 +1411,25 @@ export async function saveSponsorshipInquiry(inquiry: any): Promise<any> {
   list.unshift({ ...inquiry, id: idStr, createdAt: new Date().toISOString() });
   await safeWriteJson('sponsorship_inquiries.json', list);
   return inquiry;
+}
+
+export async function deleteSponsorshipInquiry(id: string): Promise<boolean> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.sponsorshipInquiry.delete({ where: { id: String(id) } });
+      return true;
+    } catch (err) {
+      console.error('[DataLayer] DB deleteSponsorshipInquiry error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  let list = await safeReadJson<any[]>('sponsorship_inquiries.json', []);
+  const initialLen = list.length;
+  list = list.filter((i: any) => String(i.id) !== String(id));
+  await safeWriteJson('sponsorship_inquiries.json', list);
+  return list.length < initialLen;
 }
 
 export async function getCrmCustomers(): Promise<any[]> {
@@ -1468,6 +1506,137 @@ export async function saveCrmCustomer(customer: any): Promise<any> {
   }
   await safeWriteJson('crm_customers.json', customers);
   return customer;
+}
+
+export async function deleteCrmCustomer(id: string): Promise<boolean> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.crmCustomer.delete({ where: { id: String(id) } });
+      return true;
+    } catch (err) {
+      console.error('[DataLayer] DB deleteCrmCustomer error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  let customers = await safeReadJson<any[]>('crm_customers.json', []);
+  const initialLen = customers.length;
+  customers = customers.filter((c: any) => String(c.id) !== String(id));
+  await safeWriteJson('crm_customers.json', customers);
+  return customers.length < initialLen;
+}
+
+export async function getCrmInvoices(): Promise<any[]> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      const invoices = await db.invoice.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+      if (invoices && invoices.length > 0) return invoices;
+    } catch (err) {
+      console.error('[DataLayer] DB getCrmInvoices error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+  return await safeReadJson<any[]>('invoices.json', []);
+}
+
+export async function saveCrmInvoice(invoice: any): Promise<any> {
+  const db = getPrisma();
+  const idStr = String(invoice.id || `INV-2026-${Math.floor(100 + Math.random() * 900)}`);
+
+  if (db && isDatabaseConnected()) {
+    try {
+      return await db.invoice.upsert({
+        where: { id: idStr },
+        update: {
+          clientName: invoice.clientName,
+          clientCompany: invoice.clientCompany || null,
+          clientEmail: invoice.clientEmail,
+          currency: invoice.currency || 'USD',
+          subtotal: Number(invoice.subtotal) || 0,
+          taxRate: Number(invoice.taxRate) || 0,
+          taxAmount: Number(invoice.taxAmount) || 0,
+          total: Number(invoice.total) || 0,
+          issueDate: invoice.issueDate || new Date().toISOString().split('T')[0],
+          dueDate: invoice.dueDate || new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0],
+          status: invoice.status || 'Pending',
+          paymentMethod: invoice.paymentMethod || null,
+          paymentRef: invoice.paymentRef || null,
+          items: invoice.items ? JSON.parse(JSON.stringify(invoice.items)) : undefined,
+          notes: invoice.notes || null,
+        },
+        create: {
+          id: idStr,
+          clientName: invoice.clientName,
+          clientCompany: invoice.clientCompany || null,
+          clientEmail: invoice.clientEmail,
+          currency: invoice.currency || 'USD',
+          subtotal: Number(invoice.subtotal) || 0,
+          taxRate: Number(invoice.taxRate) || 0,
+          taxAmount: Number(invoice.taxAmount) || 0,
+          total: Number(invoice.total) || 0,
+          issueDate: invoice.issueDate || new Date().toISOString().split('T')[0],
+          dueDate: invoice.dueDate || new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0],
+          status: invoice.status || 'Pending',
+          paymentMethod: invoice.paymentMethod || null,
+          paymentRef: invoice.paymentRef || null,
+          items: invoice.items ? JSON.parse(JSON.stringify(invoice.items)) : undefined,
+          notes: invoice.notes || null,
+        },
+      });
+    } catch (err) {
+      console.error('[DataLayer] DB saveCrmInvoice error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  const list = await safeReadJson<any[]>('invoices.json', []);
+  const idx = list.findIndex((i: any) => i.id === idStr);
+  if (idx >= 0) {
+    list[idx] = { ...list[idx], ...invoice };
+  } else {
+    list.unshift({ ...invoice, id: idStr });
+  }
+  await safeWriteJson('invoices.json', list);
+  return invoice;
+}
+
+export async function deleteCrmInvoice(id: string): Promise<boolean> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.invoice.delete({ where: { id: String(id) } });
+      return true;
+    } catch (err) {
+      console.error('[DataLayer] DB deleteCrmInvoice error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  let list = await safeReadJson<any[]>('invoices.json', []);
+  const initialLen = list.length;
+  list = list.filter((i: any) => String(i.id) !== String(id));
+  await safeWriteJson('invoices.json', list);
+  return list.length < initialLen;
+}
+
+export async function getAttributionData(): Promise<any> {
+  return await safeReadJson<any>('click_attribution.json', {
+    totalImpressions: 284500,
+    totalClicks: 12840,
+    overallCtr: 4.51,
+    totalConversions: 492,
+    conversionRate: 3.83,
+    estimatedRevenueUsd: 8420.50,
+    sources: [],
+    topCampaigns: [],
+    geoDistribution: [],
+    deviceSplit: { desktop: 58.4, mobile: 37.2, tablet: 4.4 },
+    recentClickStream: []
+  });
 }
 
 export async function getBacklinks(): Promise<any[]> {
@@ -1645,4 +1814,209 @@ export async function setAnalyticsCache(site: string, data: any): Promise<void> 
   }
 
   await safeWriteJson('analytics_cache.json', { cachedAt: new Date().toISOString(), data });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 12. SOCIAL LOGS
+// ─────────────────────────────────────────────────────────────────────────────
+export async function getSocialLogs(limit = 50): Promise<any[]> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      const rows = await db.socialLog.findMany({
+        orderBy: { timestamp: 'desc' },
+        take: limit,
+      });
+      if (rows && rows.length > 0) return rows;
+    } catch (err) {
+      console.error('[DataLayer] DB getSocialLogs error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+  const logs = await safeReadJson<any[]>('social_log.json', []);
+  return logs.slice(-limit).reverse();
+}
+
+export async function appendSocialLog(entry: any): Promise<any> {
+  const db = getPrisma();
+  const idStr = String(entry.id || `soc-${Date.now()}`);
+
+  if (db && isDatabaseConnected()) {
+    try {
+      return await db.socialLog.create({
+        data: {
+          id: idStr,
+          platform: entry.platform || 'unknown',
+          articleId: entry.articleId ? String(entry.articleId) : null,
+          postUrl: entry.url || entry.postUrl || null,
+          success: entry.status === 'published' || entry.status === 'simulated' || entry.success !== false,
+          metadata: entry ? JSON.parse(JSON.stringify(entry)) : undefined,
+          timestamp: entry.timestamp ? new Date(entry.timestamp) : new Date(),
+        },
+      });
+    } catch (err) {
+      console.error('[DataLayer] DB appendSocialLog error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  const logs = await safeReadJson<any[]>('social_log.json', []);
+  logs.push({ ...entry, id: idStr, timestamp: entry.timestamp || new Date().toISOString() });
+  await safeWriteJson('social_log.json', logs.slice(-200));
+  return entry;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 13. EMAIL TEMPLATES
+// ─────────────────────────────────────────────────────────────────────────────
+export async function getEmailTemplates(): Promise<any[]> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      const templates = await db.emailTemplate.findMany({
+        orderBy: { updatedAt: 'desc' },
+      });
+      if (templates && templates.length > 0) return templates;
+    } catch (err) {
+      console.error('[DataLayer] DB getEmailTemplates error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+  return await safeReadJson<any[]>('email_templates.json', []);
+}
+
+export async function saveEmailTemplate(template: any): Promise<any> {
+  const db = getPrisma();
+  const idStr = String(template.id || `tpl_${Date.now()}`);
+
+  if (db && isDatabaseConnected()) {
+    try {
+      return await db.emailTemplate.upsert({
+        where: { id: idStr },
+        update: {
+          name: template.name,
+          entity: template.entity || 'General',
+          category: template.category || 'Communication',
+          subject: template.subject,
+          preheader: template.preheader || null,
+          htmlTemplate: template.htmlTemplate,
+          variables: template.variables ? JSON.parse(JSON.stringify(template.variables)) : undefined,
+        },
+        create: {
+          id: idStr,
+          name: template.name,
+          entity: template.entity || 'General',
+          category: template.category || 'Communication',
+          subject: template.subject,
+          preheader: template.preheader || null,
+          htmlTemplate: template.htmlTemplate,
+          variables: template.variables ? JSON.parse(JSON.stringify(template.variables)) : undefined,
+        },
+      });
+    } catch (err) {
+      console.error('[DataLayer] DB saveEmailTemplate error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  const list = await safeReadJson<any[]>('email_templates.json', []);
+  const idx = list.findIndex((t: any) => t.id === idStr);
+  if (idx >= 0) {
+    list[idx] = { ...list[idx], ...template };
+  } else {
+    list.unshift({ ...template, id: idStr });
+  }
+  await safeWriteJson('email_templates.json', list);
+  return template;
+}
+
+export async function deleteEmailTemplate(id: string): Promise<boolean> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.emailTemplate.delete({ where: { id: String(id) } });
+      return true;
+    } catch (err) {
+      console.error('[DataLayer] DB deleteEmailTemplate error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  let list = await safeReadJson<any[]>('email_templates.json', []);
+  const initialLen = list.length;
+  list = list.filter((t: any) => String(t.id) !== String(id));
+  await safeWriteJson('email_templates.json', list);
+  return list.length < initialLen;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 14. META AUTOMATIONS
+// ─────────────────────────────────────────────────────────────────────────────
+export async function getMetaAutomations(): Promise<any[]> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      const rows = await db.metaAutomation.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+      if (rows && rows.length > 0) return rows;
+    } catch (err) {
+      console.error('[DataLayer] DB getMetaAutomations error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+  return await safeReadJson<any[]>('meta_automations.json', []);
+}
+
+export async function saveMetaAutomation(automation: any): Promise<any> {
+  const db = getPrisma();
+  const idStr = String(automation.id || `meta_rule_${Date.now()}`);
+
+  if (db && isDatabaseConnected()) {
+    try {
+      return await db.metaAutomation.upsert({
+        where: { id: idStr },
+        update: {
+          name: automation.name,
+          pageHandle: automation.pageHandle || null,
+          targetUrl: automation.targetUrl,
+          triggerKeyword: automation.triggerKeyword || 'ANY',
+          step1FollowRequestDm: automation.step1FollowRequestDm || null,
+          step2PayloadDm: automation.step2PayloadDm || null,
+          dmTemplate: automation.dmTemplate || null,
+          publicCommentReply: automation.publicCommentReply || null,
+          dmsSent: Number(automation.dmsSent) || 0,
+          conversions: Number(automation.conversions) || 0,
+          isActive: automation.isActive !== false,
+        },
+        create: {
+          id: idStr,
+          name: automation.name,
+          pageHandle: automation.pageHandle || null,
+          targetUrl: automation.targetUrl,
+          triggerKeyword: automation.triggerKeyword || 'ANY',
+          step1FollowRequestDm: automation.step1FollowRequestDm || null,
+          step2PayloadDm: automation.step2PayloadDm || null,
+          dmTemplate: automation.dmTemplate || null,
+          publicCommentReply: automation.publicCommentReply || null,
+          dmsSent: Number(automation.dmsSent) || 0,
+          conversions: Number(automation.conversions) || 0,
+          isActive: automation.isActive !== false,
+        },
+      });
+    } catch (err) {
+      console.error('[DataLayer] DB saveMetaAutomation error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  const list = await safeReadJson<any[]>('meta_automations.json', []);
+  const idx = list.findIndex((a: any) => a.id === idStr);
+  if (idx >= 0) {
+    list[idx] = { ...list[idx], ...automation };
+  } else {
+    list.unshift({ ...automation, id: idStr });
+  }
+  await safeWriteJson('meta_automations.json', list);
+  return automation;
 }

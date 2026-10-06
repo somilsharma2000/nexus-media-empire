@@ -1,46 +1,21 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import {
+  getAttributionData,
+  getPaymentTransactions,
+  getCrmCustomers,
+  getCrmInvoices,
+} from "@/lib/data-layer";
 
-const ATTRIBUTION_PATH = path.join(process.cwd(), "data", "click_attribution.json");
-const TRANSACTIONS_PATH = path.join(process.cwd(), "data", "payment_transactions.json");
-const CRM_PATH = path.join(process.cwd(), "data", "crm_customers.json");
-const INVOICES_PATH = path.join(process.cwd(), "data", "invoices.json");
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    let attribution = {
-      totalImpressions: 284500,
-      totalClicks: 12840,
-      overallCtr: 4.51,
-      totalConversions: 492,
-      conversionRate: 3.83,
-      estimatedRevenueUsd: 8420.50,
-      sources: [],
-      topCampaigns: [],
-      geoDistribution: [],
-      deviceSplit: { desktop: 58.4, mobile: 37.2, tablet: 4.4 },
-      recentClickStream: []
-    };
-
-    if (fs.existsSync(ATTRIBUTION_PATH)) {
-      attribution = JSON.parse(fs.readFileSync(ATTRIBUTION_PATH, "utf-8"));
-    }
-
-    let transactions = [];
-    if (fs.existsSync(TRANSACTIONS_PATH)) {
-      transactions = JSON.parse(fs.readFileSync(TRANSACTIONS_PATH, "utf-8"));
-    }
-
-    let customers = [];
-    if (fs.existsSync(CRM_PATH)) {
-      customers = JSON.parse(fs.readFileSync(CRM_PATH, "utf-8"));
-    }
-
-    let invoices = [];
-    if (fs.existsSync(INVOICES_PATH)) {
-      invoices = JSON.parse(fs.readFileSync(INVOICES_PATH, "utf-8"));
-    }
+    const [attribution, transactions, customers, invoices] = await Promise.all([
+      getAttributionData(),
+      getPaymentTransactions(),
+      getCrmCustomers(),
+      getCrmInvoices(),
+    ]);
 
     // Calculate live stream totals
     const digitalProductRevenue = transactions

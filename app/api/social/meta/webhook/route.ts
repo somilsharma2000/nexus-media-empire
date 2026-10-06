@@ -1,12 +1,8 @@
 import { NextResponse } from 'next/server';
-import { resilientReadJson, atomicWriteJson } from '@/lib/atomic-storage';
+import { getMetaAutomations, saveMetaAutomation, getSocialLogs, appendSocialLog } from '@/lib/data-layer';
 import { getCanonicalSiteUrl } from '@/lib/site-url';
-import path from 'path';
 
 export const dynamic = 'force-dynamic';
-
-const AUTOMATIONS_PATH = path.join(process.cwd(), 'data', 'meta_automations.json');
-const SOCIAL_LOG_PATH = path.join(process.cwd(), 'data', 'social_log.json');
 
 /**
  * Meta Graph API Webhook Handshake (GET)
@@ -33,9 +29,8 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // Load automations and social activity logs
-    const automations = await resilientReadJson<any[]>(AUTOMATIONS_PATH, []);
-    const logs = await resilientReadJson<any[]>(SOCIAL_LOG_PATH, []);
+    // Load automations
+    const automations = await getMetaAutomations();
 
     const action: string = body.action || ''; // e.g. 'confirm_follow'
     const commentText: string = body.commentText || body?.entry?.[0]?.changes?.[0]?.value?.text || '';
@@ -54,6 +49,7 @@ export async function POST(req: Request) {
     if (isFollowConfirmation) {
       // Find automation rule by automationId or match first active rule
       const matched = automations.find((a) => a.id === automationId) || automations[0] || {
+        id: 'default-meta-gate',
         name: 'Nexus Universal Access Gate',
         pageHandle: 'TheTrendMatrix',
         targetUrl: `${getCanonicalSiteUrl()}/news/quantum-computing-reaches-1000-qubit-milestone`,
@@ -85,10 +81,10 @@ export async function POST(req: Request) {
 
       // Increment conversion counter
       matched.conversions = (matched.conversions || 0) + 1;
-      await atomicWriteJson(AUTOMATIONS_PATH, automations);
+      await saveMetaAutomation(matched);
 
       // Log verified payload delivery
-      const logEntry = {
+      await appendSocialLog({
         id: `meta-step2-${Date.now()}`,
         platform: 'Instagram/Facebook Auto-DM',
         title: `✅ Follow Verified: Delivered un-gated link to @${username}`,
@@ -96,9 +92,7 @@ export async function POST(req: Request) {
         timestamp: new Date().toISOString(),
         url: matched.targetUrl,
         dmPreview: step2Message,
-      };
-      logs.unshift(logEntry);
-      await atomicWriteJson(SOCIAL_LOG_PATH, logs.slice(0, 50));
+      });
 
       return NextResponse.json({
         success: true,
@@ -173,10 +167,10 @@ export async function POST(req: Request) {
 
     // Update automation stats
     matched.dmsSent = (matched.dmsSent || 0) + 1;
-    await atomicWriteJson(AUTOMATIONS_PATH, automations);
+    await saveMetaAutomation(matched);
 
     // Log to social activity
-    const logEntry = {
+    await appendSocialLog({
       id: `meta-step1-${Date.now()}`,
       platform: 'Instagram/Facebook Auto-DM',
       title: `⚡ Any-Comment Trigger: Sent Follow-Gate to @${username} (Comment: "${commentText.slice(0, 30)}")`,
@@ -185,9 +179,7 @@ export async function POST(req: Request) {
       url: matched.targetUrl,
       dmPreview: step1Message,
       publicReply: publicReply,
-    };
-    logs.unshift(logEntry);
-    await atomicWriteJson(SOCIAL_LOG_PATH, logs.slice(0, 50));
+    });
 
     return NextResponse.json({
       success: true,
