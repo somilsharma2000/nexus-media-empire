@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
 import { checkRateLimit, rateLimitExceededResponse } from '@/lib/rate-limit';
-import { addNewsletterSubscriber } from '@/lib/data-layer';
+import { addNewsletterSubscriber, getSettings } from '@/lib/data-layer';
 
-const SETTINGS_PATH = path.join(process.cwd(), 'data', 'settings.json');
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   const rateLimit = checkRateLimit(req, 10, 60000);
@@ -24,18 +22,10 @@ export async function POST(req: Request) {
     // 1. Dual-Layer Storage: Persist via data layer (DB + Local Storage)
     await addNewsletterSubscriber(cleanEmail, targetNiche);
 
-    // 2. Read Beehiiv credentials from env or settings.json
-    let beehiivApiKey = process.env.BEEHIIV_API_KEY;
-    let beehiivPubId = process.env.BEEHIIV_PUBLICATION_ID;
-
-    try {
-      const rawSettings = await fs.readFile(SETTINGS_PATH, 'utf-8');
-      const settings = JSON.parse(rawSettings);
-      if (settings.BEEHIIV_API_KEY) beehiivApiKey = settings.BEEHIIV_API_KEY;
-      if (settings.BEEHIIV_PUBLICATION_ID) beehiivPubId = settings.BEEHIIV_PUBLICATION_ID;
-    } catch {
-      // Ignore if settings.json not found
-    }
+    // 2. Read Beehiiv credentials from env or settings
+    const settings = await getSettings();
+    let beehiivApiKey = process.env.BEEHIIV_API_KEY || settings.BEEHIIV_API_KEY;
+    let beehiivPubId = process.env.BEEHIIV_PUBLICATION_ID || settings.BEEHIIV_PUBLICATION_ID;
 
     // 3. If Beehiiv API is configured, push subscription to Beehiiv v2 API
     let beehiivSynced = false;

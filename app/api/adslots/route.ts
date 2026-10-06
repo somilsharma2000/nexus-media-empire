@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdminAuth, unauthorizedResponse } from '@/lib/auth-guard';
-import { getAdSlots, saveAdSlot } from '@/lib/data-layer';
-import fs from 'fs';
-import path from 'path';
+import { getAdSlots, saveAdSlot, deleteAdSlot } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic';
-
-const DATA_FILE = path.join(process.cwd(), 'data', 'adslots.json');
 
 // GET /api/adslots — return all slots
 export async function GET(request: NextRequest) {
@@ -78,13 +74,10 @@ export async function DELETE(request: NextRequest) {
     if (!id) {
       return NextResponse.json({ error: 'id query param required' }, { status: 400 });
     }
-    const slots = await getAdSlots();
-    const filtered = slots.filter((s: { id: string }) => s.id !== id);
-    try {
-      fs.writeFileSync(DATA_FILE, JSON.stringify(filtered, null, 2));
-    } catch {}
+    await deleteAdSlot(id);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: 'Failed to delete slot' }, { status: 500 });
   }
 }
+

@@ -1,27 +1,11 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import {
+  getPaymentTransactions,
+  savePaymentTransaction,
+  deletePaymentTransaction,
+} from "@/lib/data-layer";
 
-const TRANSACTIONS_PATH = path.join(process.cwd(), "data", "payment_transactions.json");
-
-function getTransactions() {
-  try {
-    if (!fs.existsSync(TRANSACTIONS_PATH)) {
-      return [];
-    }
-    return JSON.parse(fs.readFileSync(TRANSACTIONS_PATH, "utf-8"));
-  } catch {
-    return [];
-  }
-}
-
-function saveTransactions(data: any[]) {
-  try {
-    fs.writeFileSync(TRANSACTIONS_PATH, JSON.stringify(data.slice(0, 500), null, 2));
-  } catch (err) {
-    console.error("[TRANSACTIONS SAVE ERROR]", err);
-  }
-}
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   try {
@@ -29,7 +13,7 @@ export async function GET(req: Request) {
     const filterType = searchParams.get("type");
     const query = searchParams.get("q")?.toLowerCase();
 
-    let txns = getTransactions();
+    let txns = await getPaymentTransactions();
 
     if (filterType && filterType !== "all") {
       txns = txns.filter((t: any) => t.itemType === filterType);
@@ -104,9 +88,7 @@ export async function POST(req: Request) {
       notes
     };
 
-    const current = getTransactions();
-    current.unshift(newTxn);
-    saveTransactions(current);
+    await savePaymentTransaction(newTxn);
 
     return NextResponse.json({ success: true, transaction: newTxn });
   } catch (error: any) {
@@ -123,12 +105,11 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ success: false, error: "Missing id" }, { status: 400 });
     }
 
-    const current = getTransactions();
-    const filtered = current.filter((t: any) => t.id !== id);
-    saveTransactions(filtered);
+    await deletePaymentTransaction(id);
 
-    return NextResponse.json({ success: true, remainingCount: filtered.length });
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
+

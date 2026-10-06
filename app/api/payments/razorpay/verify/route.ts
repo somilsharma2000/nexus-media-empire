@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import { verifyRazorpaySignature } from "@/lib/razorpay";
-import fs from "fs";
-import path from "path";
+import { savePaymentTransaction, getCrmCustomers, saveCrmCustomer } from "@/lib/data-layer";
 
-const TRANSACTIONS_PATH = path.join(process.cwd(), "data", "payment_transactions.json");
-const CRM_PATH = path.join(process.cwd(), "data", "crm_customers.json");
+export const dynamic = 'force-dynamic';
 
 interface PaymentTransaction {
   id: string;
@@ -22,60 +20,41 @@ interface PaymentTransaction {
   accessKey?: string;
 }
 
-function loadTransactions(): PaymentTransaction[] {
-  try {
-    if (!fs.existsSync(TRANSACTIONS_PATH)) {
-      fs.writeFileSync(TRANSACTIONS_PATH, JSON.stringify([], null, 2));
-      return [];
-    }
-    const raw = fs.readFileSync(TRANSACTIONS_PATH, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-function saveTransaction(txn: PaymentTransaction) {
-  try {
-    const list = loadTransactions();
-    list.unshift(txn);
-    fs.writeFileSync(TRANSACTIONS_PATH, JSON.stringify(list.slice(0, 500), null, 2));
-  } catch (err) {
-    console.error("[TRANSACTION SAVE ERROR]", err);
-  }
-}
-
-function upsertCrmCustomer(email?: string, name?: string, amount?: number, currency?: string, itemTitle?: string, itemType?: string) {
+async function upsertCrmCustomer(email?: string, name?: string, amount?: number, currency?: string, itemTitle?: string, itemType?: string) {
   if (!email) return;
   try {
-    let customers: any[] = [];
-    if (fs.existsSync(CRM_PATH)) {
-      customers = JSON.parse(fs.readFileSync(CRM_PATH, "utf-8"));
-    }
-    const existingIdx = customers.findIndex((c: any) => c.email?.toLowerCase() === email.toLowerCase());
+    const customers = await getCrmCustomers();
+    const existing = customers.find((c: any) => c.email?.toLowerCase() === email.toLowerCase());
     const amt = Number(amount) || 0;
     const isUsd = (currency || "INR").toUpperCase() === "USD";
 
-    if (existingIdx !== -1) {
-      const c = customers[existingIdx];
-      if (isUsd) c.totalSpentUsd = (c.totalSpentUsd || 0) + amt;
-      else c.totalSpentInr = (c.totalSpentInr || 0) + amt;
-      c.ordersCount = (c.ordersCount || 0) + 1;
-      c.lastActive = new Date().toISOString();
-      if (!c.deals) c.deals = [];
-      c.deals.unshift({
-        id: `deal_${Date.now()}`,
-        title: itemTitle || "Online Checkout",
-        amount: amt,
-        currency: currency?.toUpperCase() || "INR",
-        date: new Date().toISOString().split("T")[0],
-        status: "Paid"
-      });
-      if (!c.tags) c.tags = [];
-      if (!c.tags.includes("Verified Buyer")) c.tags.push("Verified Buyer");
-      if (itemType === "sponsor_slot" && !c.tags.includes("Sponsor")) c.tags.push("Sponsor");
+    if (existing) {
+      const updated = {
+        ...existing,
+        totalSpentUsd: isUsd ? (existing.totalSpentUsd || 0) + amt : (existing.totalSpentUsd || 0),
+        totalSpentInr: !isUsd ? (existing.totalSpentInr || 0) + amt : (existing.totalSpentInr || 0),
+        ordersCount: (existing.ordersCount || 0) + 1,
+        lastActive: new Date().toISOString(),
+        deals: [
+          {
+            id: `deal_${Date.now()}`,
+            title: itemTitle || "Online Checkout",
+            amount: amt,
+            currency: currency?.toUpperCase() || "INR",
+            date: new Date().toISOString().split("T")[0],
+            status: "Paid"
+          },
+          ...(existing.deals || [])
+        ],
+        tags: Array.from(new Set([
+          ...(existing.tags || []),
+          "Verified Buyer",
+          itemType === "sponsor_slot" ? "Sponsor" : "Digital Buyer"
+        ]))
+      };
+      await saveCrmCustomer(updated);
     } else {
-      customers.unshift({
+      const newCustomer = {
         id: `crm_cust_${Date.now()}`,
         name: name || email.split("@")[0],
         email: email,
@@ -98,9 +77,9 @@ function upsertCrmCustomer(email?: string, name?: string, amount?: number, curre
           date: new Date().toISOString().split("T")[0],
           status: "Paid"
         }]
-      });
+      };
+      await saveCrmCustomer(newCustomer);
     }
-    fs.writeFileSync(CRM_PATH, JSON.stringify(customers, null, 2));
   } catch (err) {
     console.error("[CRM AUTO-UPSERT ERROR]", err);
   }
@@ -163,8 +142,8 @@ export async function POST(req: Request) {
       accessKey,
     };
 
-    saveTransaction(txnRecord);
-    upsertCrmCustomer(customerEmail, customerName, amount, currency, itemTitle, itemType);
+    await savePaymentTransaction(txnRecord);
+    await upsertCrmCustomer(customerEmail, customerName, amount, currency, itemTitle, itemType);
 
     return NextResponse.json({
       success: true,
@@ -184,3 +163,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

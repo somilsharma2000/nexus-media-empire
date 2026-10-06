@@ -1,27 +1,9 @@
 import { NextResponse } from "next/server";
 import { verifyWebhookSignature } from "@/lib/razorpay";
-import fs from "fs";
-import path from "path";
+import { saveWebhookLog } from "@/lib/data-layer";
 
-const WEBHOOK_LOGS_PATH = path.join(process.cwd(), "data", "webhook_logs.json");
+export const dynamic = 'force-dynamic';
 
-function logWebhook(eventData: any) {
-  try {
-    let logs = [];
-    if (fs.existsSync(WEBHOOK_LOGS_PATH)) {
-      logs = JSON.parse(fs.readFileSync(WEBHOOK_LOGS_PATH, "utf-8"));
-    }
-    logs.unshift({
-      id: `wh_${Date.now()}`,
-      receivedAt: new Date().toISOString(),
-      event: eventData?.event || "unknown",
-      payload: eventData?.payload || {},
-    });
-    fs.writeFileSync(WEBHOOK_LOGS_PATH, JSON.stringify(logs.slice(0, 100), null, 2));
-  } catch (err) {
-    console.error("[WEBHOOK LOG ERROR]", err);
-  }
-}
 
 export async function POST(req: Request) {
   try {
@@ -42,7 +24,7 @@ export async function POST(req: Request) {
     }
 
     const event = JSON.parse(rawBody);
-    logWebhook(event);
+    await saveWebhookLog(event);
 
     const eventType = event.event;
     console.log(`[RAZORPAY WEBHOOK RECEIVED] ${eventType}`);

@@ -599,6 +599,27 @@ export async function addSubscriber(email: string, niche = 'general'): Promise<a
 
 export const addNewsletterSubscriber = addSubscriber;
 
+export async function logNewsletterSend(logEntry: {
+  subject: string;
+  recipientCount: number;
+  niche: string;
+}): Promise<any> {
+  const logs = await safeReadJson<any[]>('newsletter_log.json', []);
+  const entry = {
+    id: `nl-${Date.now()}`,
+    ...logEntry,
+    sentAt: new Date().toISOString(),
+    status: 'dispatched',
+  };
+  logs.unshift(entry);
+  await safeWriteJson('newsletter_log.json', logs.slice(0, 100));
+  return entry;
+}
+
+export async function getNewsletterLogs(): Promise<any[]> {
+  return await safeReadJson<any[]>('newsletter_log.json', []);
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // 6. AD SLOTS & CLICKS & AFFILIATES
 // ─────────────────────────────────────────────────────────────────────────────
@@ -673,6 +694,25 @@ export async function saveAdSlot(slot: any): Promise<any> {
   }
   await safeWriteJson('adslots.json', slots);
   return slot;
+}
+
+export async function deleteAdSlot(id: string): Promise<boolean> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.adSlot.delete({ where: { id: String(id) } });
+      return true;
+    } catch (err) {
+      console.error('[DataLayer] DB deleteAdSlot error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  let slots = await safeReadJson<any[]>('adslots.json', []);
+  const initialLen = slots.length;
+  slots = slots.filter((s: any) => String(s.id) !== String(id));
+  await safeWriteJson('adslots.json', slots);
+  return slots.length < initialLen;
 }
 
 export async function killswitchAllAdSlots(): Promise<any[]> {
@@ -898,6 +938,40 @@ export async function savePaymentTransaction(tx: any): Promise<any> {
   list.unshift({ ...tx, id: idStr, createdAt: new Date().toISOString() });
   await safeWriteJson('payment_transactions.json', list);
   return tx;
+}
+
+export async function deletePaymentTransaction(id: string): Promise<boolean> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.paymentTransaction.delete({ where: { id: String(id) } });
+      return true;
+    } catch (err) {
+      console.error('[DataLayer] DB deletePaymentTransaction error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  let list = await safeReadJson<any[]>('payment_transactions.json', []);
+  const initialLen = list.length;
+  list = list.filter((t: any) => String(t.id) !== String(id));
+  await safeWriteJson('payment_transactions.json', list);
+  return list.length < initialLen;
+}
+
+export async function getWebhookLogs(): Promise<any[]> {
+  return await safeReadJson<any[]>('webhook_logs.json', []);
+}
+
+export async function saveWebhookLog(eventData: any): Promise<void> {
+  const logs = await safeReadJson<any[]>('webhook_logs.json', []);
+  logs.unshift({
+    id: `wh_${Date.now()}`,
+    receivedAt: new Date().toISOString(),
+    event: eventData?.event || 'unknown',
+    payload: eventData?.payload || {},
+  });
+  await safeWriteJson('webhook_logs.json', logs.slice(0, 100));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1169,6 +1243,25 @@ export async function saveDigitalProduct(product: any): Promise<any> {
   }
   await safeWriteJson('digital_products.json', products);
   return product;
+}
+
+export async function deleteDigitalProduct(id: string): Promise<boolean> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.digitalProduct.delete({ where: { id: String(id) } });
+      return true;
+    } catch (err) {
+      console.error('[DataLayer] DB deleteDigitalProduct error:', err);
+      if (isProductionEnvironment()) throw err;
+    }
+  }
+
+  let products = await safeReadJson<any[]>('digital_products.json', []);
+  const initialLen = products.length;
+  products = products.filter((p: any) => String(p.id) !== String(id));
+  await safeWriteJson('digital_products.json', products);
+  return products.length < initialLen;
 }
 
 export async function getSponsors(): Promise<any[]> {
