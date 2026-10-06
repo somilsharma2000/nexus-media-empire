@@ -77,16 +77,16 @@ export async function POST(req: Request) {
     await writeArticles(articles);
 
     // Ping SEO for each published article
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3002';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://media-empire-beta.vercel.app';
     for (const article of toPublish) {
       const articleNiche = article.niche || article.category?.toLowerCase() || 'news';
       const articleSlug = article.slug || String(article.id);
-      const articleUrl = `${siteUrl}/${articleNiche}/${articleSlug}`;
+      const relativeArticlePath = `/${articleNiche}/${articleSlug}`;
       try {
         await fetch(`${siteUrl}/api/seo/ping`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: articleUrl }),
+          body: JSON.stringify({ url: relativeArticlePath }),
         });
       } catch (pingErr: any) {
         errors.push(`SEO ping failed for ${article.title}: ${pingErr.message}`);

@@ -1,37 +1,21 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
-
-const ARTICLES_PATH = path.join(process.cwd(), 'data', 'articles.json');
+import { searchArticles } from '@/lib/data-layer';
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const query = (searchParams.get('q') || '').toLowerCase().trim();
-    const niche = searchParams.get('niche');
+    const query = searchParams.get('q') || '';
+    const niche = searchParams.get('niche') || undefined;
 
-    const raw = await fs.readFile(ARTICLES_PATH, 'utf-8');
-    let articles = JSON.parse(raw);
-
-    if (niche && niche !== 'all') {
-      articles = articles.filter((a: any) => a.niche === niche);
-    }
-
-    if (query) {
-      articles = articles.filter((a: any) =>
-        a.title.toLowerCase().includes(query) ||
-        (a.excerpt && a.excerpt.toLowerCase().includes(query)) ||
-        (a.content && a.content.toLowerCase().includes(query))
-      );
-    }
+    const matched = await searchArticles(query, niche);
 
     return NextResponse.json({
       query,
-      count: articles.length,
-      articles: articles.slice(0, 15).map((a: any) => ({
+      count: matched.length,
+      articles: matched.slice(0, 15).map((a: any) => ({
         id: a.id,
         title: a.title,
-        niche: a.niche,
+        niche: a.site || a.niche,
         slug: a.slug,
         excerpt: a.excerpt,
         publishedAt: a.publishedAt || a.publishAt,

@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import fs from 'fs/promises';
 import path from 'path';
+import { getArticles } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic';
 
@@ -69,29 +70,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Include queued article URLs from /api/seo/ping
+  // Include queued article URLs from /api/seo/ping (sanitized to baseUrl)
   const queuedUrls = await readQueue();
-  const dynamicQueuedRoutes: MetadataRoute.Sitemap = queuedUrls.map((url) => ({
-    url,
-    lastModified: new Date(),
-    changeFrequency: 'daily',
-    priority: 0.85,
-  }));
+  const dynamicQueuedRoutes: MetadataRoute.Sitemap = queuedUrls
+    .map((rawUrl) => {
+      let cleanPath = rawUrl;
+      if (cleanPath.startsWith('http://') || cleanPath.startsWith('https://')) {
+        try {
+          cleanPath = new URL(cleanPath).pathname;
+        } catch {
+          return null;
+        }
+      }
+      if (!cleanPath.startsWith('/')) cleanPath = `/${cleanPath}`;
+      return {
+        url: `${baseUrl}${cleanPath}`,
+        lastModified: new Date(),
+        changeFrequency: 'daily' as const,
+        priority: 0.85,
+      };
+    })
+    .filter(Boolean) as MetadataRoute.Sitemap;
 
-  // Also load all published articles from data/articles.json
+  // Load all published/scheduled articles via DB-first data layer
   let articleRoutes: MetadataRoute.Sitemap = [];
   try {
-    const articlesPath = path.join(process.cwd(), 'data', 'articles.json');
-    const articlesRaw = await fs.readFile(articlesPath, 'utf-8');
-    const articles = JSON.parse(articlesRaw);
+    const articles = await getArticles();
     articleRoutes = articles
-      .filter((a: { status?: string }) => a.status === 'published' || a.status === 'scheduled')
-      .map((a: { niche?: string; slug?: string; id?: string; updatedAt?: string; publishedAt?: string }) => ({
-        url: `${baseUrl}/${a.niche || 'news'}/${a.slug || a.id}`,
-        lastModified: new Date(a.updatedAt || a.publishedAt || Date.now()),
-        changeFrequency: 'weekly' as const,
-        priority: 0.9,
-      }));
+      .filter((a: any) => a.status === 'published' || a.status === 'scheduled')
+      .map((a: any) => {
+        const niche = a.site || a.niche || 'news';
+        const slug = a.slug || a.id;
+        return {
+          url: `${baseUrl}/${niche}/${slug}`,
+          lastModified: new Date(a.updatedAt || a.publishedAt || a.publishAt || Date.now()),
+          changeFrequency: 'weekly' as const,
+          priority: 0.9,
+        };
+      });
   } catch (err) {
     console.error('Error adding articles to sitemap:', err);
   }
@@ -102,9 +118,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const deduplicatedRoutes: MetadataRoute.Sitemap = [];
 
   for (const route of allRoutes) {
-    if (!uniqueUrls.has(route.url)) {
-      uniqueUrls.add(route.url);
-      deduplicatedRoutes.push(route);
+    // Extra safety guarantee: never allow localhost in production sitemap
+    const finalUrl = route.url.replace(/http:\/\/localhost:\d+/, baseUrl);
+    if (!uniqueUrls.has(finalUrl)) {
+      uniqueUrls.add(finalUrl);
+      deduplicatedRoutes.push({
+        ...route,
+        url: finalUrl,
+      });
     }
   }
 

@@ -1,8 +1,10 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import { authConfig } from "./auth.config";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -41,21 +43,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return null;
       }
     })
-  ],
-  pages: {
-    signIn: '/admin/login',
-  },
-  callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isAdminRoute = nextUrl.pathname.startsWith('/admin') && nextUrl.pathname !== '/admin/login';
-      
-      if (isAdminRoute) {
-        if (isLoggedIn) return true;
-        return Response.redirect(new URL('/admin/login', nextUrl));
-      }
-      
-      return true;
-    }
-  }
+  ]
 });

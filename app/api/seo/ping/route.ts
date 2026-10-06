@@ -26,12 +26,30 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing url' }, { status: 400 });
   }
 
+  // 1. Sanitize to strictly relative path for internal queue persistence
+  let relativePath = url;
+  if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+    try {
+      const parsed = new URL(relativePath);
+      relativePath = parsed.pathname;
+    } catch {
+      // Keep as-is if parsing fails
+    }
+  }
+  if (!relativePath.startsWith('/')) {
+    relativePath = `/${relativePath}`;
+  }
+
+  // 2. Build full canonical URL using production baseUrl for external indexing engines
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://media-empire-beta.vercel.app';
+  const canonicalUrl = `${baseUrl}${relativePath}`;
+
   const apiKey = process.env.GOOGLE_INDEXING_API_KEY;
   const indexNowKey = process.env.INDEXNOW_KEY || 'nexus-media-index-key';
   let googlePingsuccess = false;
   let indexNowSuccess = false;
 
-  // 1. Google Indexing API
+  // 3. Google Indexing API
   if (apiKey) {
     try {
       const res = await fetch(
@@ -39,7 +57,7 @@ export async function POST(request: Request) {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url, type: 'URL_UPDATED' }),
+          body: JSON.stringify({ url: canonicalUrl, type: 'URL_UPDATED' }),
         }
       );
       if (res.ok) googlePingsuccess = true;
@@ -48,9 +66,9 @@ export async function POST(request: Request) {
     }
   }
 
-  // 2. IndexNow Protocol (Bing, DuckDuckGo, Yahoo, AI engines)
+  // 4. IndexNow Protocol (Bing, DuckDuckGo, Yahoo, AI engines)
   try {
-    const host = new URL(url).host;
+    const host = new URL(canonicalUrl).host;
     const indexNowRes = await fetch('https://api.indexnow.org/indexnow', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
@@ -58,7 +76,7 @@ export async function POST(request: Request) {
         host,
         key: indexNowKey,
         keyLocation: `https://${host}/${indexNowKey}.txt`,
-        urlList: [url]
+        urlList: [canonicalUrl]
       })
     });
     if (indexNowRes.ok || indexNowRes.status === 200 || indexNowRes.status === 202) {
@@ -68,16 +86,17 @@ export async function POST(request: Request) {
     console.error('[SEO Ping] IndexNow ping failed:', err);
   }
 
-  // Fallback / Audit queue
+  // 5. Store relative path only into queue
   const queue = await readQueue();
-  if (!queue.includes(url)) {
-    queue.push(url);
+  if (!queue.includes(relativePath)) {
+    queue.push(relativePath);
     await writeQueue(queue);
   }
 
   return NextResponse.json({
     success: true,
-    url,
+    url: canonicalUrl,
+    relativePath,
     google: googlePingsuccess ? 'submitted' : 'skipped_or_queued',
     indexNow: indexNowSuccess ? 'broadcasted_to_bing_and_duckduckgo' : 'queued',
     timestamp: new Date().toISOString()

@@ -8,8 +8,26 @@ export function isDatabaseConnected(): boolean {
   return Boolean(process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres'));
 }
 
+async function safeReadJson<T>(filename: string, fallback: T): Promise<T> {
+  try {
+    const raw = await fs.readFile(path.join(DATA_DIR, filename), 'utf-8');
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+async function safeWriteJson(filename: string, data: any): Promise<void> {
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fs.writeFile(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn(`[DataLayer] Local write fallback skipped for ${filename}:`, err);
+  }
+}
+
 // ─── 1. ARTICLES REPOSITORY ──────────────────────────────────────────────────
-export async function getArticles() {
+export async function getArticles(): Promise<any[]> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
@@ -23,20 +41,14 @@ export async function getArticles() {
         }));
       }
     } catch (err) {
-      console.warn('[DataLayer] DB getArticles failed, using local vault:', err);
+      console.warn('[DataLayer] DB getArticles failed, checking local vault:', err);
     }
   }
 
-  // Fallback to JSON vault
-  try {
-    const raw = await fs.readFile(path.join(DATA_DIR, 'articles.json'), 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
+  return await safeReadJson<any[]>('articles.json', []);
 }
 
-export async function getArticleById(id: string) {
+export async function getArticleById(id: string): Promise<any | null> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
@@ -60,127 +72,124 @@ export async function getArticleById(id: string) {
   return articles.find((a: any) => String(a.id) === String(id) || a.slug === id) || null;
 }
 
-export async function saveArticle(article: any) {
-  const articles = await getArticles();
-  const existingIdx = articles.findIndex((a: any) => String(a.id) === String(article.id));
-
-  if (existingIdx !== -1) {
-    articles[existingIdx] = { ...articles[existingIdx], ...article };
-  } else {
-    articles.unshift(article);
-  }
-
-  // Write to local JSON
-  try {
-    await fs.writeFile(path.join(DATA_DIR, 'articles.json'), JSON.stringify(articles, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('[DataLayer] Failed to write articles.json:', err);
-  }
-
-  // Persist to DB if connected
+export async function saveArticle(article: any): Promise<any> {
   const db = getPrisma();
+  const idStr = String(article.id || `art-${Date.now()}`);
+  const formatted = {
+    ...article,
+    id: idStr,
+    site: article.site || article.niche || article.category || 'news',
+    slug: (article.slug || article.title || idStr).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+  };
+
   if (db && isDatabaseConnected()) {
     try {
-      const idStr = String(article.id);
       await db.article.upsert({
         where: { id: idStr },
         update: {
-          title: article.title || 'Untitled',
-          slug: article.slug || null,
-          site: article.niche || article.category || 'news',
-          category: article.category || article.niche || 'Technology',
-          excerpt: article.excerpt || '',
-          content: article.content || '',
-          metaTitle: article.metaTitle || null,
-          metaDescription: article.metaDescription || null,
-          image: article.image || null,
-          imagePrompt: article.imagePrompt || null,
-          featured: Boolean(article.featured),
-          status: article.status || 'draft',
-          qaStatus: article.qaStatus || 'pending',
-          qaVerdict: article.qaVerdict || undefined,
-          source: article.source || null,
-          viewCount: Number(article.viewCount) || 0,
-          publishAt: article.publishAt ? new Date(article.publishAt) : null,
-          publishedAt: article.publishedAt ? new Date(article.publishedAt) : null,
+          title: formatted.title || 'Untitled',
+          slug: formatted.slug,
+          site: formatted.site,
+          category: formatted.category || formatted.site,
+          excerpt: formatted.excerpt || '',
+          content: formatted.content || '',
+          metaTitle: formatted.metaTitle || null,
+          metaDescription: formatted.metaDescription || null,
+          image: formatted.image || null,
+          featured: Boolean(formatted.featured),
+          status: formatted.status || 'draft',
+          qaStatus: formatted.qaStatus || 'pending',
+          qaVerdict: formatted.qaVerdict || undefined,
+          source: formatted.source || null,
+          viewCount: Number(formatted.viewCount) || 0,
+          publishAt: formatted.publishAt ? new Date(formatted.publishAt) : null,
+          publishedAt: formatted.publishedAt ? new Date(formatted.publishedAt) : null,
         },
         create: {
           id: idStr,
-          title: article.title || 'Untitled',
-          slug: article.slug || null,
-          site: article.niche || article.category || 'news',
-          category: article.category || article.niche || 'Technology',
-          excerpt: article.excerpt || '',
-          content: article.content || '',
-          metaTitle: article.metaTitle || null,
-          metaDescription: article.metaDescription || null,
-          image: article.image || null,
-          imagePrompt: article.imagePrompt || null,
-          featured: Boolean(article.featured),
-          status: article.status || 'draft',
-          qaStatus: article.qaStatus || 'pending',
-          qaVerdict: article.qaVerdict || undefined,
-          source: article.source || null,
-          viewCount: Number(article.viewCount) || 0,
-          publishAt: article.publishAt ? new Date(article.publishAt) : null,
-          publishedAt: article.publishedAt ? new Date(article.publishedAt) : null,
+          title: formatted.title || 'Untitled',
+          slug: formatted.slug,
+          site: formatted.site,
+          category: formatted.category || formatted.site,
+          excerpt: formatted.excerpt || '',
+          content: formatted.content || '',
+          metaTitle: formatted.metaTitle || null,
+          metaDescription: formatted.metaDescription || null,
+          image: formatted.image || null,
+          featured: Boolean(formatted.featured),
+          status: formatted.status || 'draft',
+          qaStatus: formatted.qaStatus || 'pending',
+          qaVerdict: formatted.qaVerdict || undefined,
+          source: formatted.source || null,
+          viewCount: Number(formatted.viewCount) || 0,
+          publishAt: formatted.publishAt ? new Date(formatted.publishAt) : null,
+          publishedAt: formatted.publishedAt ? new Date(formatted.publishedAt) : null,
         },
       });
     } catch (dbErr) {
-      console.warn('[DataLayer] DB saveArticle upsert error:', dbErr);
+      console.warn('[DataLayer] DB saveArticle error:', dbErr);
     }
   }
 
-  return article;
-}
-
-export async function saveArticles(articles: any[]) {
-  try {
-    await fs.writeFile(path.join(DATA_DIR, 'articles.json'), JSON.stringify(articles, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('[DataLayer] Failed to write articles.json:', err);
-  }
-
-  const db = getPrisma();
-  if (db && isDatabaseConnected()) {
-    try {
-      for (const a of articles.slice(0, 10)) {
-        await saveArticle(a);
-      }
-    } catch (dbErr) {
-      console.warn('[DataLayer] DB batch articles error:', dbErr);
-    }
-  }
-}
-
-export async function incrementArticleViews(id: string) {
-  const articles = await getArticles();
-  const idx = articles.findIndex((a: any) => String(a.id) === String(id) || a.slug === id);
-  let newViews = 1;
-
+  // Also update local cache
+  const articles = await safeReadJson<any[]>('articles.json', []);
+  const idx = articles.findIndex((a: any) => String(a.id) === idStr);
   if (idx !== -1) {
-    articles[idx].viewCount = (articles[idx].viewCount || 0) + 1;
-    newViews = articles[idx].viewCount;
-    await fs.writeFile(path.join(DATA_DIR, 'articles.json'), JSON.stringify(articles, null, 2), 'utf-8').catch(() => {});
+    articles[idx] = { ...articles[idx], ...formatted };
+  } else {
+    articles.unshift(formatted);
   }
+  await safeWriteJson('articles.json', articles);
 
+  return formatted;
+}
+
+export async function saveArticles(articles: any[]): Promise<void> {
+  for (const a of articles) {
+    await saveArticle(a);
+  }
+}
+
+export async function incrementArticleViews(id: string): Promise<number> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
-      await db.article.updateMany({
+      const res = await db.article.updateMany({
         where: { OR: [{ id: String(id) }, { slug: String(id) }] },
         data: { viewCount: { increment: 1 } },
       });
+      if (res.count > 0) {
+        const updated = await getArticleById(id);
+        return updated?.viewCount || 1;
+      }
     } catch (err) {
       console.warn('[DataLayer] DB increment views error:', err);
     }
   }
 
-  return newViews;
+  const articles = await safeReadJson<any[]>('articles.json', []);
+  const idx = articles.findIndex((a: any) => String(a.id) === String(id) || a.slug === id);
+  let views = 1;
+  if (idx !== -1) {
+    articles[idx].viewCount = (articles[idx].viewCount || 0) + 1;
+    views = articles[idx].viewCount;
+    await safeWriteJson('articles.json', articles);
+  }
+  return views;
+}
+
+export async function searchArticles(query: string, niche?: string): Promise<any[]> {
+  const articles = await getArticles();
+  const q = query.toLowerCase().trim();
+  return articles.filter((a: any) => {
+    const matchesNiche = !niche || niche === 'all' || a.site === niche || a.niche === niche;
+    const matchesQuery = !q || (a.title && a.title.toLowerCase().includes(q)) || (a.content && a.content.toLowerCase().includes(q));
+    return matchesNiche && matchesQuery;
+  });
 }
 
 // ─── 2. PIPELINE STATE & LOGS REPOSITORY ─────────────────────────────────────
-export async function getPipelineState() {
+export async function getPipelineState(): Promise<Record<string, any>> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
@@ -201,25 +210,14 @@ export async function getPipelineState() {
     }
   }
 
-  try {
-    const raw = await fs.readFile(path.join(DATA_DIR, 'pipeline_state.json'), 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return {
-      trend_scout: { status: 'active', consecutiveFailures: 0 },
-      qa_review: { status: 'active', consecutiveFailures: 0 },
-      publisher: { status: 'active', consecutiveFailures: 0 },
-    };
-  }
+  return await safeReadJson('pipeline_state.json', {
+    trend_scout: { status: 'active', consecutiveFailures: 0 },
+    qa_review: { status: 'active', consecutiveFailures: 0 },
+    publisher: { status: 'active', consecutiveFailures: 0 },
+  });
 }
 
-export async function updatePipelineState(state: Record<string, any>) {
-  try {
-    await fs.writeFile(path.join(DATA_DIR, 'pipeline_state.json'), JSON.stringify(state, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('[DataLayer] Failed to write pipeline_state.json:', err);
-  }
-
+export async function updatePipelineState(state: Record<string, any>): Promise<void> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
@@ -243,19 +241,16 @@ export async function updatePipelineState(state: Record<string, any>) {
       console.warn('[DataLayer] DB updatePipelineState error:', err);
     }
   }
+
+  await safeWriteJson('pipeline_state.json', state);
 }
 
-export async function getPipelineLogs(limit = 20) {
-  try {
-    const raw = await fs.readFile(path.join(DATA_DIR, 'pipeline_log.json'), 'utf-8');
-    const logs = JSON.parse(raw);
-    return logs.slice(-limit).reverse();
-  } catch {
-    return [];
-  }
+export async function getPipelineLogs(limit = 20): Promise<any[]> {
+  const logs = await safeReadJson<any[]>('pipeline_log.json', []);
+  return logs.slice(-limit).reverse();
 }
 
-export async function appendPipelineLog(entry: { step: string; status: string; detail: string; timestamp?: string }) {
+export async function appendPipelineLog(entry: { step: string; status: string; detail: string; timestamp?: string }): Promise<void> {
   const logEntry = {
     timestamp: entry.timestamp || new Date().toISOString(),
     step: entry.step,
@@ -263,18 +258,13 @@ export async function appendPipelineLog(entry: { step: string; status: string; d
     detail: entry.detail,
   };
 
-  try {
-    const raw = await fs.readFile(path.join(DATA_DIR, 'pipeline_log.json'), 'utf-8').catch(() => '[]');
-    const logs = JSON.parse(raw);
-    logs.push(logEntry);
-    await fs.writeFile(path.join(DATA_DIR, 'pipeline_log.json'), JSON.stringify(logs.slice(-500), null, 2), 'utf-8');
-  } catch (err) {
-    console.error('[DataLayer] Failed to write pipeline_log.json:', err);
-  }
+  const logs = await safeReadJson<any[]>('pipeline_log.json', []);
+  logs.push(logEntry);
+  await safeWriteJson('pipeline_log.json', logs.slice(-500));
 }
 
 // ─── 3. AD SLOTS REPOSITORY ──────────────────────────────────────────────────
-export async function getAdSlots() {
+export async function getAdSlots(): Promise<any[]> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
@@ -283,33 +273,14 @@ export async function getAdSlots() {
       });
       if (dbSlots && dbSlots.length > 0) return dbSlots;
     } catch (err) {
-      console.warn('[DataLayer] DB adslots failed, using local vault:', err);
+      console.warn('[DataLayer] DB adslots failed:', err);
     }
   }
 
-  try {
-    const raw = await fs.readFile(path.join(DATA_DIR, 'adslots.json'), 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
+  return await safeReadJson<any[]>('adslots.json', []);
 }
 
-export async function saveAdSlot(slot: any) {
-  const slots = await getAdSlots();
-  const idx = slots.findIndex((s: any) => s.id === slot.id);
-  if (idx !== -1) {
-    slots[idx] = { ...slots[idx], ...slot };
-  } else {
-    slots.push(slot);
-  }
-
-  try {
-    await fs.writeFile(path.join(DATA_DIR, 'adslots.json'), JSON.stringify(slots, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('[DataLayer] Failed to write adslots.json:', err);
-  }
-
+export async function saveAdSlot(slot: any): Promise<any> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
@@ -352,19 +323,19 @@ export async function saveAdSlot(slot: any) {
     }
   }
 
+  const slots = await safeReadJson<any[]>('adslots.json', []);
+  const idx = slots.findIndex((s: any) => s.id === slot.id);
+  if (idx !== -1) {
+    slots[idx] = { ...slots[idx], ...slot };
+  } else {
+    slots.push(slot);
+  }
+  await safeWriteJson('adslots.json', slots);
+
   return slot;
 }
 
-export async function killswitchAllAdSlots() {
-  const slots = await getAdSlots();
-  const updated = slots.map((s: any) => ({ ...s, isActive: false }));
-
-  try {
-    await fs.writeFile(path.join(DATA_DIR, 'adslots.json'), JSON.stringify(updated, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('[DataLayer] Failed to write adslots.json on killswitch:', err);
-  }
-
+export async function killswitchAllAdSlots(): Promise<any[]> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
@@ -374,26 +345,37 @@ export async function killswitchAllAdSlots() {
     }
   }
 
+  const slots = await safeReadJson<any[]>('adslots.json', []);
+  const updated = slots.map((s: any) => ({ ...s, isActive: false }));
+  await safeWriteJson('adslots.json', updated);
   return updated;
 }
 
-// ─── 4. CLICK LOGS REPOSITORY ────────────────────────────────────────────────
-export async function logAffiliateClick(slug: string, targetUrl: string, site?: string) {
-  try {
-    const filePath = path.join(DATA_DIR, 'click_log.json');
-    const raw = await fs.readFile(filePath, 'utf-8').catch(() => '[]');
-    const clicks = JSON.parse(raw);
-    clicks.unshift({
-      slug,
-      targetUrl,
-      site: site || 'general',
-      timestamp: new Date().toISOString(),
-    });
-    await fs.writeFile(filePath, JSON.stringify(clicks.slice(0, 500), null, 2));
-  } catch (err) {
-    console.error('[DataLayer] Failed to write click_log.json:', err);
-  }
+// ─── 4. AFFILIATE LINKS & CLICKS ─────────────────────────────────────────────
+export async function getAffiliateLinks(): Promise<any[]> {
+  return await safeReadJson<any[]>('affiliate_links.json', []);
+}
 
+export async function saveAffiliateLink(link: any): Promise<any> {
+  const links = await getAffiliateLinks();
+  const idx = links.findIndex((l: any) => l.id === link.id);
+  if (idx !== -1) {
+    links[idx] = { ...links[idx], ...link };
+  } else {
+    links.push(link);
+  }
+  await safeWriteJson('affiliate_links.json', links);
+  return link;
+}
+
+export async function deleteAffiliateLink(id: string): Promise<boolean> {
+  const links = await getAffiliateLinks();
+  const filtered = links.filter((l: any) => l.id !== id);
+  await safeWriteJson('affiliate_links.json', filtered);
+  return true;
+}
+
+export async function logAffiliateClick(slug: string, targetUrl: string, site?: string): Promise<void> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
@@ -408,6 +390,45 @@ export async function logAffiliateClick(slug: string, targetUrl: string, site?: 
       console.warn('[DataLayer] DB clickLog insert warning:', err);
     }
   }
+
+  const clicks = await safeReadJson<any[]>('click_log.json', []);
+  clicks.unshift({
+    slug,
+    targetUrl,
+    site: site || 'general',
+    timestamp: new Date().toISOString(),
+  });
+  await safeWriteJson('click_log.json', clicks.slice(0, 500));
+}
+
+export async function getAffiliateClicksToday(): Promise<Record<string, number>> {
+  const db = getPrisma();
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  if (db && isDatabaseConnected()) {
+    try {
+      const logs = await db.clickLog.findMany({
+        where: { timestamp: { gte: startOfDay } },
+      });
+      const counts: Record<string, number> = {};
+      logs.forEach((l: any) => {
+        counts[l.slug] = (counts[l.slug] || 0) + 1;
+      });
+      return counts;
+    } catch (err) {
+      console.warn('[DataLayer] DB click logs today error:', err);
+    }
+  }
+
+  const clicks = await safeReadJson<any[]>('click_log.json', []);
+  const counts: Record<string, number> = {};
+  clicks.forEach((c: any) => {
+    if (new Date(c.timestamp) >= startOfDay) {
+      counts[c.slug] = (counts[c.slug] || 0) + 1;
+    }
+  });
+  return counts;
 }
 
 // ─── 5. SETTINGS REPOSITORY ──────────────────────────────────────────────────
@@ -426,21 +447,10 @@ export async function getSettings(): Promise<Record<string, any>> {
     }
   }
 
-  try {
-    const raw = await fs.readFile(path.join(DATA_DIR, 'settings.json'), 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return {};
-  }
+  return await safeReadJson<Record<string, any>>('settings.json', {});
 }
 
-export async function saveSettings(settings: Record<string, any>) {
-  try {
-    await fs.writeFile(path.join(DATA_DIR, 'settings.json'), JSON.stringify(settings, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('[DataLayer] Failed to write settings.json:', err);
-  }
-
+export async function saveSettings(settings: Record<string, any>): Promise<void> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
@@ -455,10 +465,12 @@ export async function saveSettings(settings: Record<string, any>) {
       console.warn('[DataLayer] DB saveSettings error:', err);
     }
   }
+
+  await safeWriteJson('settings.json', settings);
 }
 
 // ─── 6. NEWSLETTER SUBSCRIBERS ───────────────────────────────────────────────
-export async function getNewsletterSubscribers() {
+export async function getNewsletterSubscribers(): Promise<any[]> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
@@ -471,25 +483,13 @@ export async function getNewsletterSubscribers() {
     }
   }
 
-  try {
-    const raw = await fs.readFile(path.join(DATA_DIR, 'subscribers.json'), 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
+  return await safeReadJson<any[]>('subscribers.json', []);
 }
 
-export async function addNewsletterSubscriber(email: string, niche = 'general') {
+export async function addNewsletterSubscriber(email: string, niche = 'general'): Promise<any> {
   const cleanEmail = email.trim().toLowerCase();
-  const subs = await getNewsletterSubscribers();
-  const exists = subs.some((s: any) => s.email.toLowerCase() === cleanEmail);
-
-  if (!exists) {
-    subs.unshift({ email: cleanEmail, niche, subscribedAt: new Date().toISOString() });
-    await fs.writeFile(path.join(DATA_DIR, 'subscribers.json'), JSON.stringify(subs, null, 2), 'utf-8').catch(() => {});
-  }
-
   const db = getPrisma();
+
   if (db && isDatabaseConnected()) {
     try {
       await db.newsletterSubscriber.upsert({
@@ -502,10 +502,17 @@ export async function addNewsletterSubscriber(email: string, niche = 'general') 
     }
   }
 
+  const subs = await safeReadJson<any[]>('subscribers.json', []);
+  const exists = subs.some((s: any) => s.email.toLowerCase() === cleanEmail);
+  if (!exists) {
+    subs.unshift({ email: cleanEmail, niche, subscribedAt: new Date().toISOString() });
+    await safeWriteJson('subscribers.json', subs);
+  }
+
   return { email: cleanEmail, niche };
 }
 
-// ─── 7. QA LOGS REPOSITORY ───────────────────────────────────────────────────
+// ─── 7. QA LOGS & CONFIG REPOSITORY ──────────────────────────────────────────
 export async function saveQALog(qaData: {
   articleId: string;
   verdict: string;
@@ -514,7 +521,7 @@ export async function saveQALog(qaData: {
   rejectionReason?: string;
   revisionInstructions?: string;
   model?: string;
-}) {
+}): Promise<void> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
@@ -536,4 +543,123 @@ export async function saveQALog(qaData: {
       console.warn('[DataLayer] DB saveQALog error:', err);
     }
   }
+}
+
+export async function getQAConfig(): Promise<any> {
+  return await safeReadJson('qa_config.json', {
+    approveThreshold: 8,
+    reviseThreshold: 5,
+    maxRevisionAttempts: 1,
+    autoPublishApproved: true,
+    requireQAForPublish: true,
+  });
+}
+
+export async function saveQAConfig(config: any): Promise<void> {
+  await safeWriteJson('qa_config.json', config);
+}
+
+// ─── 8. AUTOMATION CONFIG ───────────────────────────────────────────────────
+export async function getAutomationConfig(): Promise<any> {
+  return await safeReadJson('automation_config.json', {
+    trend_scout: { enabled: true, schedule: '0 8 * * *', lastRun: null },
+    publisher: { enabled: true, schedule: '0 9 * * *', lastRun: null },
+    health_monitor: { enabled: true, schedule: '0 12 * * *', lastRun: null },
+    content_doctor: { enabled: true, schedule: '0 3 * * 1', lastRun: null },
+    weekly_report: { enabled: true, schedule: '0 9 * * 0', lastRun: null },
+    twitter_autopost: { enabled: false, schedule: 'on_publish', lastRun: null },
+    reddit_autopost: { enabled: false, schedule: '0 10 * * *', lastRun: null },
+  });
+}
+
+export async function saveAutomationConfig(config: any): Promise<void> {
+  await safeWriteJson('automation_config.json', config);
+}
+
+// ─── 9. TOPICS REPOSITORY ────────────────────────────────────────────────────
+export async function getTopics(): Promise<any[]> {
+  return await safeReadJson<any[]>('topics.json', []);
+}
+
+export async function saveTopic(topic: any): Promise<any> {
+  const topics = await getTopics();
+  const idx = topics.findIndex((t: any) => t.id === topic.id);
+  if (idx !== -1) {
+    topics[idx] = { ...topics[idx], ...topic };
+  } else {
+    topics.push(topic);
+  }
+  await safeWriteJson('topics.json', topics);
+  return topic;
+}
+
+export async function deleteTopic(id: string): Promise<void> {
+  const topics = await getTopics();
+  const filtered = topics.filter((t: any) => t.id !== id);
+  await safeWriteJson('topics.json', filtered);
+}
+
+// ─── 10. ALERTS REPOSITORY ───────────────────────────────────────────────────
+export async function getAlerts(): Promise<any[]> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      const dbAlerts = await db.alertLog.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 50,
+      });
+      if (dbAlerts && dbAlerts.length > 0) return dbAlerts;
+    } catch (err) {
+      console.warn('[DataLayer] DB alerts error:', err);
+    }
+  }
+
+  return await safeReadJson<any[]>('alerts.json', []);
+}
+
+export async function saveAlert(alert: { type: string; message: string; severity: string }): Promise<void> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.alertLog.create({
+        data: {
+          type: alert.type,
+          message: alert.message,
+          severity: alert.severity,
+          resolved: false,
+        },
+      });
+    } catch (err) {
+      console.warn('[DataLayer] DB saveAlert error:', err);
+    }
+  }
+
+  const alerts = await safeReadJson<any[]>('alerts.json', []);
+  alerts.unshift({
+    id: `alt-${Date.now()}`,
+    type: alert.type,
+    message: alert.message,
+    severity: alert.severity,
+    resolved: false,
+    createdAt: new Date().toISOString(),
+  });
+  await safeWriteJson('alerts.json', alerts.slice(0, 50));
+}
+
+export async function resolveAlert(id: string): Promise<void> {
+  const db = getPrisma();
+  if (db && isDatabaseConnected()) {
+    try {
+      await db.alertLog.update({
+        where: { id },
+        data: { resolved: true },
+      });
+    } catch (err) {
+      console.warn('[DataLayer] DB resolveAlert error:', err);
+    }
+  }
+
+  const alerts = await safeReadJson<any[]>('alerts.json', []);
+  const updated = alerts.map((a: any) => (a.id === id ? { ...a, resolved: true } : a));
+  await safeWriteJson('alerts.json', updated);
 }

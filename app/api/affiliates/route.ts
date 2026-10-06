@@ -1,20 +1,7 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { getAffiliateLinks, saveAffiliateLink, deleteAffiliateLink } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic';
-
-const linksFilePath = path.join(process.cwd(), 'data', 'affiliate_links.json');
-
-interface AffiliateLink {
-  id: string;
-  name: string;
-  slug: string;
-  affiliateUrl: string;
-  niche: string;
-  commissionEstimate: string;
-  isActive: boolean;
-}
 
 function slugify(name: string): string {
   return name
@@ -23,30 +10,15 @@ function slugify(name: string): string {
     .replace(/^-|-$/g, '');
 }
 
-async function readLinks(): Promise<AffiliateLink[]> {
-  try {
-    await fs.mkdir(path.dirname(linksFilePath), { recursive: true });
-    const raw = await fs.readFile(linksFilePath, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-async function writeLinks(links: AffiliateLink[]): Promise<void> {
-  await fs.writeFile(linksFilePath, JSON.stringify(links, null, 2));
-}
-
 export async function GET() {
-  const links = await readLinks();
+  const links = await getAffiliateLinks();
   return NextResponse.json(links);
 }
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const links = await readLinks();
 
-  const newLink: AffiliateLink = {
+  const newLink = {
     id: `aff-${Date.now()}`,
     name: body.name,
     slug: body.slug || slugify(body.name),
@@ -56,8 +28,7 @@ export async function POST(request: Request) {
     isActive: body.isActive !== undefined ? body.isActive : true,
   };
 
-  links.push(newLink);
-  await writeLinks(links);
+  await saveAffiliateLink(newLink);
   return NextResponse.json({ success: true, link: newLink });
 }
 
@@ -67,15 +38,15 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: 'Missing id' }, { status: 400 });
   }
 
-  const links = await readLinks();
-  const idx = links.findIndex((l) => l.id === body.id);
-  if (idx === -1) {
+  const links = await getAffiliateLinks();
+  const existing = links.find((l) => l.id === body.id);
+  if (!existing) {
     return NextResponse.json({ error: 'Link not found' }, { status: 404 });
   }
 
-  links[idx] = { ...links[idx], ...body };
-  await writeLinks(links);
-  return NextResponse.json({ success: true, link: links[idx] });
+  const updated = { ...existing, ...body };
+  await saveAffiliateLink(updated);
+  return NextResponse.json({ success: true, link: updated });
 }
 
 export async function DELETE(request: Request) {
@@ -84,8 +55,6 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: 'Missing id' }, { status: 400 });
   }
 
-  const links = await readLinks();
-  const filtered = links.filter((l) => l.id !== id);
-  await writeLinks(filtered);
+  await deleteAffiliateLink(id);
   return NextResponse.json({ success: true });
 }
