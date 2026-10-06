@@ -154,6 +154,8 @@ export default function PublicNewsSite() {
     }
   };
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#050505] text-gray-200 font-sans selection:bg-blue-500/30">
       
@@ -175,7 +177,7 @@ export default function PublicNewsSite() {
         <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-4 cursor-pointer" onClick={() => window.scrollTo(0,0)}>
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center transform rotate-12">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center transform rotate-12 shadow-lg shadow-blue-500/20">
                 <div className="w-4 h-4 bg-white transform -rotate-12"></div>
               </div>
               <div>
@@ -191,16 +193,60 @@ export default function PublicNewsSite() {
               <a href="/advertise" className="text-blue-400 hover:text-blue-300 transition-colors font-mono text-xs">Advertise</a>
             </div>
           </div>
-          <div className="flex items-center gap-5">
-            <Search className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer" />
-            <Bookmark className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer" />
-            <a href="/advertise" className="hidden sm:block text-xs font-mono text-gray-400 hover:text-white border border-gray-800 px-3 py-1.5 rounded-full">
+          <div className="flex items-center gap-4">
+            <a href="/advertise" className="hidden sm:block text-xs font-mono text-gray-400 hover:text-white border border-gray-800 px-3 py-1.5 rounded-full hover:border-blue-500/40 transition-colors">
               Media Kit
             </a>
-            <button className="hidden md:block bg-white text-black px-5 py-2 rounded-full font-bold text-sm hover:bg-gray-200 transition-colors">Subscribe</button>
-            <Menu className="w-6 h-6 text-white md:hidden cursor-pointer" />
+            <button 
+              onClick={() => {
+                const el = document.getElementById('newsletter-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="hidden md:block bg-white text-black px-5 py-2 rounded-full font-bold text-sm hover:bg-gray-200 transition-colors shadow-sm"
+            >
+              Subscribe
+            </button>
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 text-gray-400 hover:text-white md:hidden border border-gray-800 rounded-lg focus:outline-none"
+              aria-label="Toggle Navigation"
+            >
+              <Menu className="w-6 h-6 text-white" />
+            </button>
           </div>
         </div>
+
+        {/* Mobile Dropdown Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-b border-gray-800 bg-[#080c14] px-6 py-6 space-y-4"
+            >
+              <div className="flex flex-col space-y-3 font-semibold text-sm">
+                <span className="text-white hover:text-blue-400 cursor-pointer py-1">Technology</span>
+                <span className="text-gray-300 hover:text-blue-400 cursor-pointer py-1">AI &amp; Future</span>
+                <span className="text-gray-300 hover:text-blue-400 cursor-pointer py-1">Markets</span>
+                <span className="text-gray-300 hover:text-blue-400 cursor-pointer py-1">Startups</span>
+                <a href="/advertise" className="text-blue-400 hover:text-blue-300 font-mono text-xs py-1">📢 Sponsor / Advertise ($3,500/mo)</a>
+              </div>
+              <div className="pt-4 border-t border-gray-800 flex flex-col gap-3">
+                <button 
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    const el = document.getElementById('newsletter-section');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors text-center"
+                >
+                  Subscribe Free Newsletter
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
 
@@ -327,7 +373,9 @@ export default function PublicNewsSite() {
                 </div>
 
                 {/* Newsletter Subscribe */}
-                <NewsletterForm niche="news" variant="inline" />
+                <div id="newsletter-section">
+                  <NewsletterForm niche="news" variant="inline" />
+                </div>
               </div>
             )}
           </>

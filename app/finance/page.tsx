@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { ChevronRight, BarChart2 } from "lucide-react";
+import { ChevronRight, BarChart2, Menu } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import CookieConsent from "../../components/CookieConsent";
 import ArticleSearch from "../../components/ArticleSearch";
 import NewsletterForm from "../../components/NewsletterForm";
@@ -134,6 +135,8 @@ export default function FinanceSite() {
     return () => clearInterval(interval);
   }, []);
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-serif selection:bg-amber-500/30">
       
@@ -160,16 +163,46 @@ export default function FinanceSite() {
       <header className="border-b-4 border-gray-900 bg-white sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 h-24 flex justify-between items-center">
           <div className="flex flex-col">
-            <h1 className="text-4xl font-black text-gray-900 tracking-tighter uppercase font-sans">Wall St <span className="text-amber-600">Insider</span></h1>
-            <p className="text-xs text-gray-500 uppercase tracking-widest font-sans font-bold mt-1">Markets. Economy. Wealth.</p>
+            <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tighter uppercase font-sans">Wall St <span className="text-amber-600">Insider</span></h1>
+            <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest font-sans font-bold mt-1">Markets. Economy. Wealth.</p>
           </div>
           <div className="flex items-center gap-4 font-sans">
-            <a href="/advertise" className="text-xs font-bold uppercase text-amber-700 hover:text-amber-800 tracking-wider">
+            <a href="/advertise" className="hidden sm:block text-xs font-bold uppercase text-amber-700 hover:text-amber-800 tracking-wider">
               Advertise / Media Kit
             </a>
-            <button className="border-2 border-gray-900 px-6 py-2 font-bold font-sans hover:bg-gray-900 hover:text-white transition-colors uppercase text-sm">Subscribe for $1</button>
+            <button className="hidden md:block border-2 border-gray-900 px-6 py-2 font-bold font-sans hover:bg-gray-900 hover:text-white transition-colors uppercase text-sm">Subscribe for $1</button>
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 text-gray-800 md:hidden border border-gray-300 rounded-lg hover:bg-gray-100"
+              aria-label="Toggle Navigation"
+            >
+              <Menu className="w-6 h-6 text-gray-900" />
+            </button>
           </div>
         </div>
+
+        {/* Mobile Dropdown Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-gray-200 bg-gray-50 px-6 py-6 space-y-4 font-sans text-sm"
+            >
+              <div className="flex flex-col space-y-3 font-semibold">
+                <a href="/advertise" className="text-amber-700 hover:text-amber-800 font-bold py-1">📢 Sponsor Wall St Insider ($3,500/mo)</a>
+                <a href="/news" className="text-gray-700 hover:text-black py-1">🌐 Tech Matrix News</a>
+                <a href="/crypto" className="text-gray-700 hover:text-black py-1">₿ Crypto Daily</a>
+              </div>
+              <div className="pt-4 border-t border-gray-200">
+                <button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-2.5 rounded-lg text-xs uppercase tracking-wider transition-colors text-center">
+                  Subscribe to Daily Intelligence
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
 

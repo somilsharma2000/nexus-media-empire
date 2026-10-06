@@ -11,6 +11,8 @@ import GodModeWhaleTracker from "../../components/GodModeWhaleTracker";
 
 
 
+import { motion, AnimatePresence } from "framer-motion";
+
 interface Article { id: number | string; title: string; category: string; time: string; excerpt: string; content?: string; image?: string; featured?: boolean; slug?: string; niche?: string; }
 
 interface AdSlot {
@@ -135,6 +137,8 @@ export default function CryptoSite() {
   const heroArticle = articles.length > 0 ? articles[0] : null;
   const feedArticles = articles.length > 1 ? articles.slice(1) : [];
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#020804] text-gray-200 font-sans selection:bg-green-500/30">
       
@@ -161,7 +165,7 @@ export default function CryptoSite() {
         <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-4 cursor-pointer" onClick={() => window.scrollTo(0,0)}>
-              <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center font-black text-black text-xl">
+              <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center font-black text-black text-xl shadow-lg shadow-green-500/20">
                 ₿
               </div>
               <div>
@@ -175,12 +179,43 @@ export default function CryptoSite() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <a href="/advertise" className="hidden sm:block text-xs font-mono text-gray-400 hover:text-white border border-gray-800 px-3 py-1.5 rounded-full">
+            <a href="/advertise" className="hidden sm:block text-xs font-mono text-gray-400 hover:text-white border border-gray-800 px-3 py-1.5 rounded-full hover:border-green-500/40 transition-colors">
               Media Kit
             </a>
-            <button className="bg-green-500 text-black px-5 py-2 rounded-full font-black text-xs hover:bg-green-400 transition-colors uppercase tracking-wider">Connect Wallet</button>
+            <button className="hidden sm:block bg-green-500 text-black px-5 py-2 rounded-full font-black text-xs hover:bg-green-400 transition-colors uppercase tracking-wider shadow-sm">Connect Wallet</button>
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 text-gray-400 hover:text-white md:hidden border border-gray-800 rounded-lg focus:outline-none"
+              aria-label="Toggle Navigation"
+            >
+              <Menu className="w-6 h-6 text-green-400" />
+            </button>
           </div>
         </div>
+
+        {/* Mobile Dropdown Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-b border-green-900/40 bg-[#040e07] px-6 py-6 space-y-4 font-mono text-sm"
+            >
+              <div className="flex flex-col space-y-3 font-semibold">
+                <a href="/advertise" className="text-green-400 hover:text-green-300 py-1">📢 Sponsor Crypto Daily ($3,500/mo)</a>
+                <a href="/advertise/portal" className="text-gray-300 hover:text-white py-1">🛡️ Real-Time Proof Portal</a>
+                <a href="/news" className="text-gray-300 hover:text-white py-1">🌐 Tech Matrix News</a>
+                <a href="/finance" className="text-gray-300 hover:text-white py-1">📈 Wall St Insider</a>
+              </div>
+              <div className="pt-4 border-t border-green-900/30">
+                <button className="w-full bg-green-500 hover:bg-green-400 text-black font-black py-2.5 rounded-xl text-xs uppercase tracking-wider transition-colors text-center">
+                  Connect Web3 Wallet
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
 

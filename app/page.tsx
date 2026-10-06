@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { 
   Terminal, Activity, Zap, Globe, MessageSquare, Play, CheckCircle, 
   LayoutDashboard, BrainCircuit, Image as ImageIcon, X, Copy, ChevronRight, 
-  TrendingUp, Briefcase, LineChart, Lock,
+  TrendingUp, Briefcase, LineChart, Lock, Menu,
   Database, RefreshCw, Power, Sliders, Brain, Code2, Key, PieChart, BarChart, Layers,
   Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock, Palette, Package, Flame, Building, CreditCard
 } from "lucide-react";
@@ -55,6 +55,7 @@ interface GenerationResults { blog?: string; tweets?: string[]; systemPrompt?: s
 
 export default function NexusDashboard() {
   const [currentView, setCurrentView] = useState("godmode");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [toast, setToast] = useState<{message: string, type: string} | null>(null);
   const showToast = (message: string, type = 'success') => { 
     setToast({message, type}); 
@@ -206,9 +207,63 @@ export default function NexusDashboard() {
     showToast("Copied to clipboard!");
   };
 
+  const renderNavLinks = (closeOnClick = false) => (
+    <>
+      {/* EXECUTIVE COMMAND */}
+      <div className="space-y-1">
+        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Executive Command</p>
+        <NavItem icon={<Zap className="text-amber-400" />} label="God-Mode Hub" active={currentView === 'godmode'} onClick={() => { setCurrentView('godmode'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<LayoutDashboard className="text-blue-400" />} label="Command Center" active={currentView === 'dashboard'} onClick={() => { setCurrentView('dashboard'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<ShieldCheck className="text-emerald-400" />} label="System Health" active={currentView === 'health'} onClick={() => { setCurrentView('health'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+      </div>
+
+      {/* CONTENT ENGINE */}
+      <div className="space-y-1">
+        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Content Engine</p>
+        <NavItem icon={<Sparkles className="text-purple-400" />} label="Article Vault" active={currentView === 'articles'} onClick={() => { setCurrentView('articles'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Tag className="text-cyan-400" />} label="Topic Ingestion" active={currentView === 'topics'} onClick={() => { setCurrentView('topics'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<RefreshCw className="text-blue-400" />} label="Auto-Pilot Pipeline" active={currentView === 'autopilot'} onClick={() => { setCurrentView('autopilot'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Brain className="text-pink-400" />} label="QA Gate Config" active={currentView === 'qaconfig'} onClick={() => { setCurrentView('qaconfig'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+      </div>
+
+      {/* MONETIZATION */}
+      <div className="space-y-1">
+        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Monetization</p>
+        <NavItem icon={<CreditCard className="text-emerald-400" />} label="Razorpay & Orders" active={currentView === 'razorpay'} onClick={() => { setCurrentView('razorpay'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Sliders className="text-yellow-400" />} label="Ad Density Blueprint" active={currentView === 'blueprint'} onClick={() => { setCurrentView('blueprint'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Building className="text-blue-400" />} label="Brand Sponsors & RFPs" active={currentView === 'sponsors'} onClick={() => { setCurrentView('sponsors'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<BrainCircuit className="text-cyan-400" />} label="Behavioral Targeting" active={currentView === 'behavioral'} onClick={() => { setCurrentView('behavioral'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Layers className="text-amber-400" />} label="Ad Slot Manager" active={currentView === 'adslots'} onClick={() => { setCurrentView('adslots'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Link2 className="text-emerald-400" />} label="Affiliate Bounties" active={currentView === 'affiliates'} onClick={() => { setCurrentView('affiliates'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Package className="text-emerald-400" />} label="Digital Product Funnel" active={currentView === 'products'} onClick={() => { setCurrentView('products'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<TrendingUp className="text-green-400" />} label="Revenue & Analytics" active={currentView === 'analytics'} onClick={() => { setCurrentView('analytics'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+      </div>
+
+      {/* GROWTH & SOCIAL */}
+      <div className="space-y-1">
+        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Growth & Social</p>
+        <NavItem icon={<Mail className="text-pink-400" />} label="Templates & Popups" active={currentView === 'templates'} onClick={() => { setCurrentView('templates'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Share2 className="text-cyan-400" />} label="Omni-Brand Socials" active={currentView === 'omnisocial'} onClick={() => { setCurrentView('omnisocial'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Flame className="text-amber-400" />} label="Viral Hook Studio" active={currentView === 'hooks'} onClick={() => { setCurrentView('hooks'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Palette className="text-pink-400" />} label="Promo Poster Studio" active={currentView === 'posters'} onClick={() => { setCurrentView('posters'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<BarChart className="text-purple-400" />} label="SEO Opportunities" active={currentView === 'seo'} onClick={() => { setCurrentView('seo'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Mail className="text-indigo-400" />} label="Newsletter Hub" active={currentView === 'newsletter'} onClick={() => { setCurrentView('newsletter'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Link2 className="text-blue-400" />} label="Backlink Authority" active={currentView === 'backlinks'} onClick={() => { setCurrentView('backlinks'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+      </div>
+
+      {/* INFRASTRUCTURE */}
+      <div className="space-y-1">
+        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Infrastructure</p>
+        <NavItem icon={<Clock className="text-teal-400" />} label="Chrono Automations" active={currentView === 'automation'} onClick={() => { setCurrentView('automation'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Globe className="text-blue-400" />} label="Account Connections" active={currentView === 'connections'} onClick={() => { setCurrentView('connections'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+        <NavItem icon={<Key className="text-amber-400" />} label="Settings & API Keys" active={currentView === 'settings'} onClick={() => { setCurrentView('settings'); if (closeOnClick) setIsMobileMenuOpen(false); }} />
+      </div>
+    </>
+  );
+
   return (
     <AdminSecurityGate>
-      <div className="flex h-screen w-screen bg-[#030508] text-gray-100 font-sans overflow-hidden selection:bg-blue-500/30">
+      <div className="flex flex-col lg:flex-row h-screen w-screen bg-[#030508] text-gray-100 font-sans overflow-hidden selection:bg-blue-500/30">
       
       {/* Toast Notification */}
       {toast && (
@@ -218,8 +273,80 @@ export default function NexusDashboard() {
         </div>
       )}
 
-      {/* Sidebar Navigation */}
-      <aside className="w-72 border-r border-gray-850 bg-[#06080d] p-5 flex flex-col justify-between shrink-0 select-none overflow-hidden h-full z-20">
+      {/* Mobile Top Navigation Header (Screens < 1024px) */}
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#06080d] border-b border-gray-800 w-full z-30 shrink-0 shadow-lg">
+        <div className="flex items-center gap-2.5">
+          <div className="p-1.5 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl shadow-md shadow-blue-600/30">
+            <BrainCircuit className="w-4 h-4 text-white" />
+          </div>
+          <div>
+            <span className="font-black text-xs text-white tracking-wider font-mono">
+              NEXUS<span className="text-blue-500">MEDIA</span>
+            </span>
+            <span className="text-[9px] text-gray-500 font-mono block -mt-0.5">Autonomous Control</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-blue-500/10 text-blue-400 border border-blue-500/30">
+            {currentView}
+          </span>
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 bg-gray-900 hover:bg-gray-800 text-gray-200 rounded-xl border border-gray-700 transition-colors shadow-sm"
+            aria-label="Toggle navigation drawer"
+          >
+            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Slide-Over Navigation Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-40 lg:hidden flex"
+          >
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 280 }}
+              className="bg-[#06080d] w-4/5 max-w-xs h-full border-r border-gray-800 p-5 flex flex-col justify-between overflow-y-auto"
+            >
+              <div className="space-y-4">
+                <div className="flex justify-between items-center pb-3 border-b border-gray-800">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 bg-blue-600 rounded-lg">
+                      <BrainCircuit className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="font-bold text-xs text-white">Navigation Menu</span>
+                  </div>
+                  <button onClick={() => setIsMobileMenuOpen(false)} className="p-1 text-gray-400 hover:text-white">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <nav className="flex flex-col gap-5 text-xs">
+                  {renderNavLinks(true)}
+                </nav>
+              </div>
+
+              <div className="pt-4 border-t border-gray-800 text-[10px] text-gray-500 font-mono text-center">
+                Nexus Autonomous Media Network v3.0
+              </div>
+            </motion.div>
+
+            <div className="flex-1" onClick={() => setIsMobileMenuOpen(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Sidebar Navigation */}
+      <aside className="hidden lg:flex w-72 border-r border-gray-850 bg-[#06080d] p-5 flex-col justify-between shrink-0 select-none overflow-hidden h-full z-20">
         <div className="flex flex-col gap-6 overflow-hidden flex-1">
           <div className="flex items-center gap-3 px-2 pt-1">
             <div className="p-2 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl shadow-lg shadow-blue-900/40 border border-blue-400/30">
@@ -234,56 +361,7 @@ export default function NexusDashboard() {
           </div>
           
           <nav className="flex flex-col gap-5 overflow-y-auto pr-1 text-xs custom-scrollbar">
-            {/* EXECUTIVE COMMAND */}
-            <div className="space-y-1">
-              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Executive Command</p>
-              <NavItem icon={<Zap className="text-amber-400" />} label="God-Mode Hub" active={currentView === 'godmode'} onClick={() => setCurrentView('godmode')} />
-              <NavItem icon={<LayoutDashboard className="text-blue-400" />} label="Command Center" active={currentView === 'dashboard'} onClick={() => setCurrentView('dashboard')} />
-              <NavItem icon={<ShieldCheck className="text-emerald-400" />} label="System Health" active={currentView === 'health'} onClick={() => setCurrentView('health')} />
-            </div>
-
-            {/* CONTENT ENGINE */}
-            <div className="space-y-1">
-              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Content Engine</p>
-              <NavItem icon={<Sparkles className="text-purple-400" />} label="Article Vault" active={currentView === 'articles'} onClick={() => setCurrentView('articles')} />
-              <NavItem icon={<Tag className="text-cyan-400" />} label="Topic Ingestion" active={currentView === 'topics'} onClick={() => setCurrentView('topics')} />
-              <NavItem icon={<RefreshCw className="text-blue-400" />} label="Auto-Pilot Pipeline" active={currentView === 'autopilot'} onClick={() => setCurrentView('autopilot')} />
-              <NavItem icon={<Brain className="text-pink-400" />} label="QA Gate Config" active={currentView === 'qaconfig'} onClick={() => setCurrentView('qaconfig')} />
-            </div>
-
-            {/* MONETIZATION */}
-            <div className="space-y-1">
-              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Monetization</p>
-              <NavItem icon={<CreditCard className="text-emerald-400" />} label="Razorpay & Orders" active={currentView === 'razorpay'} onClick={() => setCurrentView('razorpay')} />
-              <NavItem icon={<Sliders className="text-yellow-400" />} label="Ad Density Blueprint" active={currentView === 'blueprint'} onClick={() => setCurrentView('blueprint')} />
-              <NavItem icon={<Building className="text-blue-400" />} label="Brand Sponsors & RFPs" active={currentView === 'sponsors'} onClick={() => setCurrentView('sponsors')} />
-              <NavItem icon={<BrainCircuit className="text-cyan-400" />} label="Behavioral Targeting" active={currentView === 'behavioral'} onClick={() => setCurrentView('behavioral')} />
-              <NavItem icon={<Layers className="text-amber-400" />} label="Ad Slot Manager" active={currentView === 'adslots'} onClick={() => setCurrentView('adslots')} />
-              <NavItem icon={<Link2 className="text-emerald-400" />} label="Affiliate Bounties" active={currentView === 'affiliates'} onClick={() => setCurrentView('affiliates')} />
-              <NavItem icon={<Package className="text-emerald-400" />} label="Digital Product Funnel" active={currentView === 'products'} onClick={() => setCurrentView('products')} />
-              <NavItem icon={<TrendingUp className="text-green-400" />} label="Revenue & Analytics" active={currentView === 'analytics'} onClick={() => setCurrentView('analytics')} />
-            </div>
-
-
-            {/* GROWTH & SOCIAL */}
-            <div className="space-y-1">
-              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Growth & Social</p>
-              <NavItem icon={<Mail className="text-pink-400" />} label="Templates & Popups" active={currentView === 'templates'} onClick={() => setCurrentView('templates')} />
-              <NavItem icon={<Share2 className="text-cyan-400" />} label="Omni-Brand Socials" active={currentView === 'omnisocial'} onClick={() => setCurrentView('omnisocial')} />
-              <NavItem icon={<Flame className="text-amber-400" />} label="Viral Hook Studio" active={currentView === 'hooks'} onClick={() => setCurrentView('hooks')} />
-              <NavItem icon={<Palette className="text-pink-400" />} label="Promo Poster Studio" active={currentView === 'posters'} onClick={() => setCurrentView('posters')} />
-              <NavItem icon={<BarChart className="text-purple-400" />} label="SEO Opportunities" active={currentView === 'seo'} onClick={() => setCurrentView('seo')} />
-              <NavItem icon={<Mail className="text-indigo-400" />} label="Newsletter Hub" active={currentView === 'newsletter'} onClick={() => setCurrentView('newsletter')} />
-              <NavItem icon={<Link2 className="text-blue-400" />} label="Backlink Authority" active={currentView === 'backlinks'} onClick={() => setCurrentView('backlinks')} />
-            </div>
-
-            {/* INFRASTRUCTURE */}
-            <div className="space-y-1">
-              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Infrastructure</p>
-              <NavItem icon={<Clock className="text-teal-400" />} label="Chrono Automations" active={currentView === 'automation'} onClick={() => setCurrentView('automation')} />
-              <NavItem icon={<Globe className="text-blue-400" />} label="Account Connections" active={currentView === 'connections'} onClick={() => setCurrentView('connections')} />
-              <NavItem icon={<Key className="text-amber-400" />} label="Settings & API Keys" active={currentView === 'settings'} onClick={() => setCurrentView('settings')} />
-            </div>
+            {renderNavLinks(false)}
           </nav>
         </div>
 
@@ -306,7 +384,7 @@ export default function NexusDashboard() {
       </aside>
 
       {/* Main Content Area - Full Width & Cleanly Centered */}
-      <main className="flex-1 min-w-0 p-6 md:p-8 lg:p-10 relative flex flex-col h-screen overflow-y-auto bg-[#030508]">
+      <main className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 lg:p-10 relative flex flex-col h-screen overflow-y-auto bg-[#030508]">
         <div className="w-full max-w-7xl mx-auto space-y-8 pb-16">
           
           {/* VIEW: GOD-MODE MASTER CONTROL */}
