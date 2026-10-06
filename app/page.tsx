@@ -24,7 +24,6 @@ import {
 import { motion } from "framer-motion";
 import CookieConsent from "../components/CookieConsent";
 import NewsletterForm from "../components/NewsletterForm";
-import GodModeLiveTicker from "../components/GodModeLiveTicker";
 import ArticleSearch from "../components/ArticleSearch";
 
 interface Article {
@@ -120,9 +119,6 @@ export default function PublicHomePage() {
 
   return (
     <div className="min-h-screen bg-[#030712] text-gray-100 font-sans selection:bg-blue-600 selection:text-white pb-20">
-      {/* Top Breaking Ticker */}
-      <GodModeLiveTicker />
-
       {/* Global Header Navigation */}
       <header className="sticky top-0 z-50 bg-[#030712]/90 backdrop-blur-xl border-b border-gray-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">

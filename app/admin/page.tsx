@@ -37,8 +37,8 @@ import SponsorManager from "../../components/SponsorManager";
 import AdminSecurityGate from "../../components/AdminSecurityGate";
 import MonetizationBlueprint from "../../components/MonetizationBlueprint";
 import RazorpayGatewayHub from "../../components/RazorpayGatewayHub";
-import CommunicationsStudio from "../../components/CommunicationsStudio";
 import MetaAgencyStudio from "../../components/MetaAgencyStudio";
+import AdNetworkHub from "../../components/AdNetworkHub";
 
 interface NavItemProps {
   icon: React.ReactNode;
@@ -124,6 +124,7 @@ export default function NexusDashboard() {
       {/* 3. MONETIZATION */}
       <div className="space-y-1">
         <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1 font-mono">Monetization Hub</p>
+        <NavItem icon={<Globe />} label="Ad Networks &amp; Exchanges" active={currentView === "adnetworks"} onClick={() => { setCurrentView("adnetworks"); if (closeOnClick) setIsMobileMenuOpen(false); }} badge="9 Networks" />
         <NavItem icon={<Layers />} label="Ad Slot Manager" active={currentView === "adslots"} onClick={() => { setCurrentView("adslots"); if (closeOnClick) setIsMobileMenuOpen(false); }} />
         <NavItem icon={<Link2 />} label="Affiliate Links (/go)" active={currentView === "affiliates"} onClick={() => { setCurrentView("affiliates"); if (closeOnClick) setIsMobileMenuOpen(false); }} />
         <NavItem icon={<Building />} label="Sponsors &amp; Inquiries" active={currentView === "sponsors"} onClick={() => { setCurrentView("sponsors"); if (closeOnClick) setIsMobileMenuOpen(false); }} />
@@ -391,6 +392,13 @@ export default function NexusDashboard() {
                   <p className="text-gray-400 text-sm mt-1">Tune the 5-dimension AI self-reviewer thresholds, budget cap, and auto-publish behavior.</p>
                 </header>
                 <QAConfigPanel />
+              </motion.div>
+            )}
+
+            {/* VIEW: AD NETWORKS & EXCHANGES */}
+            {currentView === "adnetworks" && (
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+                <AdNetworkHub />
               </motion.div>
             )}
 

@@ -22,7 +22,6 @@ import CookieConsent from "../../components/CookieConsent";
 import ArticleSearch from "../../components/ArticleSearch";
 import NewsletterForm from "../../components/NewsletterForm";
 import BrandTakeoverBanner from "../../components/BrandTakeoverBanner";
-import GodModeLiveTicker from "../../components/GodModeLiveTicker";
 import GodModeWhaleTracker from "../../components/GodModeWhaleTracker";
 
 interface Article { 
@@ -238,9 +237,6 @@ export default function CryptoSite() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Top Live Telemetry Ticker */}
-      <GodModeLiveTicker niche="crypto" />
 
       {/* Brand Sponsor Takeover Banner */}
       <BrandTakeoverBanner niche="crypto" />

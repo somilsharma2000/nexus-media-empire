@@ -22,7 +22,6 @@ import CookieConsent from "../../components/CookieConsent";
 import ArticleSearch from "../../components/ArticleSearch";
 import NewsletterForm from "../../components/NewsletterForm";
 import BrandTakeoverBanner from "../../components/BrandTakeoverBanner";
-import GodModeLiveTicker from "../../components/GodModeLiveTicker";
 
 interface Article { 
   id: number | string; 
@@ -237,9 +236,6 @@ export default function PublicNewsSite() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Top Live Telemetry Ticker */}
-      <GodModeLiveTicker niche="news" />
 
       {/* Brand Sponsor Takeover Banner */}
       <BrandTakeoverBanner niche="news" />

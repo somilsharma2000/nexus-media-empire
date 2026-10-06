@@ -18,7 +18,6 @@ import ExitIntentModal from "../../../components/ExitIntentModal";
 import SmartBehavioralAdUnit from "../../../components/SmartBehavioralAdUnit";
 import SmartBehavioralPill from "../../../components/SmartBehavioralPill";
 import BrandTakeoverBanner from "../../../components/BrandTakeoverBanner";
-import GodModeLiveTicker from "../../../components/GodModeLiveTicker";
 import GodModeArticleCopilot from "../../../components/GodModeArticleCopilot";
 import InstantProductCheckoutModal, { DigitalProduct } from "../../../components/InstantProductCheckoutModal";
 
@@ -216,9 +215,6 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
 
       {/* Exit Intent Lead Capture Modal */}
       <ExitIntentModal niche={article.niche} />
-
-      {/* Live God-Mode Telemetry Ticker */}
-      <GodModeLiveTicker niche={article.niche} />
 
       {/* Brand Sponsor Takeover Banner */}
       <BrandTakeoverBanner niche={article.niche} />

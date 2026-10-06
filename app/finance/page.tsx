@@ -22,7 +22,6 @@ import CookieConsent from "../../components/CookieConsent";
 import ArticleSearch from "../../components/ArticleSearch";
 import NewsletterForm from "../../components/NewsletterForm";
 import BrandTakeoverBanner from "../../components/BrandTakeoverBanner";
-import GodModeLiveTicker from "../../components/GodModeLiveTicker";
 import GodModeMacroRadar from "../../components/GodModeMacroRadar";
 
 interface Article { 
@@ -238,9 +237,6 @@ export default function FinanceSite() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Top Live Telemetry Ticker */}
-      <GodModeLiveTicker niche="finance" />
 
       {/* Brand Sponsor Takeover Banner */}
       <BrandTakeoverBanner niche="finance" />
