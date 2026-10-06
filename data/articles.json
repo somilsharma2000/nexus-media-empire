@@ -222,8 +222,8 @@
       "5/ Empirical data shows systematic implementation reduces friction by up to 45% while protecting accuracy.",
       "6/ Read the full deep-dive and operational playbook here: https://thetrendmatrix.com/news/ai-coding-assistants-explained-copilot-vs-cursor-vs-claude-code"
     ],
-    "status": "scheduled",
-    "publishedAt": null,
+    "status": "published",
+    "publishedAt": "2026-10-06T09:56:13.265Z",
     "publishAt": "2026-10-06T08:02:23.686Z",
     "createdAt": "2026-10-03T08:02:23.686Z",
     "updatedAt": "2026-10-03T08:02:23.686Z",
@@ -245,7 +245,8 @@
       "rejectionReason": ""
     },
     "image": "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop",
-    "inlineImage": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
+    "inlineImage": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop",
+    "featured": false
   },
   {
     "id": "art-vault-7",
@@ -1863,7 +1864,9 @@
     "viewCount": 78,
     "publishAt": "2026-10-20T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
-    "publishedAt": null
+    "publishedAt": null,
+    "human_verified": true,
+    "updatedAt": "2026-10-06T09:56:47.494Z"
   },
   {
     "id": "art-vault-47",
@@ -1902,7 +1905,9 @@
     "viewCount": 85,
     "publishAt": "2026-10-21T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
-    "publishedAt": null
+    "publishedAt": null,
+    "human_verified": true,
+    "updatedAt": "2026-10-06T09:56:48.113Z"
   },
   {
     "id": "art-vault-48",
@@ -1941,7 +1946,9 @@
     "viewCount": 74,
     "publishAt": "2026-10-22T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
-    "publishedAt": null
+    "publishedAt": null,
+    "human_verified": true,
+    "updatedAt": "2026-10-06T09:56:51.784Z"
   },
   {
     "id": "art-vault-49",
@@ -1980,7 +1987,9 @@
     "viewCount": 50,
     "publishAt": "2026-10-23T07:28:09.539Z",
     "createdAt": "2026-10-04T07:28:09.539Z",
-    "publishedAt": null
+    "publishedAt": null,
+    "human_verified": true,
+    "updatedAt": "2026-10-06T09:56:55.569Z"
   },
   {
     "id": "art-vault-50",
