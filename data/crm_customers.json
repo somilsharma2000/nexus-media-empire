@@ -1,0 +1,109 @@
+[
+  {
+    "id": "crm_cust_001",
+    "name": "Alex Vance",
+    "email": "alex.trading@hedgefund.io",
+    "company": "Vance Quant Capital",
+    "phone": "+1 (415) 892-3341",
+    "country": "United States",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80",
+    "tier": "VIP Whale",
+    "status": "Active",
+    "totalSpentUsd": 2450,
+    "totalSpentInr": 0,
+    "ordersCount": 4,
+    "lastActive": "2026-10-06T06:30:15.000Z",
+    "tags": ["Crypto VIP", "Algorithmic Trader", "Annual Sponsor", "Fast Payer"],
+    "assignedRep": "Nexus Executive Desk",
+    "notes": "Interested in exclusive sponsorship of Crypto Daily newsletter. High responsiveness.",
+    "deals": [
+      { "id": "deal_01", "title": "Custom High-Frequency Bot Kit", "amount": 1499, "currency": "USD", "date": "2026-10-06", "status": "Paid" },
+      { "id": "deal_02", "title": "Crypto Daily Header Placement (Month)", "amount": 950, "currency": "USD", "date": "2026-09-15", "status": "Paid" }
+    ]
+  },
+  {
+    "id": "crm_cust_002",
+    "name": "Rahul Sharma",
+    "email": "rahul.tech@startup.in",
+    "company": "HyperScale Labs",
+    "phone": "+91 98201 44521",
+    "country": "India",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80",
+    "tier": "Pro Subscriber",
+    "status": "Active",
+    "totalSpentUsd": 0,
+    "totalSpentInr": 48999,
+    "ordersCount": 3,
+    "lastActive": "2026-10-06T05:15:22.000Z",
+    "tags": ["AI Builder", "UPI Verified", "Growth Playbook", "Community Leader"],
+    "assignedRep": "Growth Team",
+    "notes": "Purchased Media Empire Blueprint via UPI. Enquired about custom enterprise white-label license.",
+    "deals": [
+      { "id": "deal_03", "title": "Nexus Autonomous Empire Blueprint", "amount": 3999, "currency": "INR", "date": "2026-10-06", "status": "Paid" },
+      { "id": "deal_04", "title": "Enterprise Media White-Label Advisory", "amount": 45000, "currency": "INR", "date": "2026-09-28", "status": "Paid" }
+    ]
+  },
+  {
+    "id": "crm_cust_003",
+    "name": "Marcus Aurelius Lindqvist",
+    "email": "growth@ledgerdefi.com",
+    "company": "Ledger DeFi Protocol",
+    "phone": "+44 20 7946 0912",
+    "country": "United Kingdom",
+    "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80",
+    "tier": "Enterprise Sponsor",
+    "status": "Active",
+    "totalSpentUsd": 3850,
+    "totalSpentInr": 0,
+    "ordersCount": 2,
+    "lastActive": "2026-10-05T22:40:10.000Z",
+    "tags": ["DeFi Protocol", "Header Sponsor", "Web3 Whale", "Retainer"],
+    "assignedRep": "Ad Operations",
+    "notes": "Quarterly sponsor across Wall St Insider & Crypto Daily. Net 15 terms requested.",
+    "deals": [
+      { "id": "deal_05", "title": "Multi-Domain Banner Retainer Q4", "amount": 3500, "currency": "USD", "date": "2026-10-05", "status": "Paid" },
+      { "id": "deal_06", "title": "Dedicated Sponsored Analytical Brief", "amount": 350, "currency": "USD", "date": "2026-09-10", "status": "Paid" }
+    ]
+  },
+  {
+    "id": "crm_cust_004",
+    "name": "Sarah Jenkins",
+    "email": "sarah.invests@familyoffice.co",
+    "company": "Alpine Heritage Capital",
+    "phone": "+1 (212) 555-0199",
+    "country": "United States",
+    "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop&q=80",
+    "tier": "Pro Subscriber",
+    "status": "Active",
+    "totalSpentUsd": 648,
+    "totalSpentInr": 0,
+    "ordersCount": 2,
+    "lastActive": "2026-10-05T18:10:45.000Z",
+    "tags": ["VIP Newsletter", "Macro Investor", "High Net Worth"],
+    "assignedRep": "Editorial Desk",
+    "notes": "VIP Newsletter annual subscriber. Frequent reader of Finance category.",
+    "deals": [
+      { "id": "deal_07", "title": "VIP Alpha Newsletter Membership (1 Year)", "amount": 349, "currency": "USD", "date": "2026-10-05", "status": "Paid" },
+      { "id": "deal_08", "title": "Family Office AI Research Report", "amount": 299, "currency": "USD", "date": "2026-08-20", "status": "Paid" }
+    ]
+  },
+  {
+    "id": "crm_cust_005",
+    "name": "Elena Rostova",
+    "email": "elena@nordicventure.de",
+    "company": "Nordic AI Ventures",
+    "phone": "+49 30 1234 5678",
+    "country": "Germany",
+    "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&auto=format&fit=crop&q=80",
+    "tier": "Warm Lead",
+    "status": "Negotiating",
+    "totalSpentUsd": 0,
+    "totalSpentInr": 0,
+    "ordersCount": 0,
+    "lastActive": "2026-10-06T08:20:00.000Z",
+    "tags": ["VC Lead", "Newsletter Inquiry", "German Market"],
+    "assignedRep": "Nexus Executive Desk",
+    "notes": "Inquired for 6-month newsletter co-branding contract. RFP pending quotation of $5,000.",
+    "deals": []
+  }
+]

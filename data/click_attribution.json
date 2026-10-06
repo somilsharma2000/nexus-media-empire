@@ -1,0 +1,40 @@
+{
+  "totalImpressions": 284500,
+  "totalClicks": 12840,
+  "overallCtr": 4.51,
+  "totalConversions": 492,
+  "conversionRate": 3.83,
+  "estimatedRevenueUsd": 8420.50,
+  "sources": [
+    { "source": "Organic Search (Google / Perplexity)", "visitors": 142000, "clicks": 6820, "ctr": 4.80, "conversions": 268, "revenue": 4580.00 },
+    { "source": "Twitter / X Threads", "visitors": 64500, "clicks": 3120, "ctr": 4.83, "conversions": 114, "revenue": 1950.50 },
+    { "source": "Reddit & Quora Communities", "visitors": 42000, "clicks": 1840, "ctr": 4.38, "conversions": 68, "revenue": 1160.00 },
+    { "source": "Beehiiv & Substack Newsletters", "visitors": 24000, "clicks": 820, "ctr": 3.41, "conversions": 34, "revenue": 580.00 },
+    { "source": "Direct / Bookmarks", "visitors": 12000, "clicks": 240, "ctr": 2.00, "conversions": 8, "revenue": 150.00 }
+  ],
+  "topCampaigns": [
+    { "name": "Crypto Yield Staking Guide 2026", "clicks": 2840, "conversions": 142, "epc": 1.25, "roi": "+420%" },
+    { "name": "AI Quantitative Trading Bot Kit Launch", "clicks": 2410, "conversions": 118, "epc": 2.10, "roi": "+850%" },
+    { "name": "Top 10 High-Growth Index Funds", "clicks": 1980, "conversions": 86, "epc": 0.95, "roi": "+310%" },
+    { "name": "Ledger Hardware Wallet Cold Storage", "clicks": 1560, "conversions": 74, "epc": 1.45, "roi": "+520%" }
+  ],
+  "geoDistribution": [
+    { "country": "United States", "code": "US", "percentage": 46.5, "rpmUsd": 38.50, "conversions": 228 },
+    { "country": "India", "code": "IN", "percentage": 24.2, "rpmUsd": 12.80, "conversions": 142 },
+    { "country": "United Kingdom", "code": "UK", "percentage": 11.4, "rpmUsd": 32.40, "conversions": 56 },
+    { "country": "Germany & EU", "code": "DE", "percentage": 9.8, "rpmUsd": 29.10, "conversions": 42 },
+    { "country": "Canada & Australia", "code": "CA", "percentage": 8.1, "rpmUsd": 34.00, "conversions": 24 }
+  ],
+  "deviceSplit": {
+    "desktop": 58.4,
+    "mobile": 37.2,
+    "tablet": 4.4
+  },
+  "recentClickStream": [
+    { "id": "clk_01", "time": "1 min ago", "target": "Ledger Wallet Affiliate", "source": "Organic Search", "niche": "Crypto", "country": "US", "converted": true, "payout": "$25.00" },
+    { "id": "clk_02", "time": "3 mins ago", "target": "Trading Bot Kit Checkout", "source": "Twitter Thread", "niche": "Tech", "country": "IN", "converted": true, "payout": "₹3,999" },
+    { "id": "clk_03", "time": "6 mins ago", "target": "TradingView Pro Banner", "source": "Reddit r/investing", "niche": "Finance", "country": "UK", "converted": false, "payout": "$0.00" },
+    { "id": "clk_04", "time": "9 mins ago", "target": "VIP Newsletter Annual Sub", "source": "Beehiiv Digest", "niche": "Finance", "country": "US", "converted": true, "payout": "$349.00" },
+    { "id": "clk_05", "time": "14 mins ago", "target": "Coinbase Exchange Signup", "source": "Organic Search", "niche": "Crypto", "country": "DE", "converted": true, "payout": "$10.00" }
+  ]
+}

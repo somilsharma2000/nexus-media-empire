@@ -1,0 +1,62 @@
+[
+  {
+    "id": "INV-2026-001",
+    "clientName": "Marcus Aurelius Lindqvist",
+    "clientCompany": "Ledger DeFi Protocol",
+    "clientEmail": "growth@ledgerdefi.com",
+    "currency": "USD",
+    "subtotal": 3500,
+    "taxRate": 0,
+    "taxAmount": 0,
+    "total": 3500,
+    "issueDate": "2026-10-01",
+    "dueDate": "2026-10-15",
+    "status": "Paid",
+    "paymentMethod": "Razorpay Corporate Card",
+    "paymentRef": "pay_O1kL774pQ82f",
+    "items": [
+      { "description": "Wall St Insider & Crypto Daily Header Takeover (Q4 Month 1)", "qty": 1, "rate": 3500, "amount": 3500 }
+    ],
+    "notes": "Thank you for partnering with Nexus Media Empire."
+  },
+  {
+    "id": "INV-2026-002",
+    "clientName": "Rahul Sharma",
+    "clientCompany": "HyperScale Labs",
+    "clientEmail": "rahul.tech@startup.in",
+    "currency": "INR",
+    "subtotal": 41525,
+    "taxRate": 18,
+    "taxAmount": 7474,
+    "total": 48999,
+    "issueDate": "2026-09-28",
+    "dueDate": "2026-10-05",
+    "status": "Paid",
+    "paymentMethod": "Razorpay UPI (Google Pay)",
+    "paymentRef": "pay_O1kL883mN91e",
+    "items": [
+      { "description": "Nexus Autonomous Media Network Enterprise License", "qty": 1, "rate": 41525, "amount": 41525 }
+    ],
+    "notes": "GST 18% inclusive. Includes full source code repository and deployment orchestration."
+  },
+  {
+    "id": "INV-2026-003",
+    "clientName": "Elena Rostova",
+    "clientCompany": "Nordic AI Ventures",
+    "clientEmail": "elena@nordicventure.de",
+    "currency": "USD",
+    "subtotal": 5000,
+    "taxRate": 0,
+    "taxAmount": 0,
+    "total": 5000,
+    "issueDate": "2026-10-05",
+    "dueDate": "2026-10-20",
+    "status": "Pending",
+    "paymentMethod": "Direct Razorpay Link",
+    "paymentRef": null,
+    "items": [
+      { "description": "Sponsored Tech Matrix Deep-Dive Column (6-Week Retainer)", "qty": 1, "rate": 5000, "amount": 5000 }
+    ],
+    "notes": "Payment link active. Auto-converts to EUR on checkout."
+  }
+]
