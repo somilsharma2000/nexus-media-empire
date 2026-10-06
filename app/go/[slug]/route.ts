@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { logAffiliateClick } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,12 +61,8 @@ export async function GET(request: Request, { params }: { params: { slug: string
       return NextResponse.redirect(new URL('/', request.url));
     }
 
-    // Log the click
-    await appendClick({
-      slug,
-      affiliateUrl: link.affiliateUrl,
-      timestamp: new Date().toISOString(),
-    });
+    // Log the click in database & local storage
+    await logAffiliateClick(slug, link.affiliateUrl, link.niche);
 
     console.log(`[Affiliate Tracking] Click: ${slug} → ${link.affiliateUrl}`);
 

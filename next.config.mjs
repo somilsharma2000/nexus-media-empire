@@ -1,13 +1,43 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    // Lint errors will be shown as warnings during dev but won't fail production builds.
-    // Fix remaining lint issues incrementally before launch.
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Type errors are caught during dev; build proceeds for deployment.
     ignoreBuildErrors: false,
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+        ],
+      },
+    ];
   },
 };
 

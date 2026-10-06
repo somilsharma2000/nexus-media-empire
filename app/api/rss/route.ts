@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
-
-const ARTICLES_PATH = path.join(process.cwd(), 'data', 'articles.json');
+import { getArticles } from '@/lib/data-layer';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -15,11 +12,10 @@ export async function GET(req: Request) {
   };
 
   const pubName = nicheTitles[niche] || 'Nexus Media Empire';
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thetrendmatrix.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://media-empire-beta.vercel.app';
 
   try {
-    const raw = await fs.readFile(ARTICLES_PATH, 'utf-8');
-    const allArticles = JSON.parse(raw);
+    const allArticles = await getArticles();
     const articles = allArticles.filter((a: any) => a.niche === niche || niche === 'all');
 
     const rssItems = articles

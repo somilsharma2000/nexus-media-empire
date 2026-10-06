@@ -84,13 +84,13 @@ export default function GeoSchema({
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://thetrendmatrix.com"
+            "item": process.env.NEXT_PUBLIC_SITE_URL || "https://media-empire-beta.vercel.app"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": niche.charAt(0).toUpperCase() + niche.slice(1),
-            "item": `https://thetrendmatrix.com/${niche}`
+            "item": `${process.env.NEXT_PUBLIC_SITE_URL || "https://media-empire-beta.vercel.app"}/${niche}`
           },
           {
             "@type": "ListItem",
