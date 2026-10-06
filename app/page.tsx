@@ -6,7 +6,7 @@ import {
   LayoutDashboard, BrainCircuit, Image as ImageIcon, X, Copy, ChevronRight, 
   TrendingUp, Briefcase, LineChart, Lock,
   Database, RefreshCw, Power, Sliders, Brain, Code2, Key, PieChart, BarChart, Layers,
-  Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock, Palette, Package, Flame, Building
+  Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock, Palette, Package, Flame, Building, CreditCard
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import RevenueDashboard from "../components/RevenueDashboard";
@@ -34,6 +34,7 @@ import BehavioralAnalyticsPanel from "../components/BehavioralAnalyticsPanel";
 import SponsorManager from "../components/SponsorManager";
 import AdminSecurityGate from "../components/AdminSecurityGate";
 import MonetizationBlueprint from "../components/MonetizationBlueprint";
+import RazorpayGatewayHub from "../components/RazorpayGatewayHub";
 
 
 const TRENDS = [
@@ -252,6 +253,7 @@ export default function NexusDashboard() {
             {/* MONETIZATION */}
             <div className="space-y-1">
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Monetization</p>
+              <NavItem icon={<CreditCard className="text-emerald-400" />} label="Razorpay & Orders" active={currentView === 'razorpay'} onClick={() => setCurrentView('razorpay')} />
               <NavItem icon={<Sliders className="text-yellow-400" />} label="Ad Density Blueprint" active={currentView === 'blueprint'} onClick={() => setCurrentView('blueprint')} />
               <NavItem icon={<Building className="text-blue-400" />} label="Brand Sponsors & RFPs" active={currentView === 'sponsors'} onClick={() => setCurrentView('sponsors')} />
               <NavItem icon={<BrainCircuit className="text-cyan-400" />} label="Behavioral Targeting" active={currentView === 'behavioral'} onClick={() => setCurrentView('behavioral')} />
@@ -486,6 +488,13 @@ export default function NexusDashboard() {
           {currentView === 'sponsors' && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
               <SponsorManager />
+            </motion.div>
+          )}
+
+          {/* VIEW: RAZORPAY GATEWAY & ORDERS */}
+          {currentView === 'razorpay' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <RazorpayGatewayHub />
             </motion.div>
           )}
 
