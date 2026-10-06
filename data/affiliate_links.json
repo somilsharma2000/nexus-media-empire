@@ -1,5 +1,29 @@
 [
-  {"id":"aff-1", "name":"Ledger Hardware Wallet", "slug":"ledger-wallet", "affiliateUrl":"https://ledger.com", "niche":"crypto", "commissionEstimate":"$15-30 per sale", "isActive":true},
-  {"id":"aff-2", "name":"TradingView Pro", "slug":"tradingview-pro", "affiliateUrl":"https://tradingview.com", "niche":"finance", "commissionEstimate":"$20 per sale", "isActive":true},
-  {"id":"aff-3", "name":"Coinbase Exchange", "slug":"coinbase", "affiliateUrl":"https://coinbase.com", "niche":"crypto", "commissionEstimate":"$10 per signup", "isActive":true}
+  {
+    "id": "aff-1",
+    "name": "Ledger Hardware Wallet",
+    "slug": "ledger-wallet",
+    "affiliateUrl": "https://ledger.com",
+    "niche": "crypto",
+    "commissionEstimate": "$15-30 per sale",
+    "isActive": true
+  },
+  {
+    "id": "aff-2",
+    "name": "TradingView Pro",
+    "slug": "tradingview-pro",
+    "affiliateUrl": "https://tradingview.com",
+    "niche": "finance",
+    "commissionEstimate": "$20 per sale",
+    "isActive": true
+  },
+  {
+    "id": "aff-3",
+    "name": "Coinbase Exchange",
+    "slug": "coinbase",
+    "affiliateUrl": "https://coinbase.com",
+    "niche": "crypto",
+    "commissionEstimate": "$10 per signup",
+    "isActive": true
+  }
 ]
