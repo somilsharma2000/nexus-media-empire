@@ -9,19 +9,36 @@ export function getPrisma() {
 
   if (!prismaInstance) {
     try {
-      // Dynamic import to prevent build-time crashes if Prisma client is ungenerated
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { PrismaClient } = require('@prisma/client');
-      prismaInstance = new PrismaClient({
-        log: ['error'],
-      });
+      const globalForPrisma = globalThis as unknown as { prismaInstance?: any };
+
+      if (globalForPrisma.prismaInstance) {
+        prismaInstance = globalForPrisma.prismaInstance;
+      } else {
+        prismaInstance = new PrismaClient({
+          log: ['error'],
+        });
+        globalForPrisma.prismaInstance = prismaInstance;
+      }
     } catch (e) {
-      console.warn('[Prisma] Client initialization deferred until database migration:', e);
+      console.warn('[Prisma] Client initialization error:', e);
       return null;
     }
   }
   return prismaInstance;
 }
 
-export const prisma = getPrisma();
+export const prisma = new Proxy({} as any, {
+  get(_target, prop) {
+    const client = getPrisma();
+    if (!client) return undefined;
+    const value = client[prop];
+    if (typeof value === 'function') {
+      return value.bind(client);
+    }
+    return value;
+  },
+});
+
 export default prisma;
