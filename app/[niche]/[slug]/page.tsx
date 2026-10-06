@@ -6,7 +6,6 @@ import { ArrowLeft, Clock, Calendar, Share2, Bookmark, CheckCircle, Tag, Eye, Ch
 import CookieConsent from "../../../components/CookieConsent";
 import NewsletterForm from "../../../components/NewsletterForm";
 import ReadingProgressBar from "../../../components/ReadingProgressBar";
-import ArticleAudioPlayer from "../../../components/ArticleAudioPlayer";
 import TableOfContents from "../../../components/TableOfContents";
 import AuthorBio from "../../../components/AuthorBio";
 import CommunityPoll from "../../../components/CommunityPoll";
@@ -277,9 +276,6 @@ export default function SingleArticlePage({ params }: { params: { niche: string;
           url={currentUrl}
           onFontSizeChange={handleFontSizeChange}
         />
-
-        {/* AI Audio Narration Widget */}
-        <ArticleAudioPlayer title={article.title} readTime="6 min" content={article.content} />
 
         {/* LLM / GEO Search Engine Quick Verdict Card */}
         <LlmAnswerBox

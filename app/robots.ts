@@ -7,12 +7,13 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
-        disallow: ['/admin', '/api/auth', '/api/settings'],
+        allow: ['/', '/news', '/crypto', '/finance', '/advertise', '/about', '/privacy', '/terms', '/disclosures'],
+        disallow: ['/admin', '/admin/*', '/api/*'],
       },
       {
-        userAgent: ['GPTBot', 'PerplexityBot', 'ClaudeBot', 'Google-Extended', 'Bingbot'],
-        allow: ['/', '/news', '/crypto', '/finance', '/api/rss', '/sitemap.xml'],
+        userAgent: ['GPTBot', 'PerplexityBot', 'ClaudeBot', 'Google-Extended', 'Bingbot', 'Googlebot'],
+        allow: ['/', '/news', '/crypto', '/finance', '/sitemap.xml', '/robots.txt'],
+        disallow: ['/admin', '/admin/*', '/api/*'],
       }
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
