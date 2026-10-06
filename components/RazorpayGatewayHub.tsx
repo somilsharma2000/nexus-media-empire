@@ -128,6 +128,55 @@ export default function RazorpayGatewayHub() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
 
+  // Pitch Generator State
+  const [pitchTab, setPitchTab] = useState<"profile" | "pitch">("profile");
+  const [pitchType, setPitchType] = useState<"sponsor_retainer" | "tool_cross_sell" | "vip_newsletter" | "enterprise_advisory">("sponsor_retainer");
+  const [generatedPitchSubject, setGeneratedPitchSubject] = useState("");
+  const [generatedPitchBody, setGeneratedPitchBody] = useState("");
+
+  const generatePersonalizedPitch = (cust: Customer, type: string) => {
+    let subject = "";
+    let body = "";
+    const pastDeal = cust.deals && cust.deals.length > 0 ? cust.deals[0].title : "recent partnership";
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://nexus-media.io";
+
+    if (type === "sponsor_retainer") {
+      subject = `Exclusive Q4 Category Takeover for ${cust.company || cust.name} | Nexus Media`;
+      body = `Hi ${cust.name.split(" ")[0]},\n\nFollowing up after your ${pastDeal} with Nexus Media Network.\n\nOur Tech & Finance network has scaled to 280,000+ monthly high-net-worth readers across The Trend Matrix and Wall St Insider. We are opening 2 exclusive category sponsor slots for the upcoming quarter with guaranteed 50,000+ targeted impressions and header takeover rights.\n\nGiven your focus at ${cust.company || 'your organization'}, we'd love to offer you first right of refusal before releasing the slots publicly.\n\nWould you like to lock this in for Q4? You can review package deliverables and secure the slot directly here:\n${origin}/checkout?item=Q4+Exclusive+Sponsor+Takeover&amt=3500&cur=USD&type=sponsor_slot\n\nBest regards,\nNexus Executive Commercial Desk`;
+    } else if (type === "tool_cross_sell") {
+      subject = `New Release: Next-Gen AI Trading & Algorithmic Tool Suite for ${cust.name.split(" ")[0]}`;
+      body = `Hi ${cust.name.split(" ")[0]},\n\nSince you recently acquired the ${pastDeal}, we wanted to give you early VIP access to our new Quantitative Multi-Agent Tool Kit.\n\nThis release includes 10+ production-grade scripts, real-time signal listeners, and full Python/TypeScript source code with perpetual commercial licenses.\n\nAs a verified Nexus client, you get priority access at 40% off here:\n${origin}/checkout?item=AI+Quantitative+Trading+Bot+Kit&amt=49&cur=USD&type=digital_product\n\nBest,\nNexus Product Team`;
+    } else if (type === "vip_newsletter") {
+      subject = `VIP Alpha Intelligence Pass — Reserved for ${cust.name.split(" ")[0]}`;
+      body = `Hi ${cust.name.split(" ")[0]},\n\nWe publish our deepest macro and market analyses exclusively to our private VIP Alpha list. As a valued client of ${cust.company || 'our network'}, we’ve activated an invitation for you to join our VIP tier.\n\nIncludes 2x weekly confidential briefs, institutional signal roundups, and direct access to editorial researchers.\n\nActivate your membership:\n${origin}/checkout?item=VIP+Alpha+Newsletter+Membership&amt=349&cur=USD&type=vip_newsletter\n\nWarm regards,\nNexus Editorial Team`;
+    } else {
+      subject = `Enterprise Media & AI Growth Advisory Proposal for ${cust.company || cust.name}`;
+      body = `Hi ${cust.name.split(" ")[0]},\n\nWe've analyzed the expansion of ${cust.company || 'your brand'} and have developed a tailored programmatic content distribution blueprint designed to scale your organic search traffic and qualified leads 3x.\n\nLet's schedule a 20-minute executive briefing this week to review the implementation timeline.\n\nBest regards,\nNexus Managing Director`;
+    }
+
+    setGeneratedPitchSubject(subject);
+    setGeneratedPitchBody(body);
+  };
+
+  const exportAudienceCsv = () => {
+    if (!customers.length) return;
+    const headers = "ID,Name,Email,Company,Country,Tier,Status,TotalSpentUSD,TotalSpentINR,OrdersCount,Tags,LastActive\n";
+    const rows = customers.map(c => 
+      `"${c.id}","${c.name}","${c.email}","${c.company || ''}","${c.country}","${c.tier}","${c.status}",${c.totalSpentUsd || 0},${c.totalSpentInr || 0},${c.ordersCount || 0},"${(c.tags || []).join(';')}","${c.lastActive}"`
+    ).join("\n");
+    
+    const blob = new Blob([headers + rows], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `nexus_crm_audience_${new Date().toISOString().split("T")[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setActionFeedback("Audience CSV exported successfully!");
+    setTimeout(() => setActionFeedback(null), 3000);
+  };
+
   // Fetch all intelligence data
   const fetchData = async () => {
     setIsLoading(true);
@@ -740,6 +789,14 @@ export default function RazorpayGatewayHub() {
               </div>
 
               <button
+                onClick={exportAudienceCsv}
+                className="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl text-xs font-bold font-mono transition-all flex items-center gap-1.5 border border-gray-700 shadow-md"
+                title="Export audience CSV for email marketing"
+              >
+                <Download className="w-3.5 h-3.5 text-blue-400" /> Export CSV
+              </button>
+
+              <button
                 onClick={() => setShowAddCustomerModal(true)}
                 className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold font-mono transition-all flex items-center gap-1.5 shadow-lg shadow-blue-600/20"
               >
@@ -1266,63 +1323,157 @@ export default function RazorpayGatewayHub() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 font-mono text-xs">
-              <div className="p-3.5 bg-[#060910] rounded-2xl border border-gray-800">
-                <span className="text-[10px] text-gray-500 uppercase">Total Lifetime Spend</span>
-                <p className="text-lg font-bold text-emerald-400 mt-0.5">
-                  {selectedCustomer.totalSpentUsd > 0 ? `$${selectedCustomer.totalSpentUsd.toLocaleString()}` : `₹${selectedCustomer.totalSpentInr.toLocaleString("en-IN")}`}
-                </p>
-              </div>
-              <div className="p-3.5 bg-[#060910] rounded-2xl border border-gray-800">
-                <span className="text-[10px] text-gray-500 uppercase">Tier & Status</span>
-                <p className="text-sm font-bold text-purple-400 mt-1">{selectedCustomer.tier}</p>
-              </div>
-            </div>
-
-            {/* Internal Notes */}
-            <div className="space-y-2">
-              <label className="text-xs font-mono font-bold text-gray-300">Executive Account Notes</label>
-              <div className="p-4 bg-[#060910] rounded-2xl border border-gray-800 text-xs text-gray-300">
-                {selectedCustomer.notes || "No internal notes recorded yet."}
-              </div>
-            </div>
-
-            {/* Past Deals & Transactions */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-mono font-bold text-gray-300 uppercase">Transaction History</h4>
-              {(selectedCustomer.deals || []).map((deal: any, idx: number) => (
-                <div key={idx} className="p-3 bg-[#060910] rounded-xl border border-gray-850 flex justify-between items-center text-xs font-mono">
-                  <div>
-                    <div className="font-bold text-white">{deal.title}</div>
-                    <div className="text-[10px] text-gray-500">{deal.date}</div>
-                  </div>
-                  <div className="font-bold text-emerald-400">
-                    {deal.currency === "INR" ? `₹${deal.amount.toLocaleString("en-IN")}` : `$${deal.amount}`}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="pt-4 border-t border-gray-800 flex gap-3">
-              <a
-                href={`mailto:${selectedCustomer.email}`}
-                className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl font-mono text-center transition-all"
+            <div className="flex items-center gap-2 bg-[#060910] p-1 rounded-xl border border-gray-800 font-mono text-xs">
+              <button
+                onClick={() => setPitchTab("profile")}
+                className={`flex-1 py-1.5 rounded-lg font-bold transition-all ${
+                  pitchTab === "profile" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"
+                }`}
               >
-                Send Direct Email
-              </a>
+                Account Profile & History
+              </button>
               <button
                 onClick={() => {
-                  setInvClientName(selectedCustomer.name);
-                  setInvClientEmail(selectedCustomer.email);
-                  setInvClientCompany(selectedCustomer.company);
-                  setSelectedCustomer(null);
-                  setShowNewInvoiceModal(true);
+                  setPitchTab("pitch");
+                  generatePersonalizedPitch(selectedCustomer, pitchType);
                 }}
-                className="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold text-xs rounded-xl font-mono transition-all"
+                className={`flex-1 py-1.5 rounded-lg font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  pitchTab === "pitch" ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/30" : "text-gray-400 hover:text-white"
+                }`}
               >
-                Issue Invoice
+                <Sparkles className="w-3 h-3 text-amber-400" /> Pitch & Upsell Generator
               </button>
             </div>
+
+            {pitchTab === "profile" ? (
+              <>
+                <div className="grid grid-cols-2 gap-3 font-mono text-xs">
+                  <div className="p-3.5 bg-[#060910] rounded-2xl border border-gray-800">
+                    <span className="text-[10px] text-gray-500 uppercase">Total Lifetime Spend</span>
+                    <p className="text-lg font-bold text-emerald-400 mt-0.5">
+                      {selectedCustomer.totalSpentUsd > 0 ? `$${selectedCustomer.totalSpentUsd.toLocaleString()}` : `₹${selectedCustomer.totalSpentInr.toLocaleString("en-IN")}`}
+                    </p>
+                  </div>
+                  <div className="p-3.5 bg-[#060910] rounded-2xl border border-gray-800">
+                    <span className="text-[10px] text-gray-500 uppercase">Tier & Status</span>
+                    <p className="text-sm font-bold text-purple-400 mt-1">{selectedCustomer.tier}</p>
+                  </div>
+                </div>
+
+                {/* Internal Notes */}
+                <div className="space-y-2">
+                  <label className="text-xs font-mono font-bold text-gray-300">Executive Account Notes</label>
+                  <div className="p-4 bg-[#060910] rounded-2xl border border-gray-800 text-xs text-gray-300">
+                    {selectedCustomer.notes || "No internal notes recorded yet."}
+                  </div>
+                </div>
+
+                {/* Past Deals & Transactions */}
+                <div className="space-y-3">
+                  <h4 className="text-xs font-mono font-bold text-gray-300 uppercase">Transaction History</h4>
+                  {(selectedCustomer.deals || []).map((deal: any, idx: number) => (
+                    <div key={idx} className="p-3 bg-[#060910] rounded-xl border border-gray-850 flex justify-between items-center text-xs font-mono">
+                      <div>
+                        <div className="font-bold text-white">{deal.title}</div>
+                        <div className="text-[10px] text-gray-500">{deal.date}</div>
+                      </div>
+                      <div className="font-bold text-emerald-400">
+                        {deal.currency === "INR" ? `₹${deal.amount.toLocaleString("en-IN")}` : `$${deal.amount}`}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-4 border-t border-gray-800 flex gap-3">
+                  <button
+                    onClick={() => {
+                      setPitchTab("pitch");
+                      generatePersonalizedPitch(selectedCustomer, "sponsor_retainer");
+                    }}
+                    className="flex-1 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl font-mono text-center transition-all shadow-lg shadow-blue-600/25 flex items-center justify-center gap-1.5"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300" /> Pitch Upsell
+                  </button>
+                  <button
+                    onClick={() => {
+                      setInvClientName(selectedCustomer.name);
+                      setInvClientEmail(selectedCustomer.email);
+                      setInvClientCompany(selectedCustomer.company);
+                      setSelectedCustomer(null);
+                      setShowNewInvoiceModal(true);
+                    }}
+                    className="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold text-xs rounded-xl font-mono transition-all"
+                  >
+                    Issue Invoice
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="space-y-4 animate-in fade-in">
+                <div>
+                  <label className="text-xs font-mono font-bold text-gray-300 block mb-1.5">Select Commercial Pitch Archetype</label>
+                  <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                    {[
+                      { id: "sponsor_retainer", label: "👑 Q4 Sponsor Retainer" },
+                      { id: "tool_cross_sell", label: "📦 AI Bot Kit Cross-Sell" },
+                      { id: "vip_newsletter", label: "🚀 VIP Alpha Pass" },
+                      { id: "enterprise_advisory", label: "💼 Enterprise Advisory" }
+                    ].map((p) => (
+                      <button
+                        key={p.id}
+                        onClick={() => {
+                          setPitchType(p.id as any);
+                          generatePersonalizedPitch(selectedCustomer, p.id);
+                        }}
+                        className={`p-2.5 rounded-xl border text-left transition-all ${
+                          pitchType === p.id 
+                            ? "bg-blue-600/20 border-blue-500 text-white font-bold" 
+                            : "bg-[#060910] border-gray-800 text-gray-400 hover:text-gray-200"
+                        }`}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-mono font-bold text-gray-300 block mb-1">Subject Line</label>
+                  <input
+                    type="text"
+                    value={generatedPitchSubject}
+                    onChange={(e) => setGeneratedPitchSubject(e.target.value)}
+                    className="w-full px-3.5 py-2 bg-[#060910] border border-gray-800 rounded-xl text-xs text-white font-mono outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-mono font-bold text-gray-300 block mb-1">Personalized Sales Copy</label>
+                  <textarea
+                    rows={10}
+                    value={generatedPitchBody}
+                    onChange={(e) => setGeneratedPitchBody(e.target.value)}
+                    className="w-full p-3.5 bg-[#060910] border border-gray-800 rounded-xl text-xs text-gray-200 font-mono outline-none leading-relaxed focus:border-blue-500"
+                  ></textarea>
+                </div>
+
+                <div className="pt-2 flex gap-3 font-mono">
+                  <button
+                    onClick={() => copyToClipboard(generatedPitchSubject + "\n\n" + generatedPitchBody, "pitch_copy")}
+                    className="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5"
+                  >
+                    {copiedId === "pitch_copy" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    Copy Pitch Copy
+                  </button>
+                  <a
+                    href={`mailto:${selectedCustomer.email}?subject=${encodeURIComponent(generatedPitchSubject)}&body=${encodeURIComponent(generatedPitchBody)}`}
+                    className="flex-1 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl text-center transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center gap-1.5"
+                  >
+                    <Send className="w-3.5 h-3.5" /> Launch Mail Client
+                  </a>
+                </div>
+              </div>
+            )}
 
           </div>
         </div>
