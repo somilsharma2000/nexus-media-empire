@@ -61,25 +61,24 @@ async function ensureDataFile() {
   }
 }
 
+import { getArticles, saveArticle } from '@/lib/data-layer';
+
 export async function GET() {
-  await ensureDataFile();
-  const data = await fs.readFile(dataFilePath, 'utf-8');
-  return NextResponse.json(JSON.parse(data));
+  const articles = await getArticles();
+  return NextResponse.json(articles);
 }
 
 export async function POST(req: Request) {
-  await ensureDataFile();
   const body = await req.json();
-  const data = await fs.readFile(dataFilePath, 'utf-8');
-  const articles = JSON.parse(data);
+  const articles = await getArticles();
   
   // Extract a title from the markdown blog or use the topic
-  const titleMatch = body.content.match(/^#\s+(.*)/m);
-  const title = titleMatch ? titleMatch[1] : `Trending: ${body.topic}`;
+  const titleMatch = body.content?.match(/^#\s+(.*)/m);
+  const title = body.title || (titleMatch ? titleMatch[1] : `Trending: ${body.topic}`);
   
   // Remove markdown headings and get plain text for excerpt
-  const cleanText = body.content.replace(/#/g, '').replace(/\*/g, '').trim();
-  const excerpt = cleanText.substring(0, 160) + '...';
+  const cleanText = (body.content || '').replace(/#/g, '').replace(/\*/g, '').trim();
+  const excerpt = body.excerpt || (cleanText.substring(0, 160) + '...');
 
   // Curated fallback photos
   const photoLibrary: Record<string, string[]> = {
@@ -104,9 +103,10 @@ export async function POST(req: Request) {
   const slug = (body.slug || title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
   const newArticle = {
-    id: `art-${Date.now()}`,
+    id: body.id || `art-${Date.now()}`,
     title: title,
     niche: niche,
+    site: niche,
     slug: slug,
     category: body.category || (niche === 'crypto' ? 'Crypto' : niche === 'finance' ? 'Finance' : 'AI & Tech'),
     time: 'Just now',
@@ -125,13 +125,7 @@ export async function POST(req: Request) {
     qaVerdict: null,
   };
   
-  // Demote previous featured articles
-  articles.forEach((a: { featured: boolean }) => a.featured = false);
-  
-  // Add new article to the top
-  articles.unshift(newArticle); 
-  
-  await fs.writeFile(dataFilePath, JSON.stringify(articles, null, 2));
+  await saveArticle(newArticle);
 
   // ── Auto-run QA review if API key is available ───────────────────────────
   let qaVerdict = null;

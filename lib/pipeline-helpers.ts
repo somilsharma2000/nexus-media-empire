@@ -62,21 +62,24 @@ export function isAuthorised(req: Request): boolean {
   return auth === `Bearer ${cronSecret}`;
 }
 
+import {
+  getArticles,
+  saveArticles,
+  getPipelineState,
+  updatePipelineState,
+  appendPipelineLog,
+  getPipelineLogs,
+} from './data-layer';
+
 // ─── Pipeline Log ──────────────────────────────────────────────────────────
 export async function readLog(): Promise<LogEntry[]> {
-  try {
-    const raw = await fs.readFile(PIPELINE_LOG_PATH, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
+  return (await getPipelineLogs(500)) as LogEntry[];
 }
 
 export async function appendLog(entries: LogEntry[]): Promise<void> {
-  const existing = await readLog();
-  // Keep last 500 entries to prevent unbounded growth
-  const combined = [...existing, ...entries].slice(-500);
-  await fs.writeFile(PIPELINE_LOG_PATH, JSON.stringify(combined, null, 2));
+  for (const entry of entries) {
+    await appendPipelineLog(entry);
+  }
 }
 
 export async function log(step: string, status: LogEntry['status'], detail: string): Promise<void> {
@@ -86,20 +89,11 @@ export async function log(step: string, status: LogEntry['status'], detail: stri
 
 // ─── Pipeline State ────────────────────────────────────────────────────────
 export async function readState(): Promise<PipelineState> {
-  try {
-    const raw = await fs.readFile(PIPELINE_STATE_PATH, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return {
-      trend_scout: { status: 'active', consecutiveFailures: 0 },
-      qa_review:   { status: 'active', consecutiveFailures: 0 },
-      publisher:   { status: 'active', consecutiveFailures: 0 },
-    };
-  }
+  return await getPipelineState();
 }
 
 export async function writeState(state: PipelineState): Promise<void> {
-  await fs.writeFile(PIPELINE_STATE_PATH, JSON.stringify(state, null, 2));
+  await updatePipelineState(state);
 }
 
 /**
@@ -143,16 +137,11 @@ export async function recordSuccess(step: string): Promise<void> {
 
 // ─── Articles helpers ──────────────────────────────────────────────────────
 export async function readArticles(): Promise<Article[]> {
-  try {
-    const raw = await fs.readFile(ARTICLES_PATH, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
+  return (await getArticles()) as Article[];
 }
 
 export async function writeArticles(articles: Article[]): Promise<void> {
-  await fs.writeFile(ARTICLES_PATH, JSON.stringify(articles, null, 2));
+  await saveArticles(articles);
 }
 
 // ─── Similarity ────────────────────────────────────────────────────────────

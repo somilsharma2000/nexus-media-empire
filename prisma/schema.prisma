@@ -8,16 +8,81 @@ datasource db {
 }
 
 model Article {
-  id          String   @id @default(cuid())
-  title       String
-  category    String
-  excerpt     String
-  content     String
-  imagePrompt String?
-  status      String   @default("draft") // "draft" or "published"
-  source      String?
-  createdAt   DateTime @default(now())
-  publishedAt DateTime?
+  id              String    @id @default(cuid())
+  title           String
+  slug            String?
+  site            String    @default("news") // "news", "crypto", "finance"
+  category        String
+  excerpt         String
+  content         String
+  metaTitle       String?
+  metaDescription String?
+  imagePrompt     String?
+  image           String?
+  featured        Boolean   @default(false)
+  status          String    @default("draft") // "draft", "scheduled", "published", "rejected"
+  qaStatus        String?   @default("pending") // "pending", "approved", "revision_needed", "rejected"
+  qaVerdict       Json?
+  source          String?
+  viewCount       Int       @default(0)
+  createdAt       DateTime  @default(now())
+  publishAt       DateTime?
+  publishedAt     DateTime?
+  updatedAt       DateTime  @updatedAt
+}
+
+model PipelineStepState {
+  id                  String    @id @default(cuid())
+  step                String    @unique // "trend_scout", "qa_review", "publisher"
+  status              String    @default("active") // "active", "paused", "failed"
+  lastRun             DateTime?
+  consecutiveFailures Int       @default(0)
+  updatedAt           DateTime  @updatedAt
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+model QALog {
+  id                   String   @id @default(cuid())
+  articleId            String
+  factualSoundness     Float?
+  originality          Float?
+  readability          Float?
+  seoStructure         Float?
+  averageScore         Float
+  verdict              String   // "APPROVE", "REVISE", "REJECT"
+  rejectionReason      String?
+  revisionInstructions String?
+  model                String   @default("gpt-4o-mini")
+  reviewedAt           DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  niche        String   @default("general")
+  status       String   @default("active")
+  subscribedAt DateTime @default(now())
+}
+
+model TokenUsage {
+  id            String   @id @default(cuid())
+  month         String   @unique // "YYYY-MM"
+  tokensUsed    Int      @default(0)
+  estimatedCost Float    @default(0)
+  updatedAt     DateTime @updatedAt
+}
+
+model SitemapQueue {
+  id        String   @id @default(cuid())
+  url       String   @unique
+  status    String   @default("pending") // "pending", "indexed", "failed"
+  createdAt DateTime @default(now())
 }
 
 model AdSlot {

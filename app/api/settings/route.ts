@@ -5,17 +5,14 @@ import path from 'path';
 const SETTINGS_PATH = path.join(process.cwd(), 'data', 'settings.json');
 const ENV_PATH = path.join(process.cwd(), '.env');
 
-// GET — return current saved settings (reads settings.json and falls back to process.env)
-export async function GET() {
-  let settings: Record<string, string> = {};
-  try {
-    const raw = await fs.readFile(SETTINGS_PATH, 'utf-8');
-    settings = JSON.parse(raw);
-  } catch {
-    settings = {};
-  }
+import { verifyAdminAuth, unauthorizedResponse } from '@/lib/auth-guard';
+import { getSettings, saveSettings } from '@/lib/data-layer';
 
-  // Also include runtime process.env values if missing in settings.json
+// GET — return current saved settings (reads DB/settings.json and falls back to process.env)
+export async function GET() {
+  const settings = await getSettings();
+
+  // Also include runtime process.env values if missing
   const knownKeys = [
     'OPENAI_API_KEY',
     'ANTHROPIC_API_KEY',
@@ -51,9 +48,7 @@ export async function GET() {
   return NextResponse.json(settings);
 }
 
-import { verifyAdminAuth, unauthorizedResponse } from '@/lib/auth-guard';
-
-// POST — save settings to data/settings.json AND sync to .env file & runtime process.env
+// POST — save settings to DB / data/settings.json AND sync to .env file & runtime process.env
 export async function POST(request: Request) {
   const isAuth = await verifyAdminAuth(request);
   if (!isAuth) return unauthorizedResponse();
@@ -63,17 +58,9 @@ export async function POST(request: Request) {
     const keysReceived = Object.keys(body).filter((k) => body[k] !== undefined);
 
     // 1. Read existing settings and merge
-    let currentSettings: Record<string, string> = {};
-    try {
-      const raw = await fs.readFile(SETTINGS_PATH, 'utf-8');
-      currentSettings = JSON.parse(raw);
-    } catch {
-      currentSettings = {};
-    }
-
+    const currentSettings = await getSettings();
     const merged = { ...currentSettings, ...body };
-    await fs.mkdir(path.dirname(SETTINGS_PATH), { recursive: true });
-    await fs.writeFile(SETTINGS_PATH, JSON.stringify(merged, null, 2));
+    await saveSettings(merged);
 
     // 2. Update runtime process.env for all non-empty values
     for (const [k, v] of Object.entries(body)) {

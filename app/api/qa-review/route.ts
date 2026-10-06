@@ -3,6 +3,7 @@ import OpenAI from 'openai';
 import fs from 'fs/promises';
 import path from 'path';
 import { sendTelegramAlert } from '@/lib/telegram';
+import { saveArticle, saveQALog } from '@/lib/data-layer';
 
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
@@ -198,7 +199,7 @@ Approve if average >= ${config.approveThreshold}. Revise if ${config.reviseThres
     completion.usage?.completion_tokens ?? 0,
   );
 
-  // 7. Update articles.json
+  // 7. Update article in DB / local storage and save QA Log
   if (articleId) {
     const articles = await readJSON<Article[]>(ARTICLES_PATH, []);
     const idx = articles.findIndex(
@@ -233,7 +234,19 @@ Approve if average >= ${config.approveThreshold}. Revise if ${config.reviseThres
 
       articles[idx] = article;
       await writeJSON(ARTICLES_PATH, articles);
+      await saveArticle(article);
     }
+
+    // Persist QA Log row
+    await saveQALog({
+      articleId: String(articleId),
+      verdict: verdict.verdict,
+      averageScore: verdict.averageScore,
+      scores: verdict.scores,
+      rejectionReason: verdict.rejectionReason,
+      revisionInstructions: verdict.revisionInstructions,
+      model: selectedModel,
+    });
   }
 
   // 8. Return verdict
