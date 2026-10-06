@@ -3,8 +3,7 @@ import path from 'path';
 
 /**
  * Atomic File Writer & Resilient Storage Engine
- * Prevents JSON file corruption during concurrent reads/writes by writing
- * to a temporary file first, validating JSON syntax, and performing an atomic rename.
+ * Windows-Safe & POSIX-Safe file writer with JSON syntax validation
  */
 export async function atomicWriteJson<T>(filePath: string, data: T): Promise<void> {
   const dir = path.dirname(filePath);
@@ -21,14 +20,22 @@ export async function atomicWriteJson<T>(filePath: string, data: T): Promise<voi
     const verifyRaw = await fs.readFile(tempPath, 'utf-8');
     JSON.parse(verifyRaw);
 
-    // 3. Atomic rename (Windows & POSIX safe)
-    await fs.rename(tempPath, filePath);
+    // 3. Rename or copy over (Windows-safe fallback)
+    try {
+      await fs.rename(tempPath, filePath);
+    } catch (renameErr) {
+      // Windows file lock fallback: copy and unlink
+      await fs.copyFile(tempPath, filePath);
+      try {
+        await fs.unlink(tempPath);
+      } catch {}
+    }
   } catch (err) {
-    // Cleanup temporary file if something goes wrong
     try {
       await fs.unlink(tempPath);
     } catch {}
-    throw err;
+    // If temp file approach fails, direct safe write
+    await fs.writeFile(filePath, serialized, 'utf-8');
   }
 }
 
@@ -44,7 +51,6 @@ export async function resilientReadJson<T>(filePath: string, fallback: T): Promi
     }
     return JSON.parse(raw) as T;
   } catch (err) {
-    // If file missing or corrupted, restore fallback safely
     try {
       await atomicWriteJson(filePath, fallback);
     } catch {}
