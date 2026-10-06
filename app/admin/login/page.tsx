@@ -8,7 +8,7 @@ import { Lock, ShieldCheck, Zap, ArrowRight, Activity, Terminal } from "lucide-r
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = searchParams.get("callbackUrl") || "/admin";
 
   const [email, setEmail] = useState("admin@nexus.com");
   const [password, setPassword] = useState("admin123");
