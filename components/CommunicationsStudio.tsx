@@ -208,7 +208,7 @@ export default function CommunicationsStudio() {
                 <div className="p-4 bg-[#05080e] rounded-2xl border border-gray-800 space-y-2">
                   <div className="flex justify-between items-center text-xs font-mono">
                     <span className="text-gray-400">Perpetual Access Key:</span>
-                    <span className="text-blue-400 font-bold tracking-wider">NX-DIG-K89X-A71F</span>
+                    <span className="text-blue-400 font-bold tracking-wider">DEMO-SAMPLE-KEY-XXXX</span>
                   </div>
                   <div className="flex justify-between items-center text-xs font-mono">
                     <span className="text-gray-400">License Holder:</span>
@@ -218,7 +218,7 @@ export default function CommunicationsStudio() {
 
                 <div className="flex gap-3">
                   <button
-                    onClick={() => copyToClipboard("NX-DIG-K89X-A71F", "card_key")}
+                    onClick={() => copyToClipboard("DEMO-SAMPLE-KEY-XXXX", "card_key")}
                     className="flex-1 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-1.5"
                   >
                     {copiedId === "card_key" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
