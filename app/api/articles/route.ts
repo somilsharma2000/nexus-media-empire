@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { getCanonicalSiteUrl } from '@/lib/site-url';
+import { saveArticle } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic'; // Prevent Next.js from caching the API route
 
@@ -129,9 +131,9 @@ export async function POST(req: Request) {
 
   // ── Auto-run QA review if API key is available ───────────────────────────
   let qaVerdict = null;
+  const siteUrl = getCanonicalSiteUrl();
   if (process.env.OPENAI_API_KEY) {
     try {
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3002';
       const qaRes = await fetch(`${siteUrl}/api/qa-review`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -151,8 +153,7 @@ export async function POST(req: Request) {
 
   // Notify SEO system about the new article URL
   try {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3002';
-    const articleUrl = `${siteUrl}/news/${newArticle.id}`;
+    const articleUrl = `${siteUrl}/news/${newArticle.slug || newArticle.id}`;
     await fetch(`${siteUrl}/api/seo/ping`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

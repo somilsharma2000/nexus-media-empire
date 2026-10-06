@@ -43,13 +43,15 @@ async function fetchTrends(feedUrl: string): Promise<string[]> {
   return titles.slice(1);
 }
 
+import { getCanonicalSiteUrl } from '@/lib/site-url';
+
 // ─── POST handler (cron-triggered) ────────────────────────────────────────
 export async function POST(req: Request) {
   if (!isAuthorised(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3002';
+  const siteUrl = getCanonicalSiteUrl();
   const errors: string[] = [];
   const qaResults: { topic: string; approved: boolean; reason: string }[] = [];
   let topicsFound = 0;
