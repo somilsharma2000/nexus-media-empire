@@ -1,13 +1,10 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
-
-const ENV_PATH = path.join(process.cwd(), '.env');
-
 import { verifyAdminAuth, unauthorizedResponse } from '@/lib/auth-guard';
 import { getSettings, saveSettings } from '@/lib/data-layer';
 
-// GET — return current saved settings (reads DB/settings.json and falls back to process.env)
+export const dynamic = 'force-dynamic';
+
+// GET — return current saved settings from Database / Prisma Setting model (merged with env vars)
 export async function GET() {
   const settings = await getSettings();
 
@@ -47,7 +44,7 @@ export async function GET() {
   return NextResponse.json(settings);
 }
 
-// POST — save settings to DB / data/settings.json AND sync to .env file & runtime process.env
+// POST — save settings to Prisma Setting model & update runtime process.env
 export async function POST(request: Request) {
   const isAuth = await verifyAdminAuth(request);
   if (!isAuth) return unauthorizedResponse();
@@ -56,7 +53,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const keysReceived = Object.keys(body).filter((k) => body[k] !== undefined);
 
-    // 1. Read existing settings and merge
+    // 1. Read existing settings and merge in Prisma Database
     const currentSettings = await getSettings();
     const merged = { ...currentSettings, ...body };
     await saveSettings(merged);
@@ -68,58 +65,9 @@ export async function POST(request: Request) {
       }
     }
 
-    // 3. Update or append in physical .env file
-    try {
-      let envContent = '';
-      try {
-        envContent = await fs.readFile(ENV_PATH, 'utf-8');
-      } catch {
-        envContent = '';
-      }
-
-      const envLines = envContent ? envContent.split(/\r?\n/) : [];
-      const envMap = new Map<string, string>();
-      const otherLines: string[] = [];
-
-      for (const line of envLines) {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith('#')) {
-          otherLines.push(line);
-          continue;
-        }
-        const eqIdx = line.indexOf('=');
-        if (eqIdx !== -1) {
-          const key = line.slice(0, eqIdx).trim();
-          const val = line.slice(eqIdx + 1).trim();
-          envMap.set(key, val);
-        } else {
-          otherLines.push(line);
-        }
-      }
-
-      // Merge new values into envMap
-      for (const [k, v] of Object.entries(body)) {
-        if (typeof v === 'string' && v.trim()) {
-          envMap.set(k, v.trim());
-        }
-      }
-
-      // Reconstruct .env
-      const newLines: string[] = [
-        '# NEXUS MEDIA EMPIRE — Production Environment Configuration (Updated via Admin Panel)'
-      ];
-      envMap.forEach((v, k) => {
-        newLines.push(`${k}=${v}`);
-      });
-
-      await fs.writeFile(ENV_PATH, newLines.join('\n') + '\n', 'utf-8');
-    } catch (envErr) {
-      console.warn('Could not write directly to .env file:', envErr);
-    }
-
     return NextResponse.json({ success: true, saved: keysReceived.length });
   } catch (error) {
-    console.error('Settings save error:', error);
+    console.error('[SETTINGS API ERROR]', error);
     return NextResponse.json({ error: 'Failed to save settings' }, { status: 500 });
   }
 }

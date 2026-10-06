@@ -45,13 +45,32 @@ export async function getArticles(): Promise<any[]> {
   if (db && isDatabaseConnected()) {
     try {
       const dbArticles = await db.article.findMany({
-        orderBy: { createdAt: 'desc' },
+        orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
       });
       if (dbArticles && dbArticles.length > 0) {
         return dbArticles.map((a: any) => ({
           ...a,
           niche: a.site || a.category,
         }));
+      }
+
+      // If database is connected but has 0 articles, auto-bootstrap from bundled JSON!
+      const bundled = await safeReadJson<any[]>('articles.json', []);
+      if (bundled && bundled.length > 0) {
+        console.log(`[DataLayer] Auto-bootstrapping ${bundled.length} articles into PostgreSQL...`);
+        for (const a of bundled) {
+          try {
+            await saveArticle(a);
+          } catch (seedErr) {
+            console.warn('[DataLayer] Auto-seed single article failed:', seedErr);
+          }
+        }
+        const fresh = await db.article.findMany({
+          orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
+        });
+        if (fresh && fresh.length > 0) {
+          return fresh.map((a: any) => ({ ...a, niche: a.site || a.category }));
+        }
       }
     } catch (err) {
       console.error('[DataLayer] DB getArticles error:', err);
@@ -75,6 +94,17 @@ export async function getArticleById(id: string): Promise<any | null> {
         return {
           ...a,
           niche: a.site || a.category,
+        };
+      }
+
+      // If not found in DB yet, check bundled articles and auto-upsert into DB
+      const bundled = await safeReadJson<any[]>('articles.json', []);
+      const matched = bundled.find((item: any) => String(item.id) === String(id) || item.slug === id);
+      if (matched) {
+        const saved = await saveArticle(matched);
+        return {
+          ...saved,
+          niche: saved.site || saved.category,
         };
       }
     } catch (err) {
@@ -188,12 +218,30 @@ export async function incrementArticleView(id: string): Promise<number> {
   const db = getPrisma();
   if (db && isDatabaseConnected()) {
     try {
-      const updated = await db.article.update({
-        where: { id: String(id) },
-        data: { viewCount: { increment: 1 } },
-        select: { viewCount: true },
+      const found = await db.article.findFirst({
+        where: {
+          OR: [{ id: String(id) }, { slug: String(id) }],
+        },
       });
-      return updated.viewCount;
+      if (found) {
+        const updated = await db.article.update({
+          where: { id: found.id },
+          data: { viewCount: { increment: 1 } },
+          select: { viewCount: true },
+        });
+        return updated.viewCount;
+      }
+
+      // If not in DB yet, auto-upsert from bundled articles and increment!
+      const bundled = await safeReadJson<any[]>('articles.json', []);
+      const matched = bundled.find((a: any) => String(a.id) === String(id) || a.slug === id);
+      if (matched) {
+        const newCount = (matched.viewCount || 0) + 1;
+        await saveArticle({ ...matched, viewCount: newCount });
+        return newCount;
+      }
+
+      return 0;
     } catch (err) {
       console.error('[DataLayer] DB incrementArticleView error:', err);
       if (isProductionEnvironment()) throw err;
@@ -2020,3 +2068,110 @@ export async function saveMetaAutomation(automation: any): Promise<any> {
   await safeWriteJson('meta_automations.json', list);
   return automation;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 15. AUTO-BOOTSTRAP / SEED FOR PRODUCTION SUPABASE
+// ─────────────────────────────────────────────────────────────────────────────
+export async function bootstrapProductionDatabase(): Promise<{
+  articles: number;
+  topics: number;
+  products: number;
+  sponsors: number;
+  adslots: number;
+  affiliates: number;
+}> {
+  const db = getPrisma();
+  const summary = { articles: 0, topics: 0, products: 0, sponsors: 0, adslots: 0, affiliates: 0 };
+  if (!db || !isDatabaseConnected()) return summary;
+
+  try {
+    // 1. Articles
+    const artCount = await db.article.count();
+    if (artCount === 0) {
+      const articles = await safeReadJson<any[]>('articles.json', []);
+      for (const a of articles) {
+        try {
+          await saveArticle(a);
+          summary.articles++;
+        } catch {}
+      }
+    } else {
+      summary.articles = artCount;
+    }
+
+    // 2. Topics
+    const topCount = await db.topic.count();
+    if (topCount === 0) {
+      const topics = await safeReadJson<any[]>('topics.json', []);
+      for (const t of topics) {
+        try {
+          await saveTopic(t);
+          summary.topics++;
+        } catch {}
+      }
+    } else {
+      summary.topics = topCount;
+    }
+
+    // 3. Digital Products
+    const prodCount = await db.digitalProduct.count();
+    if (prodCount === 0) {
+      const products = await safeReadJson<any[]>('digital_products.json', []);
+      for (const p of products) {
+        try {
+          await saveDigitalProduct(p);
+          summary.products++;
+        } catch {}
+      }
+    } else {
+      summary.products = prodCount;
+    }
+
+    // 4. Sponsors
+    const sponCount = await db.sponsor.count();
+    if (sponCount === 0) {
+      const sponsors = await safeReadJson<any[]>('sponsors.json', []);
+      for (const s of sponsors) {
+        try {
+          await saveSponsor(s);
+          summary.sponsors++;
+        } catch {}
+      }
+    } else {
+      summary.sponsors = sponCount;
+    }
+
+    // 5. Ad Slots
+    const slotCount = await db.adSlot.count();
+    if (slotCount === 0) {
+      const slots = await safeReadJson<any[]>('adslots.json', []);
+      for (const s of slots) {
+        try {
+          await saveAdSlot(s);
+          summary.adslots++;
+        } catch {}
+      }
+    } else {
+      summary.adslots = slotCount;
+    }
+
+    // 6. Affiliate Links
+    const affCount = await db.affiliateLink.count();
+    if (affCount === 0) {
+      const affs = await safeReadJson<any[]>('affiliate_links.json', []);
+      for (const a of affs) {
+        try {
+          await saveAffiliateLink(a);
+          summary.affiliates++;
+        } catch {}
+      }
+    } else {
+      summary.affiliates = affCount;
+    }
+  } catch (err) {
+    console.error('[DataLayer] Auto-bootstrap error:', err);
+  }
+
+  return summary;
+}
+
