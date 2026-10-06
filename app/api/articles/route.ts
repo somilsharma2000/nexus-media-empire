@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import { getCanonicalSiteUrl } from '@/lib/site-url';
-import { saveArticle } from '@/lib/data-layer';
+import { getArticles, saveArticle } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic'; // Prevent Next.js from caching the API route
 
@@ -62,8 +62,6 @@ async function ensureDataFile() {
     await fs.writeFile(dataFilePath, JSON.stringify(initialData, null, 2));
   }
 }
-
-import { getArticles, saveArticle } from '@/lib/data-layer';
 
 export async function GET() {
   const articles = await getArticles();

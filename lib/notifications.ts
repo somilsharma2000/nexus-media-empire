@@ -1,5 +1,6 @@
 import { sendTelegramAlert } from './telegram';
 import { resilientReadJson, atomicWriteJson } from './atomic-storage';
+import { getCanonicalSiteUrl } from './site-url';
 import path from 'path';
 
 export interface SystemIncidentAlert {
@@ -50,7 +51,7 @@ export async function dispatchSystemAlert(alert: SystemIncidentAlert): Promise<{
     `• <b>Severity:</b> <b>${alert.severity.toUpperCase()}</b>\n` +
     `• <b>Details:</b> ${alert.message}\n` +
     `• <b>Time:</b> ${new Date(timestamp).toLocaleTimeString()} UTC\n\n` +
-    `👉 <a href="http://localhost:3002">Open Admin Command Center</a>`;
+    `👉 <a href="${getCanonicalSiteUrl()}/admin">Open Admin Command Center</a>`;
 
   // 3. Dispatch to Telegram Bot (Phone)
   try {

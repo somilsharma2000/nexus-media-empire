@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { resilientReadJson } from '@/lib/atomic-storage';
+import { getCanonicalSiteUrl } from '@/lib/site-url';
 import path from 'path';
 
 export const dynamic = 'force-dynamic';
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
       }
     }
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3002';
+    const siteUrl = getCanonicalSiteUrl();
     const directArticleUrl = `${siteUrl}/${niche}/${targetSlug}`;
 
     // Handle names by niche

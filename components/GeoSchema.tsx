@@ -1,4 +1,5 @@
 import React from "react";
+import { getCanonicalSiteUrl } from "@/lib/site-url";
 
 interface GeoSchemaProps {
   title: string;

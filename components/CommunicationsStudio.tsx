@@ -29,39 +29,39 @@ export default function CommunicationsStudio() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  // Variable Substitutions for Live Rendering
+  // Variable Substitutions for Live Preview Rendering
   const [testVars, setTestVars] = useState<Record<string, string>>({
     CUSTOMER_NAME: "Alex Vance",
-    ITEM_NAME: "AI Quantitative Trading Bot Kit",
-    ACCESS_KEY: "NX-DIG-K89X-A71F",
+    ITEM_NAME: "AI Prompt Vault & Architecture Specs",
+    ACCESS_KEY: "DEMO-SAMPLE-KEY-XXXX",
     AMOUNT: "49",
     CURRENCY: "USD",
-    DOWNLOAD_URL: "http://localhost:3002/api/products/latest/download?key=NX-DIG-K89X-A71F",
+    DOWNLOAD_URL: "/downloads/ai-prompt-vault-2026.zip",
     CLIENT_NAME: "Marcus Aurelius",
     COMPANY_NAME: "Ledger DeFi Protocol",
     INVOICE_ID: "INV-2026-001",
     DUE_DATE: "2026-10-15",
     TOTAL_AMOUNT: "3,500",
-    PAYMENT_LINK: "http://localhost:3002/checkout?item=Q4+Exclusive+Sponsor+Takeover&amt=3500&cur=USD",
+    PAYMENT_LINK: "/advertise/portal",
     LINE_ITEMS: "Wall St Insider & Crypto Daily Header Takeover (Q4)",
-    IMPRESSIONS: "64,800",
-    CLICKS: "3,120",
-    CTR: "4.81",
-    RENEWAL_RATE: "$2,800 / month",
-    RENEWAL_LINK: "http://localhost:3002/checkout?item=Q4+Renewal+Retainer&amt=2800&cur=USD",
-    SUBSCRIBER_EMAIL: "reader@familyoffice.co",
-    NICHE_NAME: "Global Tech & Crypto Daily",
-    LEAD_MAGNET_URL: "http://localhost:3002/downloads/2026_macro_blueprint.pdf",
-    UNSUB_URL: "http://localhost:3002/unsubscribe",
+    IMPRESSIONS: "—",
+    CLICKS: "—",
+    CTR: "—",
+    RENEWAL_RATE: "Contact for Rates",
+    RENEWAL_LINK: "/advertise/portal",
+    SUBSCRIBER_EMAIL: "reader@domain.com",
+    NICHE_NAME: "The Trend Matrix",
+    LEAD_MAGNET_URL: "/downloads/ai-prompt-vault-2026.zip",
+    UNSUB_URL: "/unsubscribe",
     MEMBER_NAME: "Sarah Jenkins",
     ISSUE_NUM: "42",
-    BRIEF_TOPIC: "Autonomous Agent Compute Arbitrage & Solana Liquidity Shocks",
-    KEY_TAKEAWAYS: "1. Institutional liquidity rotated into high-throughput L1s.\n2. Multi-agent search citations grew +180% MoM.\n3. Algorithmic hedging reduced drawdowns to 1.4%.",
-    DISCORD_LINK: "https://discord.gg/nexus-alpha",
-    PARTNER_NAME: "CryptoAffiliate Pro",
-    AFFILIATE_LINK: "http://localhost:3002/go/tradingview-pro",
-    COMMISSION_RATE: "40",
-    MEDIA_KIT_URL: "http://localhost:3002/advertise"
+    BRIEF_TOPIC: "Autonomous Agent Compute & AI Citation Trends",
+    KEY_TAKEAWAYS: "1. Multi-agent search citations grew significantly.\n2. Clean structured schema drives organic indexing.\n3. Content quality gates prevent spam penalties.",
+    DISCORD_LINK: "https://discord.gg/nexus-media",
+    PARTNER_NAME: "Verified Partner",
+    AFFILIATE_LINK: "/go/tradingview-pro",
+    COMMISSION_RATE: "30",
+    MEDIA_KIT_URL: "/advertise"
   });
 
   const fetchTemplates = async () => {

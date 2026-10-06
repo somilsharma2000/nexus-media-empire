@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import { sendTelegramAlert } from '@/lib/telegram';
+import { getCanonicalSiteUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
 
@@ -75,7 +76,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const base = 'http://localhost:3002';
+  const base = getCanonicalSiteUrl();
   const checks = [
     { url: `${base}/news`,         label: 'News frontend is down',    type: 'site_down',    severity: 'critical' },
     { url: `${base}/crypto`,       label: 'Crypto frontend is down',  type: 'site_down',    severity: 'critical' },

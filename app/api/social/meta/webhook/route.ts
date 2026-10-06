@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { resilientReadJson, atomicWriteJson } from '@/lib/atomic-storage';
+import { getCanonicalSiteUrl } from '@/lib/site-url';
 import path from 'path';
 
 export const dynamic = 'force-dynamic';
@@ -55,7 +56,7 @@ export async function POST(req: Request) {
       const matched = automations.find((a) => a.id === automationId) || automations[0] || {
         name: 'Nexus Universal Access Gate',
         pageHandle: 'TheTrendMatrix',
-        targetUrl: 'http://localhost:3002/news/quantum-computing-reaches-1000-qubit-milestone',
+        targetUrl: `${getCanonicalSiteUrl()}/news/quantum-computing-reaches-1000-qubit-milestone`,
         step2PayloadDm: '🎉 Verified & Access Granted @{username}!\n\n🚀 Here is your un-gated direct link:\n{url}\n\nEnjoy reading and stay ahead of the curve! 💡',
       };
 

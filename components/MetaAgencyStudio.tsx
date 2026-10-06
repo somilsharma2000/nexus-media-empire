@@ -252,12 +252,13 @@ export default function MetaAgencyStudio() {
       setSimStep(2);
 
       // Bot dispatches the un-gated link in Step 2 DM
+      const fallbackLink = typeof window !== 'undefined' ? window.location.origin : 'https://media-empire-beta.vercel.app';
       setChatHistory((prev) => [
         ...prev,
         {
           id: `dm-2-${Date.now()}`,
           sender: 'bot',
-          text: data.dmDelivered || `🎉 Verified & Access Granted @${currentUsername}!\n\n🚀 Here is your exclusive direct link:\n${creativeData?.targetUrl || 'http://localhost:3002'}\n\nEnjoy reading! 💡`,
+          text: data.dmDelivered || `🎉 Verified & Access Granted @${currentUsername}!\n\n🚀 Here is your exclusive direct link:\n${creativeData?.targetUrl || fallbackLink}\n\nEnjoy reading! 💡`,
           timestamp: 'Just now',
           isVerified: true,
           linkUrl: data.targetUrl || creativeData?.targetUrl,
