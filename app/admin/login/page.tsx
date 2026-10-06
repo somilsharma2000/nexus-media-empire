@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Lock, ShieldCheck, Zap, ArrowRight, Activity, Terminal } from "lucide-react";
 
-export default function AdminLoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
@@ -170,5 +170,13 @@ export default function AdminLoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <React.Suspense fallback={<div className="min-h-screen bg-[#030508] flex items-center justify-center text-gray-500 font-mono text-xs">Loading Command Center...</div>}>
+      <LoginForm />
+    </React.Suspense>
   );
 }
