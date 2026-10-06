@@ -10,7 +10,7 @@ datasource db {
 model Article {
   id              String    @id @default(cuid())
   title           String
-  slug            String?
+  slug            String?   @unique
   site            String    @default("news") // "news", "crypto", "finance"
   category        String
   excerpt         String
@@ -33,7 +33,7 @@ model Article {
 
 model PipelineStepState {
   id                  String    @id @default(cuid())
-  step                String    @unique // "trend_scout", "qa_review", "publisher"
+  step                String    @unique // "trend_scout", "qa_review", "publisher", "content_doctor"
   status              String    @default("active") // "active", "paused", "failed"
   lastRun             DateTime?
   consecutiveFailures Int       @default(0)
@@ -114,7 +114,7 @@ model ClickLog {
 
 model AlertLog {
   id        String   @id @default(cuid())
-  type      String   // 'site_down', 'revenue_drop', 'article_zero', 'ads_txt_fail'
+  type      String   // 'site_down', 'revenue_drop', 'article_zero', 'ads_txt_fail', 'db_fail'
   message   String
   severity  String   // 'info', 'warning', 'critical'
   resolved  Boolean  @default(false)
@@ -132,4 +132,206 @@ model AnalyticsCache {
   ctr           Float    @default(0)
   syncedAt      DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+model Topic {
+  id        String    @id @default(cuid())
+  topic     String
+  niche     String    @default("news")
+  priority  String    @default("medium") // "high", "medium", "low"
+  isActive  Boolean   @default(true)
+  timesUsed Int       @default(0)
+  lastUsed  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model DigitalProduct {
+  id             String   @id @default(cuid())
+  name           String
+  niche          String
+  price          Float
+  format         String
+  description    String
+  targetKeywords Json?
+  salesCount     Int      @default(0)
+  revenue        Float    @default(0)
+  downloadUrl    String
+  ctaText        String
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Sponsor {
+  id                   String   @id @default(cuid())
+  brandName            String
+  logoUrl              String?
+  headline             String
+  ctaText              String
+  ctaUrl               String
+  placement            String
+  niche                String   @default("all")
+  cpm                  Float    @default(0)
+  impressionsDelivered Int      @default(0)
+  active               Boolean  @default(true)
+  tier                 String   @default("standard")
+  startDate            String?
+  endDate              String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model SponsorshipInquiry {
+  id             String   @id @default(cuid())
+  brandName      String
+  contactEmail   String
+  companyWebsite String?
+  niche          String
+  tier           String
+  budget         String?
+  message        String?
+  status         String   @default("new")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model PaymentTransaction {
+  id            String   @id @default(cuid())
+  orderId       String?  @unique
+  paymentId     String?  @unique
+  amount        Float
+  currency      String   @default("USD")
+  gateway       String   // "razorpay", "stripe", "crypto"
+  status        String   // "created", "paid", "failed", "refunded"
+  customerEmail String?
+  customerName  String?
+  productId     String?
+  productName   String?
+  metadata      Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model SocialLog {
+  id           String   @id @default(cuid())
+  platform     String   // "twitter", "reddit", "medium", "instagram"
+  articleId    String?
+  articleTitle String?
+  postUrl      String?
+  success      Boolean  @default(true)
+  error        String?
+  metadata     Json?
+  timestamp    DateTime @default(now())
+}
+
+model Backlink {
+  id           String   @id @default(cuid())
+  platform     String
+  url          String
+  articleTitle String?
+  articleId    String?
+  status       String   @default("active")
+  clicks       Int      @default(0)
+  addedAt      DateTime @default(now())
+}
+
+model CrmCustomer {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  company       String?
+  phone         String?
+  country       String?
+  avatar        String?
+  tier          String   @default("Standard")
+  status        String   @default("Active")
+  totalSpentUsd Float    @default(0)
+  totalSpentInr Float    @default(0)
+  ordersCount   Int      @default(0)
+  lastActive    DateTime @default(now())
+  tags          Json?
+  assignedRep   String?
+  notes         String?
+  deals         Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Invoice {
+  id            String    @id @default(cuid())
+  invoiceNumber String    @unique
+  customerId    String?
+  customerName  String
+  customerEmail String
+  company       String?
+  amount        Float
+  currency      String    @default("USD")
+  status        String    @default("draft") // "draft", "sent", "paid", "overdue", "cancelled"
+  dueDate       DateTime?
+  lineItems     Json?
+  paymentLink   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model AffiliateLink {
+  id                 String   @id @default(cuid())
+  name               String
+  slug               String   @unique
+  affiliateUrl       String
+  niche              String   @default("crypto")
+  commissionEstimate String?
+  isActive           Boolean  @default(true)
+  clicksCount        Int      @default(0)
+  updatedAt          DateTime @updatedAt
+}
+
+model MetaAutomation {
+  id                   String   @id @default(cuid())
+  name                 String
+  niche                String   @default("news")
+  pageHandle           String
+  triggerMode          String   @default("any_comment")
+  triggerKeyword       String   @default("ANY")
+  postType             String   @default("instagram_carousel")
+  targetUrl            String
+  productId            String?
+  dmsSent              Int      @default(0)
+  conversions          Int      @default(0)
+  isActive             Boolean  @default(true)
+  requireFollow        Boolean  @default(true)
+  step1FollowRequestDm String?
+  step2PayloadDm       String?
+  publicCommentReply   String?
+  updatedAt            DateTime @updatedAt
+}
+
+model PipelineLog {
+  id        String   @id @default(cuid())
+  step      String
+  status    String
+  detail    String?
+  error     String?
+  timestamp DateTime @default(now())
+}
+
+model ContentDoctorLog {
+  id        String   @id @default(cuid())
+  articleId String?
+  action    String   // "refreshed", "pruned", "flagged"
+  summary   String?
+  qaScore   Float?
+  timestamp DateTime @default(now())
+}
+
+model EmailTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  subject     String
+  category    String
+  htmlContent String
+  textContent String?
+  variables   Json?
+  updatedAt   DateTime @updatedAt
 }
