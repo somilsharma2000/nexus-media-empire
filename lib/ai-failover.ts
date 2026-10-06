@@ -108,17 +108,24 @@ export async function generateContentWithFailover(options: GenerateOptions): Pro
   if (nvidiaApiKey && !nvidiaApiKey.includes('placeholder')) {
     try {
       const nvidiaModel = process.env.NVIDIA_MODEL || 'meta/llama-3.3-70b-instruct';
-      const prompt = `You are an elite financial and technology journalist for Nexus Media.
-Topic: "${topic}"
-Category: "${category}"
-Format: ${format}
+      const prompt = `You are a world-class investigative journalist and subject-matter expert for Nexus Media (publishing in the style of Financial Times, Wired, and Bloomberg).
 
-Generate a comprehensive, authoritative, GEO-optimized article formatted in GitHub Markdown.
+TOPIC: "${topic}"
+CATEGORY: "${category}"
+FORMAT: ${format}
+
+STRICT EDITORIAL & LEGAL GUIDELINES:
+1. HUMAN TONE & VOICE: Write with nuanced, authentic, human intellectual depth. Use compelling storytelling, direct clear prose, and realistic industry perspectives.
+2. NO AI CLICHÉS: Strictly DO NOT use robotic phrases like "delve into", "in this fast-paced world", "a testament to", "tapestry", "beacon of hope", "unleash the power", or "it is crucial to remember".
+3. FACTUAL RIGOR: Cite credible empirical benchmarks, realistic percentages, historical precedents, and structured comparison tables. Do NOT hallucinate false statistics.
+4. LEGAL SAFE HARBOR: Always conclude with an explicit Safe Harbor notice in Markdown blockquote:
+"> **Disclaimer**: *This publication is strictly for educational, technical, and informational purposes and does not constitute financial, investment, legal, tax, or professional advice. Readers should conduct independent due diligence.*"
+
 Return ONLY valid JSON with keys:
 {
-  "article": "# H1 Title\\n\\n> **Key Takeaways**\\n> - Bullet 1\\n> - Bullet 2\\n\\n## 1. Executive Summary\\n... (1400+ words with tables and stats)",
+  "article": "# H1 Title\\n\\n> **Key Takeaways**\\n> - Bullet 1\\n> - Bullet 2\\n\\n## 1. Executive Context\\n... (1400+ words with tables and stats)",
   "metaDescription": "SEO meta description under 160 characters",
-  "tweetThread": ["Tweet 1", "Tweet 2", "Tweet 3", "Tweet 4", "Tweet 5", "Tweet 6"]
+  "tweetThread": ["Tweet 1 (hook)", "Tweet 2", "Tweet 3", "Tweet 4", "Tweet 5", "Tweet 6 (CTA)"]
 }`;
 
       const res = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
@@ -169,11 +176,11 @@ Return ONLY valid JSON with keys:
         messages: [
           {
             role: 'system',
-            content: 'You are an elite technology and financial journalist. Return ONLY JSON with keys: "article", "metaDescription", "tweetThread".',
+            content: 'You are an investigative journalist and subject matter expert for Nexus Media. Write with human depth, direct style, and zero AI clichés (never use "delve", "tapestry", "in this fast-paced world", "a testament to"). Include empirical data tables and conclude with a standard Markdown Safe Harbor legal disclaimer blockquote stating this is for informational/educational purposes only and not financial/legal advice. Return ONLY JSON with keys: "article", "metaDescription", "tweetThread".',
           },
           {
             role: 'user',
-            content: `Write a 1400-word ${format} article about: ${topic}. Category: ${category}. Cite 2026 statistics and include structured key takeaways.`,
+            content: `Write a comprehensive 1400-word ${format} article about: ${topic}. Category: ${category}. Format in clean GitHub Markdown with Key Takeaways, numbered sections, data table, and legal disclaimer.`,
           },
         ],
       });
