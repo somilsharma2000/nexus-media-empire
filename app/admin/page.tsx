@@ -7,7 +7,7 @@ import {
   LayoutDashboard, BrainCircuit, Image as ImageIcon, X, Copy, ChevronRight, 
   TrendingUp, Briefcase, LineChart, Lock, Menu,
   Database, RefreshCw, Power, Sliders, Brain, Code2, Key, PieChart, BarChart, Layers,
-  Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock, Palette, Package, Flame, Building, CreditCard
+  Inbox, Share2, ShieldCheck, Sparkles, Tag, Link2, Mail, Clock, Palette, Package, Flame, Building, CreditCard, Eye
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -95,6 +95,55 @@ export default function NexusDashboard() {
   const [currentView, setCurrentView] = useState("godmode");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: string } | null>(null);
+
+  const [liveStats, setLiveStats] = useState<{
+    todayRevenue: number;
+    totalLifetimeRevenue: number;
+    pageviews: number;
+    articlesCount: number;
+    subscribersCount: number;
+    sponsorInquiriesCount: number;
+  }>({
+    todayRevenue: 0,
+    totalLifetimeRevenue: 0,
+    pageviews: 0,
+    articlesCount: 90,
+    subscribersCount: 0,
+    sponsorInquiriesCount: 0
+  });
+
+  useEffect(() => {
+    async function loadLiveStats() {
+      try {
+        const [revRes, artRes] = await Promise.all([
+          fetch("/api/analytics/revenue"),
+          fetch("/api/articles")
+        ]);
+        if (revRes.ok) {
+          const revData = await revRes.json();
+          if (revData?.network) {
+            setLiveStats((prev) => ({
+              ...prev,
+              todayRevenue: revData.network.todayRevenue || 0,
+              totalLifetimeRevenue: revData.network.totalLifetimeRevenue || 0,
+              pageviews: revData.network.pageviews || 0,
+              subscribersCount: revData.network.subscribersCount || 0,
+              sponsorInquiriesCount: revData.network.sponsorInquiriesCount || 0
+            }));
+          }
+        }
+        if (artRes.ok) {
+          const artData = await artRes.json();
+          if (Array.isArray(artData)) {
+            setLiveStats((prev) => ({ ...prev, articlesCount: artData.length }));
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load live admin stats", err);
+      }
+    }
+    loadLiveStats();
+  }, []);
 
   const showToast = (message: string, type = "success") => { 
     setToast({ message, type }); 
@@ -302,10 +351,35 @@ export default function NexusDashboard() {
                   </div>
                 </header>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <StatCard title="Active Network Articles" value="90 Guides" icon={<Zap className="w-5 h-5 text-blue-400" />} onClick={() => setCurrentView("articles")} subtitle="100% E-E-A-T Verified" />
-                  <StatCard title="Monetization Status" value="Tri-Tier Live" icon={<Activity className="w-5 h-5 text-emerald-400" />} onClick={() => setCurrentView("adslots")} subtitle="AdSense + Affiliates + Products" />
-                  <StatCard title="Estimated Monthly RPM" value="$37 - $71" icon={<LineChart className="w-5 h-5 text-purple-400" />} onClick={() => setCurrentView("analytics")} subtitle="Per 1,000 Verified Readers" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <StatCard 
+                    title="Active Network Guides" 
+                    value={`${liveStats.articlesCount} Published`} 
+                    icon={<Zap className="w-5 h-5 text-blue-400" />} 
+                    onClick={() => setCurrentView("articles")} 
+                    subtitle="100% E-E-A-T Verified" 
+                  />
+                  <StatCard 
+                    title="Real-Time Pageviews" 
+                    value={liveStats.pageviews > 0 ? liveStats.pageviews.toLocaleString() : "0 Views"} 
+                    icon={<Eye className="w-5 h-5 text-cyan-400" />} 
+                    onClick={() => setCurrentView("analytics")} 
+                    subtitle="Live Edge Reader Traffic" 
+                  />
+                  <StatCard 
+                    title="Live Network Revenue" 
+                    value={`$${liveStats.todayRevenue.toFixed(2)}`} 
+                    icon={<TrendingUp className="w-5 h-5 text-emerald-400" />} 
+                    onClick={() => setCurrentView("analytics")} 
+                    subtitle={`$${liveStats.totalLifetimeRevenue.toFixed(2)} Lifetime Calculated`} 
+                  />
+                  <StatCard 
+                    title="Subscribers & RFPs" 
+                    value={`${liveStats.subscribersCount} / ${liveStats.sponsorInquiriesCount}`} 
+                    icon={<Building className="w-5 h-5 text-purple-400" />} 
+                    onClick={() => setCurrentView("sponsors")} 
+                    subtitle="Email Readers & Sponsor Leads" 
+                  />
                 </div>
 
                 <div className="space-y-4">
