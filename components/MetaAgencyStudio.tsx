@@ -62,6 +62,7 @@ interface MetaAutomation {
 
 export default function MetaAgencyStudio() {
   const [articles, setArticles] = useState<any[]>([]);
+  const [campaignGoal, setCampaignGoal] = useState<"article_research" | "breaking_news" | "interactive_tool" | "digital_product" | "affiliate_deal">("article_research");
   const [selectedArticleId, setSelectedArticleId] = useState<string>("");
   const [activeTab, setActiveTab] = useState<"carousel" | "reel" | "facebook" | "simulator" | "rules">("carousel");
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -71,7 +72,7 @@ export default function MetaAgencyStudio() {
 
   // Simulator state
   const [simUsername, setSimUsername] = useState("alex_investor");
-  const [simComment, setSimComment] = useState("Please send MATRIX blueprint!");
+  const [simComment, setSimComment] = useState("Please send RESEARCH link!");
   const [simResult, setSimResult] = useState<any>(null);
   const [isSimulating, setIsSimulating] = useState(false);
 
@@ -85,7 +86,7 @@ export default function MetaAgencyStudio() {
         if (Array.isArray(data) && data.length > 0) {
           setArticles(data);
           setSelectedArticleId(String(data[0].id || data[0].slug));
-          generateCreative(String(data[0].id || data[0].slug));
+          generateCreative(String(data[0].id || data[0].slug), "article_research");
         }
       })
       .catch(() => {});
@@ -97,7 +98,7 @@ export default function MetaAgencyStudio() {
       .catch(() => {});
   }, []);
 
-  const generateCreative = async (articleId: string) => {
+  const generateCreative = async (articleId: string, goal = campaignGoal) => {
     setIsLoading(true);
     try {
       const selected = articles.find((a) => String(a.id || a.slug) === articleId);
@@ -107,6 +108,7 @@ export default function MetaAgencyStudio() {
         body: JSON.stringify({
           articleId,
           niche: selected?.niche || "news",
+          campaignGoal: goal,
         }),
       });
       const data = await res.json();
@@ -175,7 +177,7 @@ export default function MetaAgencyStudio() {
             value={selectedArticleId}
             onChange={(e) => {
               setSelectedArticleId(e.target.value);
-              generateCreative(e.target.value);
+              generateCreative(e.target.value, campaignGoal);
             }}
             className="bg-[#060b14] border border-gray-800 text-xs text-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 font-mono w-full lg:w-72"
           >
@@ -187,13 +189,52 @@ export default function MetaAgencyStudio() {
           </select>
 
           <button
-            onClick={() => generateCreative(selectedArticleId)}
+            onClick={() => generateCreative(selectedArticleId, campaignGoal)}
             disabled={isLoading}
             className="px-4 py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition flex items-center gap-2 shrink-0 shadow-lg shadow-blue-600/30"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
             Regenerate
           </button>
+        </div>
+      </div>
+
+      {/* Campaign Archetype / Entity Type Selector */}
+      <div className="p-4 rounded-2xl bg-gray-950 border border-gray-800 space-y-2">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-gray-400">
+            🎯 Target Campaign Archetype &amp; Auto-DM Intent
+          </span>
+          <span className="text-[10px] font-mono text-blue-400">
+            Current Keyword: <strong>"{creativeData?.triggerKeyword || 'READ'}"</strong>
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+          {[
+            { id: "article_research", label: "📚 Full Research Teardown", desc: "Pure Knowledge & Article Link" },
+            { id: "breaking_news", label: "🚨 Breaking News Alert", desc: "Urgent Market Shift & Live Feed" },
+            { id: "interactive_tool", label: "📊 Free Web Calculator", desc: "Compounding Tool Link" },
+            { id: "digital_product", label: "⚡ Paid Execution Toolkit", desc: "Digital Pack + Discount Code" },
+            { id: "affiliate_deal", label: "🛡️ Hardware & SaaS Tool", desc: "Partner Review + Bonus Credit" },
+          ].map((item) => (
+            <button
+              key={item.id}
+              onClick={() => {
+                const goal = item.id as any;
+                setCampaignGoal(goal);
+                generateCreative(selectedArticleId, goal);
+              }}
+              className={`p-3 rounded-xl border text-left transition ${
+                campaignGoal === item.id
+                  ? "bg-blue-950/60 border-blue-500 text-white shadow-md shadow-blue-950/40"
+                  : "bg-black/50 border-gray-800/80 text-gray-400 hover:text-white hover:border-gray-700"
+              }`}
+            >
+              <div className="text-xs font-bold leading-tight">{item.label}</div>
+              <div className="text-[10px] text-gray-500 mt-1 truncate">{item.desc}</div>
+            </button>
+          ))}
         </div>
       </div>
 
