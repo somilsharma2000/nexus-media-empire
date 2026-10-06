@@ -35,6 +35,7 @@ import SponsorManager from "../components/SponsorManager";
 import AdminSecurityGate from "../components/AdminSecurityGate";
 import MonetizationBlueprint from "../components/MonetizationBlueprint";
 import RazorpayGatewayHub from "../components/RazorpayGatewayHub";
+import CommunicationsStudio from "../components/CommunicationsStudio";
 
 
 const TRENDS = [
@@ -267,6 +268,7 @@ export default function NexusDashboard() {
             {/* GROWTH & SOCIAL */}
             <div className="space-y-1">
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1.5 font-mono">Growth & Social</p>
+              <NavItem icon={<Mail className="text-pink-400" />} label="Templates & Popups" active={currentView === 'templates'} onClick={() => setCurrentView('templates')} />
               <NavItem icon={<Share2 className="text-cyan-400" />} label="Omni-Brand Socials" active={currentView === 'omnisocial'} onClick={() => setCurrentView('omnisocial')} />
               <NavItem icon={<Flame className="text-amber-400" />} label="Viral Hook Studio" active={currentView === 'hooks'} onClick={() => setCurrentView('hooks')} />
               <NavItem icon={<Palette className="text-pink-400" />} label="Promo Poster Studio" active={currentView === 'posters'} onClick={() => setCurrentView('posters')} />
@@ -568,6 +570,13 @@ export default function NexusDashboard() {
                 <p className="text-gray-400 text-sm mt-1">Real-time earnings telemetry across AdSense, direct advertisers, and affiliate conversions.</p>
               </header>
               <RevenueDashboard />
+            </motion.div>
+          )}
+
+          {/* VIEW: COMMUNICATIONS & TEMPLATES STUDIO */}
+          {currentView === 'templates' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="space-y-6">
+              <CommunicationsStudio />
             </motion.div>
           )}
 
