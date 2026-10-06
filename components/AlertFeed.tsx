@@ -78,23 +78,68 @@ export default function AlertFeed() {
     }
   }
 
+  const [testSending, setTestSending] = useState(false);
+
+  async function sendTestAlert() {
+    setTestSending(true);
+    try {
+      const res = await fetch('/api/monitor/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'pipeline',
+          severity: 'warning',
+          title: 'Emergency Notification Test',
+          message: 'All system listeners (Telegram Bot, Discord Webhook, In-App Incident Radar) are operational and responsive.',
+        }),
+      });
+      const data = await res.json();
+      setLastCheck(`✅ Test alert broadcasted to: ${data.dispatchedTo?.join(', ') || 'channels'}`);
+      await fetchAlerts();
+    } catch {
+      setLastCheck('❌ Failed to dispatch test alert');
+    } finally {
+      setTestSending(false);
+    }
+  }
+
   const unresolvedAlerts = alerts.filter((a) => !a.resolved);
 
   return (
-    <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-white font-bold text-lg">🔔 System Alerts</h2>
-        <button
-          onClick={runHealthCheck}
-          disabled={runningCheck}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm rounded-lg transition"
-        >
-          {runningCheck ? 'Checking…' : 'Run Health Check Now'}
-        </button>
+    <div className="bg-gray-900 border border-gray-700 rounded-2xl p-6 w-full shadow-2xl">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <div className="flex items-center gap-2">
+            <h2 className="text-white font-black text-xl tracking-tight">🚨 Emergency Alert &amp; Incident Radar</h2>
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">
+              Live Active
+            </span>
+          </div>
+          <p className="text-gray-400 text-xs mt-1">Instant mobile &amp; webhook alerts for pipeline errors, uptime drops, and payment events.</p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={sendTestAlert}
+            disabled={testSending}
+            className="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-black font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-amber-600/20"
+          >
+            {testSending ? 'Broadcasting...' : '⚡ Test Phone Alert'}
+          </button>
+          <button
+            onClick={runHealthCheck}
+            disabled={runningCheck}
+            className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-xs rounded-xl transition shadow-lg shadow-indigo-600/20"
+          >
+            {runningCheck ? 'Checking…' : 'Run Health Check'}
+          </button>
+        </div>
       </div>
 
       {lastCheck && (
-        <p className="text-gray-400 text-xs mb-3">{lastCheck}</p>
+        <div className="bg-[#060b13] border border-blue-500/30 text-blue-300 text-xs font-mono p-3 rounded-xl mb-4">
+          {lastCheck}
+        </div>
       )}
 
       {loading ? (
