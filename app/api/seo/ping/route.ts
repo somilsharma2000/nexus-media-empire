@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { getCanonicalSiteUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
   }
 
   // 2. Build full canonical URL using production baseUrl for external indexing engines
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://media-empire-beta.vercel.app';
+  const baseUrl = getCanonicalSiteUrl();
   const canonicalUrl = `${baseUrl}${relativePath}`;
 
   const apiKey = process.env.GOOGLE_INDEXING_API_KEY;

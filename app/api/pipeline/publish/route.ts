@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getCanonicalSiteUrl } from '@/lib/site-url';
 import {
   isAuthorised,
   readArticles,
@@ -77,7 +78,7 @@ export async function POST(req: Request) {
     await writeArticles(articles);
 
     // Ping SEO for each published article
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://media-empire-beta.vercel.app';
+    const siteUrl = getCanonicalSiteUrl();
     for (const article of toPublish) {
       const articleNiche = article.niche || article.category?.toLowerCase() || 'news';
       const articleSlug = article.slug || String(article.id);

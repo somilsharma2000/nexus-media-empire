@@ -4,10 +4,11 @@ import fs from 'fs/promises';
 import path from 'path';
 
 import { getArticles, saveArticle, saveArticles } from '@/lib/data-layer';
+import { getCanonicalSiteUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://media-empire-beta.vercel.app';
+const BASE_URL = getCanonicalSiteUrl();
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

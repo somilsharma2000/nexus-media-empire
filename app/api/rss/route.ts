@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getArticles } from '@/lib/data-layer';
+import { getCanonicalSiteUrl } from '@/lib/site-url';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -12,7 +13,7 @@ export async function GET(req: Request) {
   };
 
   const pubName = nicheTitles[niche] || 'Nexus Media Empire';
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://media-empire-beta.vercel.app';
+  const siteUrl = getCanonicalSiteUrl();
 
   try {
     const allArticles = await getArticles();
