@@ -9,6 +9,7 @@ export async function GET() {
   const isProd = isProductionEnvironment();
 
   try {
+    const hasDbUrl = Boolean(process.env.DATABASE_URL);
     const db = getPrisma();
 
     if (db) {
@@ -35,7 +36,13 @@ export async function GET() {
         {
           status: 'unhealthy',
           database: 'disconnected',
-          error: 'Prisma client not initialized in production environment',
+          error: !hasDbUrl
+            ? 'DATABASE_URL environment variable is missing in Vercel settings'
+            : 'Prisma Client failed to initialize with provided DATABASE_URL',
+          diagnostics: {
+            hasDatabaseUrl: hasDbUrl,
+            urlPrefix: hasDbUrl ? process.env.DATABASE_URL!.slice(0, 12) + '...' : 'none',
+          },
           production: true,
           timestamp,
         },
