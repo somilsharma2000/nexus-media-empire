@@ -51,8 +51,13 @@ export async function GET() {
   return NextResponse.json(settings);
 }
 
+import { verifyAdminAuth, unauthorizedResponse } from '@/lib/auth-guard';
+
 // POST — save settings to data/settings.json AND sync to .env file & runtime process.env
 export async function POST(request: Request) {
+  const isAuth = await verifyAdminAuth(request);
+  if (!isAuth) return unauthorizedResponse();
+
   try {
     const body = await request.json();
     const keysReceived = Object.keys(body).filter((k) => body[k] !== undefined);

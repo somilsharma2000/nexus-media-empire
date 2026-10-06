@@ -123,7 +123,7 @@ export default function GodModeArticleCopilot({ title, niche, content, excerpt }
             <div className="flex items-center gap-2">
               <h3 className="text-base font-black text-white tracking-tight">Nexus AI Article Intelligence Suite</h3>
               <span className="text-[10px] bg-blue-950 text-blue-400 border border-blue-800 px-2 py-0.5 rounded-full font-mono font-bold uppercase">
-                God Mode Active
+                Editorial Intelligence Active
               </span>
             </div>
             <p className="text-xs text-gray-400 font-mono">Real-time Copilot, Sentiment Barometer &amp; Synthesis</p>

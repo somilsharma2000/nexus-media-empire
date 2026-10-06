@@ -1,11 +1,17 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { checkRateLimit, rateLimitExceededResponse } from '@/lib/rate-limit';
 
 const SUBSCRIBERS_PATH = path.join(process.cwd(), 'data', 'subscribers.json');
 const SETTINGS_PATH = path.join(process.cwd(), 'data', 'settings.json');
 
 export async function POST(req: Request) {
+  const rateLimit = checkRateLimit(req, 10, 60000);
+  if (!rateLimit.success) {
+    return rateLimitExceededResponse(rateLimit.resetMs);
+  }
+
   try {
     const { email, niche } = await req.json();
     if (!email || !email.includes('@')) {

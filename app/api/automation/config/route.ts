@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { verifyAdminAuth, unauthorizedResponse } from '@/lib/auth-guard';
+
+export const dynamic = 'force-dynamic';
 
 const CONFIG_PATH = path.join(process.cwd(), 'data', 'automation_config.json');
 
@@ -14,6 +17,9 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const isAuth = await verifyAdminAuth(req);
+  if (!isAuth) return unauthorizedResponse();
+
   try {
     const body = await req.json();
     await fs.writeFile(CONFIG_PATH, JSON.stringify(body, null, 2));

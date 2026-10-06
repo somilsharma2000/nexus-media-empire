@@ -162,11 +162,11 @@ export default function SponsorPortalPage() {
         <section className="bg-[#080d16] border border-gray-800/80 rounded-3xl p-8 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-950/80 border border-blue-800/60 text-blue-400 text-xs font-mono font-semibold">
-              <Sparkles className="w-3 h-3" /> Real-Time Telemetry &amp; Attribution
+              <Sparkles className="w-3 h-3" /> Sponsor Reporting Interface (Demo &amp; Live Tracking)
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white">Live Campaign Telemetry Hub</h1>
+            <h1 className="text-2xl sm:text-3xl font-black text-white">Campaign Telemetry Hub</h1>
             <p className="text-xs text-gray-400 font-mono">
-              Transparent, unmanipulated impression verification and unique click telemetry for brand partners.
+              Direct impression verification, placement telemetry, and attribution reports for active sponsor partners.
             </p>
           </div>
 

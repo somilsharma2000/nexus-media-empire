@@ -48,10 +48,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isApi = nextUrl.pathname.startsWith('/api');
-      const isDashboard = nextUrl.pathname === '/';
+      const isAdminRoute = nextUrl.pathname.startsWith('/admin') && nextUrl.pathname !== '/admin/login';
       
-      if (isDashboard) {
+      if (isAdminRoute) {
         if (isLoggedIn) return true;
         return Response.redirect(new URL('/admin/login', nextUrl));
       }

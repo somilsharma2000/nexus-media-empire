@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
-import { isAuthorised, readState, writeState, log } from '@/lib/pipeline-helpers';
+import { readState, writeState, log } from '@/lib/pipeline-helpers';
+import { verifyAdminAuth, unauthorizedResponse } from '@/lib/auth-guard';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
-  if (!isAuthorised(req)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const isAuth = await verifyAdminAuth(req);
+  if (!isAuth) {
+    return unauthorizedResponse();
   }
 
   const body = await req.json();

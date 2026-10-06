@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { checkRateLimit, rateLimitExceededResponse } from '@/lib/rate-limit';
 
 const ARTICLES_PATH = path.join(process.cwd(), 'data', 'articles.json');
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
+  const rateLimit = checkRateLimit(req, 60, 60000);
+  if (!rateLimit.success) {
+    return rateLimitExceededResponse(rateLimit.resetMs);
+  }
+
   try {
     const raw = await fs.readFile(ARTICLES_PATH, 'utf-8');
     const articles = JSON.parse(raw);

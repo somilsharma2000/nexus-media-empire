@@ -3,6 +3,8 @@ import path from 'path';
 import { generateContentWithFailover } from '@/lib/ai-failover';
 import { resilientReadJson, atomicWriteJson } from '@/lib/atomic-storage';
 
+import { checkRateLimit, rateLimitExceededResponse } from '@/lib/rate-limit';
+
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
@@ -14,6 +16,11 @@ function currentMonth(): string {
 }
 
 export async function POST(req: Request) {
+  const rateLimit = checkRateLimit(req, 5, 60000);
+  if (!rateLimit.success) {
+    return rateLimitExceededResponse(rateLimit.resetMs);
+  }
+
   try {
     let body: { topic?: string; category?: string; format?: 'deep-dive' | 'listicle' | 'news' } = {};
     try {

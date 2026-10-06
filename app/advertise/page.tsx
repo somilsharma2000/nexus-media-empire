@@ -113,13 +113,13 @@ export default function AdvertisePage() {
         {/* Hero Section */}
         <section className="text-center space-y-6 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-950/80 border border-blue-800/80 text-blue-400 text-xs font-mono">
-            <Sparkles className="w-3.5 h-3.5" /> Direct Advertising &amp; Brand Takeover Portal
+            <Sparkles className="w-3.5 h-3.5" /> Direct Advertising &amp; Brand Partnership Portal
           </div>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-            Reach 120,000+ High-Net-Worth Founders, Crypto Allocators &amp; Engineers
+            Connect With High-Intent Founders, Tech Leaders &amp; Financial Operators
           </h1>
           <p className="text-gray-400 text-base leading-relaxed">
-            Nexus Media Empire operates 3 high-authority digital publications across Artificial Intelligence, Web3 Protocols, and Institutional Finance. Zero ad-blocker penalty, 100% native programmatic integration.
+            Nexus Media Empire operates 3 focused digital publications across Artificial Intelligence, Web3 Protocols, and Institutional Finance. High viewability, zero ad-blocker penalty, and native programmatic integration.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 pt-2 font-mono text-xs">
             <a href="#packages" className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-600/25 transition-all flex items-center gap-2">
@@ -127,7 +127,7 @@ export default function AdvertisePage() {
               <ArrowRight className="w-4 h-4" />
             </a>
             <a href="#calculator" className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-800 rounded-xl transition-all">
-              Calculate ROI Projection
+              Campaign Reach Estimator
             </a>
           </div>
         </section>
@@ -135,24 +135,24 @@ export default function AdvertisePage() {
         {/* Network Metrics Overview */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-[#080d16] border border-gray-800/80 p-6 rounded-2xl text-center space-y-1">
-            <div className="text-3xl font-black text-white font-mono">120K+</div>
-            <div className="text-xs text-gray-400 font-mono">Monthly Readers</div>
-            <div className="text-[10px] text-emerald-400 font-mono">Tier 1 US / UK / EU (84%)</div>
+            <div className="text-2xl font-black text-white font-mono">Growing</div>
+            <div className="text-xs text-gray-400 font-mono">Target Audience</div>
+            <div className="text-[10px] text-emerald-400 font-mono">US, UK &amp; Global Tier 1</div>
           </div>
           <div className="bg-[#080d16] border border-gray-800/80 p-6 rounded-2xl text-center space-y-1">
-            <div className="text-3xl font-black text-blue-400 font-mono">15K+</div>
-            <div className="text-xs text-gray-400 font-mono">Newsletter Subscribers</div>
-            <div className="text-[10px] text-blue-400/80 font-mono">42.4% Avg Open Rate</div>
+            <div className="text-2xl font-black text-blue-400 font-mono">3 Niches</div>
+            <div className="text-xs text-gray-400 font-mono">Multi-Domain Network</div>
+            <div className="text-[10px] text-blue-400/80 font-mono">Tech, Crypto &amp; Finance</div>
           </div>
           <div className="bg-[#080d16] border border-gray-800/80 p-6 rounded-2xl text-center space-y-1">
-            <div className="text-3xl font-black text-purple-400 font-mono">$185K</div>
-            <div className="text-xs text-gray-400 font-mono">Avg Reader Net Worth</div>
-            <div className="text-[10px] text-purple-400/80 font-mono">Founders &amp; Allocators</div>
+            <div className="text-2xl font-black text-purple-400 font-mono">High Intent</div>
+            <div className="text-xs text-gray-400 font-mono">Audience Profile</div>
+            <div className="text-[10px] text-purple-400/80 font-mono">Engineers &amp; Investors</div>
           </div>
           <div className="bg-[#080d16] border border-gray-800/80 p-6 rounded-2xl text-center space-y-1">
-            <div className="text-3xl font-black text-emerald-400 font-mono">2.8%</div>
-            <div className="text-xs text-gray-400 font-mono">Average Native CTR</div>
-            <div className="text-[10px] text-emerald-400 font-mono">4x Industry Benchmark</div>
+            <div className="text-2xl font-black text-emerald-400 font-mono">100% Native</div>
+            <div className="text-xs text-gray-400 font-mono">Contextual Placements</div>
+            <div className="text-[10px] text-emerald-400 font-mono">Ad-Block Resistant</div>
           </div>
         </section>
 
@@ -161,11 +161,11 @@ export default function AdvertisePage() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="space-y-1">
               <span className="text-[10px] font-mono uppercase font-bold text-blue-400 bg-blue-950/80 border border-blue-800 px-3 py-1 rounded-full">
-                Interactive ROI Estimator
+                Campaign Modeling Tool
               </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-white">Calculate Your Campaign Reach &amp; Projected ROI</h2>
+              <h2 className="text-2xl sm:text-3xl font-black text-white">Estimate Campaign Reach &amp; Allocation</h2>
               <p className="text-xs text-gray-400 font-mono">
-                Real-time projection based on historical 2.8% CTR &amp; 6.5% high-intent B2B conversion data.
+                Model reach across our network based on budget and preferred placement channels.
               </p>
             </div>
 
@@ -225,7 +225,7 @@ export default function AdvertisePage() {
           {/* Projected Outcomes Matrix */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="bg-[#03060a] p-5 rounded-2xl border border-gray-800 text-center space-y-1">
-              <div className="text-xs font-mono text-gray-400">Guaranteed Impressions</div>
+              <div className="text-xs font-mono text-gray-400">Estimated Impressions</div>
               <div className="text-2xl font-black text-white">{formatNumber(estimatedImpressions)}</div>
               <div className="text-[10px] text-blue-400 font-mono">${cpmRate} CPM Benchmark</div>
             </div>
@@ -233,19 +233,19 @@ export default function AdvertisePage() {
             <div className="bg-[#03060a] p-5 rounded-2xl border border-gray-800 text-center space-y-1">
               <div className="text-xs font-mono text-gray-400">Projected Qualified Clicks</div>
               <div className="text-2xl font-black text-emerald-400">{formatNumber(estimatedClicks)}</div>
-              <div className="text-[10px] text-gray-500 font-mono">2.8% Average CTR</div>
+              <div className="text-[10px] text-gray-500 font-mono">Est. 2.8% CTR Model</div>
             </div>
 
             <div className="bg-[#03060a] p-5 rounded-2xl border border-gray-800 text-center space-y-1">
-              <div className="text-xs font-mono text-gray-400">Projected B2B Leads</div>
+              <div className="text-xs font-mono text-gray-400">Projected B2B Inquiries</div>
               <div className="text-2xl font-black text-purple-400">{formatNumber(estimatedLeads)}</div>
-              <div className="text-[10px] text-gray-500 font-mono">High-Intent Founders</div>
+              <div className="text-[10px] text-gray-500 font-mono">High-Intent Readers</div>
             </div>
 
             <div className="bg-[#03060a] p-5 rounded-2xl border border-emerald-900/40 bg-emerald-950/10 text-center space-y-1">
               <div className="text-xs font-mono text-gray-400">Cost Advantage vs Ads</div>
               <div className="text-2xl font-black text-emerald-400">+{savingsPercent}%</div>
-              <div className="text-[10px] text-emerald-400/80 font-mono">vs Google / LinkedIn Ads</div>
+              <div className="text-[10px] text-emerald-400/80 font-mono">vs Intermediary Networks</div>
             </div>
           </div>
         </section>
@@ -253,8 +253,8 @@ export default function AdvertisePage() {
         {/* Sponsorship Packages & Rate Card */}
         <section id="packages" className="space-y-8">
           <div className="text-center space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-black text-white">Sponsorship Packages &amp; Placement Specs</h2>
-            <p className="text-xs text-gray-400 font-mono">Guaranteed impressions, verified attribution tags, and dedicated editorial placement.</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-white">Sponsorship Packages &amp; Placement Options</h2>
+            <p className="text-xs text-gray-400 font-mono">Customized delivery, verified attribution tags, and dedicated editorial placement.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -264,22 +264,22 @@ export default function AdvertisePage() {
                 <span className="text-xs font-mono font-bold text-gray-400 uppercase tracking-widest bg-gray-900 px-3 py-1 rounded-full border border-gray-800">
                   Tier 1 • Spotlight
                 </span>
-                <h3 className="text-xl font-bold text-white">Newsletter Sponsor</h3>
-                <div className="text-3xl font-black text-white">$499 <span className="text-xs font-normal text-gray-500 font-mono">/ send</span></div>
+                <h3 className="text-xl font-bold text-white">Newsletter Spotlight</h3>
+                <div className="text-2xl font-black text-white">Contact for Quote</div>
                 <p className="text-xs text-gray-400 leading-relaxed">
-                  Dedicated &quot;Presented By&quot; header banner + 120-word native shoutout sent directly to 15,000+ verified executive subscribers.
+                  Dedicated &quot;Presented By&quot; header banner + native contextual shoutout sent directly to our engaged subscriber list.
                 </p>
                 <ul className="text-xs text-gray-300 space-y-2 font-mono pt-2">
                   <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Top-of-Newsletter placement</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Guaranteed 42%+ open rate</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Targeted niche distribution</li>
                   <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Full UTM click tracking report</li>
                 </ul>
               </div>
               <button
-                onClick={() => selectPackage("Tier 1: Newsletter Sponsor ($499/send)", "$500 - $1,500", "all")}
+                onClick={() => selectPackage("Tier 1: Newsletter Spotlight", "Inquire", "all")}
                 className="w-full py-3 px-4 bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white rounded-xl text-xs font-bold font-mono transition-all flex items-center justify-center gap-2"
               >
-                <span>Select Tier 1 Package</span>
+                <span>Inquire for Tier 1</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -287,28 +287,28 @@ export default function AdvertisePage() {
             {/* Tier 2 (Featured) */}
             <div className="bg-gradient-to-b from-[#0e1627] to-[#080d16] border border-blue-500/50 p-8 rounded-3xl flex flex-col justify-between space-y-6 relative shadow-2xl shadow-blue-950/60">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-0.5 rounded-full shadow-lg">
-                MOST POPULAR FOR B2B
+                POPULAR FOR B2B
               </div>
               <div className="space-y-4">
                 <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-widest bg-blue-950/80 px-3 py-1 rounded-full border border-blue-800/60">
-                  Tier 2 • Subdomain Dominance
+                  Tier 2 • Channel Dominance
                 </span>
-                <h3 className="text-xl font-bold text-white">30-Day Niche Takeover</h3>
-                <div className="text-3xl font-black text-white">$1,499 <span className="text-xs font-normal text-gray-500 font-mono">/ month</span></div>
+                <h3 className="text-xl font-bold text-white">Niche Channel Sponsorship</h3>
+                <div className="text-2xl font-black text-white">Custom Package</div>
                 <p className="text-xs text-gray-300 leading-relaxed">
-                  100% Share of Voice on your chosen niche (Tech, Crypto, or Finance). Includes persistent co-branded header bar + in-article native cards.
+                  High share-of-voice on your chosen niche channel (Tech, Crypto, or Finance). Includes persistent co-branded header bar + in-article native cards.
                 </p>
                 <ul className="text-xs text-gray-300 space-y-2 font-mono pt-2">
-                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Co-branded header bar on all pages</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Co-branded header bar on target channel</li>
                   <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Native in-article responsive banner</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> 250,000+ guaranteed impressions</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Priority placement on new editorial releases</li>
                 </ul>
               </div>
               <button
-                onClick={() => selectPackage("Tier 2: 30-Day Niche Takeover ($1,499/mo)", "$1,500 - $3,500", "news")}
+                onClick={() => selectPackage("Tier 2: Niche Channel Sponsorship", "Custom", "news")}
                 className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold font-mono shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2"
               >
-                <span>Select Tier 2 Package</span>
+                <span>Inquire for Tier 2</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -319,22 +319,22 @@ export default function AdvertisePage() {
                 <span className="text-xs font-mono font-bold text-purple-400 uppercase tracking-widest bg-purple-950/60 px-3 py-1 rounded-full border border-purple-800/60">
                   Tier 3 • Empire Partner
                 </span>
-                <h3 className="text-xl font-bold text-white">Multi-Domain Dominance</h3>
-                <div className="text-3xl font-black text-white">$3,999 <span className="text-xs font-normal text-gray-500 font-mono">/ month</span></div>
+                <h3 className="text-xl font-bold text-white">Multi-Domain Network Partner</h3>
+                <div className="text-2xl font-black text-white">Enterprise Tier</div>
                 <p className="text-xs text-gray-400 leading-relaxed">
-                  Complete network-wide sponsor takeover across all 3 publications, 4 weekly newsletter editions, and 2 co-branded longform whitepapers.
+                  Complete network-wide sponsor presence across all publications, newsletter editions, and co-branded longform analysis.
                 </p>
                 <ul className="text-xs text-gray-300 space-y-2 font-mono pt-2">
-                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Network-wide homepage &amp; article takeovers</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> 2 Co-branded E-E-A-T research guides</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Dedicated account manager &amp; custom creative</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Network-wide homepage &amp; article placements</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Co-branded in-depth research guides</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" /> Dedicated account support &amp; custom creative</li>
                 </ul>
               </div>
               <button
-                onClick={() => selectPackage("Tier 3: Multi-Domain Dominance ($3,999/mo)", "$3,999+", "all")}
+                onClick={() => selectPackage("Tier 3: Multi-Domain Network Partner", "Enterprise", "all")}
                 className="w-full py-3 px-4 bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white rounded-xl text-xs font-bold font-mono transition-all flex items-center justify-center gap-2"
               >
-                <span>Select Tier 3 Package</span>
+                <span>Inquire for Tier 3</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>

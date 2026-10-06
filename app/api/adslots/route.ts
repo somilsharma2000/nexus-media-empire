@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { verifyAdminAuth, unauthorizedResponse } from '@/lib/auth-guard';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +23,6 @@ function writeSlots(slots: unknown[]) {
 export async function GET(request: NextRequest) {
   const { pathname } = new URL(request.url);
 
-  // Handle killswitch sub-path routed via this file (fallback)
   if (pathname.endsWith('/killswitch')) {
     return NextResponse.json({ error: 'Use PATCH for killswitch' }, { status: 405 });
   }
@@ -32,6 +32,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/adslots — create new slot
 export async function POST(request: NextRequest) {
+  const isAuth = await verifyAdminAuth(request);
+  if (!isAuth) return unauthorizedResponse();
+
   try {
     const body = await request.json();
     const slots = readSlots();
@@ -61,6 +64,9 @@ export async function POST(request: NextRequest) {
 
 // PUT /api/adslots — update existing slot by id
 export async function PUT(request: NextRequest) {
+  const isAuth = await verifyAdminAuth(request);
+  if (!isAuth) return unauthorizedResponse();
+
   try {
     const body = await request.json();
     if (!body.id) {
@@ -79,8 +85,11 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// DELETE /api/adslots — delete slot by id (passed as query param)
+// DELETE /api/adslots — delete slot by id
 export async function DELETE(request: NextRequest) {
+  const isAuth = await verifyAdminAuth(request);
+  if (!isAuth) return unauthorizedResponse();
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

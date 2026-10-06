@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import { sendTelegramAlert } from '@/lib/telegram';
+import { checkRateLimit, rateLimitExceededResponse } from '@/lib/rate-limit';
 
 const INQUIRIES_PATH = path.join(process.cwd(), 'data', 'sponsorship_inquiries.json');
 
@@ -15,6 +16,11 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const rateLimit = checkRateLimit(req, 5, 60000);
+  if (!rateLimit.success) {
+    return rateLimitExceededResponse(rateLimit.resetMs);
+  }
+
   try {
     const body = await req.json();
     const { companyName, contactEmail, budgetMonthly, targetNiche, placementRequested, notes } = body;

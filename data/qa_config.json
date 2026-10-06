@@ -1,6 +1,11 @@
 {
   "approveThreshold": 8,
   "reviseThreshold": 5,
+  "nicheThresholds": {
+    "news": 7.0,
+    "crypto": 8.0,
+    "finance": 8.0
+  },
   "maxRevisionAttempts": 1,
   "autoPublishApproved": true,
   "requireQAForPublish": true
