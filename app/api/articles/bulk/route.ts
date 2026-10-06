@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server';
-import { resilientReadJson, atomicWriteJson } from '@/lib/atomic-storage';
-import path from 'path';
+import { getArticles, saveArticles } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic';
-
-const ARTICLES_PATH = path.join(process.cwd(), 'data', 'articles.json');
 
 const NICHE_HOOK_TEMPLATES: Record<string, string[]> = {
   news: [
@@ -30,7 +27,7 @@ const NICHE_HOOK_TEMPLATES: Record<string, string[]> = {
 export async function POST(req: Request) {
   try {
     const { action } = await req.json();
-    const articles = await resilientReadJson<any[]>(ARTICLES_PATH, []);
+    const articles = await getArticles();
 
     if (action === 'auto_hook_all') {
       let updatedCount = 0;
@@ -60,7 +57,7 @@ export async function POST(req: Request) {
         return art;
       });
 
-      await atomicWriteJson(ARTICLES_PATH, updatedArticles);
+      await saveArticles(updatedArticles);
 
       return NextResponse.json({
         success: true,
@@ -86,7 +83,7 @@ export async function POST(req: Request) {
         return art;
       });
 
-      await atomicWriteJson(ARTICLES_PATH, updatedArticles);
+      await saveArticles(updatedArticles);
 
       return NextResponse.json({
         success: true,
