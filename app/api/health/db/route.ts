@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { getPrisma } from '@/lib/prisma';
 import { isProductionEnvironment, bootstrapProductionDatabase } from '@/lib/data-layer';
 
 export const dynamic = 'force-dynamic';
@@ -9,13 +9,15 @@ export async function GET() {
   const isProd = isProductionEnvironment();
 
   try {
-    if (prisma) {
+    const db = getPrisma();
+
+    if (db) {
       // 1. Verify live DB connection with raw ping
-      await prisma.$queryRaw`SELECT 1 as connected`;
+      await db.$queryRaw`SELECT 1 as connected`;
 
       // 2. Ensure database is populated / bootstrap if empty
       const bootstrapStats = await bootstrapProductionDatabase();
-      const articleCount = await prisma.article.count();
+      const articleCount = await db.article.count();
 
       return NextResponse.json({
         status: 'healthy',

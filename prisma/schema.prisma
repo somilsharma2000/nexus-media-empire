@@ -260,16 +260,28 @@ model CrmCustomer {
 
 model Invoice {
   id            String    @id @default(cuid())
-  invoiceNumber String    @unique
+  invoiceNumber String?   @unique
   customerId    String?
-  customerName  String
-  customerEmail String
+  clientName    String?
+  customerName  String?
+  clientEmail   String?
+  customerEmail String?
+  clientCompany String?
   company       String?
-  amount        Float
+  amount        Float     @default(0)
+  subtotal      Float     @default(0)
+  taxRate       Float     @default(0)
+  taxAmount     Float     @default(0)
+  total         Float     @default(0)
   currency      String    @default("USD")
-  status        String    @default("draft") // "draft", "sent", "paid", "overdue", "cancelled"
-  dueDate       DateTime?
+  status        String    @default("draft") // "draft", "sent", "paid", "overdue", "cancelled", "Pending"
+  issueDate     String?
+  dueDate       String?
+  paymentMethod String?
+  paymentRef    String?
+  items         Json?
   lineItems     Json?
+  notes         String?
   paymentLink   String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -284,6 +296,7 @@ model AffiliateLink {
   commissionEstimate String?
   isActive           Boolean  @default(true)
   clicksCount        Int      @default(0)
+  createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }
 
@@ -303,7 +316,9 @@ model MetaAutomation {
   requireFollow        Boolean  @default(true)
   step1FollowRequestDm String?
   step2PayloadDm       String?
+  dmTemplate           String?
   publicCommentReply   String?
+  createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }
 
@@ -326,12 +341,17 @@ model ContentDoctorLog {
 }
 
 model EmailTemplate {
-  id          String   @id @default(cuid())
-  name        String
-  subject     String
-  category    String
-  htmlContent String
-  textContent String?
-  variables   Json?
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  name         String
+  entity       String?  @default("General")
+  subject      String
+  category     String   @default("Communication")
+  preheader    String?
+  previewText  String?
+  htmlTemplate String?
+  htmlContent  String?
+  textContent  String?
+  variables    Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

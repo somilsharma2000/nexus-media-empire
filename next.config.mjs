@@ -6,6 +6,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@prisma/client', 'prisma', 'bcryptjs'],
+  },
   async headers() {
     return [
       {
