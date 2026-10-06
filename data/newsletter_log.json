@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "id": "nl_001",
+    "subject": "⚡ The Trend Matrix #42: Autonomous AI Agents in Production",
+    "niche": "news",
+    "sentAt": "2026-10-06T08:00:00.000Z",
+    "recipients": 12450,
+    "openRate": "48.2%",
+    "clickRate": "14.6%",
+    "status": "Delivered"
+  },
+  {
+    "id": "nl_002",
+    "subject": "🐋 Crypto Daily VIP: Whale Wallets Accumulating Before ETF Decision",
+    "niche": "crypto",
+    "sentAt": "2026-10-05T14:30:00.000Z",
+    "recipients": 8920,
+    "openRate": "54.8%",
+    "clickRate": "21.1%",
+    "status": "Delivered"
+  },
+  {
+    "id": "nl_003",
+    "subject": "📊 Wall St Insider: 3 Dividend Aristocrats Beating the S&P 500",
+    "niche": "finance",
+    "sentAt": "2026-10-04T09:15:00.000Z",
+    "recipients": 15800,
+    "openRate": "43.9%",
+    "clickRate": "11.3%",
+    "status": "Delivered"
+  }
+]

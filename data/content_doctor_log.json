@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "articleId": "1",
+    "title": "Quantum Computing Reaches 1000-Qubit Milestone: What It Means for AI",
+    "action": "refreshed",
+    "changes": "Updated benchmark metrics, added 2026 performance comparisons and Perplexity citation tags.",
+    "qaScore": 9.4,
+    "timestamp": "2026-10-06T03:00:00.000Z",
+    "status": "Approved & Live"
+  },
+  {
+    "articleId": "2",
+    "title": "Bitcoin Halving Cycle Analysis: Institutional Inflows in 2026",
+    "action": "refreshed",
+    "changes": "Refreshed on-chain whale transaction data and updated ETF reserve figures.",
+    "qaScore": 9.1,
+    "timestamp": "2026-10-05T03:00:00.000Z",
+    "status": "Approved & Live"
+  }
+]
